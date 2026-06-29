@@ -1,0 +1,371 @@
+{% extends "base.html" %}
+
+{% block title %}پرسشنامه فرسودگی شغلی ماسلاچ | سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.assessment-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+.assessment-intro {
+    background: linear-gradient(135deg, #FFF8F0 0%, #FDF3E7 100%);
+    border: 1px solid #E8D5B8;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.assessment-intro h1 {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.75rem;
+}
+
+.assessment-intro p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.progress-bar-wrap {
+    background: var(--border);
+    border-radius: 10px;
+    height: 6px;
+    margin: 1.5rem 0 0.5rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--ocean-blue), var(--sage-teal));
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.progress-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: left;
+}
+
+.question-card {
+    background: #1A2E45;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.2s;
+}
+
+.question-card.answered {
+    border-color: var(--sage-teal);
+}
+
+.question-number {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 0.5rem;
+}
+
+.question-text {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+}
+
+/* Scale legend box — shown once below intro */
+.scale-legend-box {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Scale legend above each question */
+.scale-legend {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.scale-legend-title {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 0.5rem;
+    font-family: var(--font-title);
+}
+
+.scale-legend-row {
+    display: flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+}
+
+.scale-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.scale-legend-num {
+    font-family: var(--font-title);
+    font-size: 0.8rem;
+    color: #7BC8F5;
+    font-weight: bold;
+    min-width: 12px;
+    text-align: center;
+}
+
+.scale-legend-text {
+    color: rgba(255,255,255,0.8);
+}
+
+/* Likert buttons with label */
+.likert-scale {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.likert-btn {
+    flex: 1;
+    min-width: 70px;
+    min-height: 60px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.4rem 0.25rem;
+}
+
+.likert-num {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.likert-label {
+    font-size: 0.65rem;
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
+}
+
+.likert-btn:hover {
+    border-color: var(--ocean-blue);
+    color: var(--ocean-blue);
+    background: var(--cloud-blue);
+}
+
+.likert-btn.selected {
+    background: var(--ocean-blue);
+    border-color: var(--ocean-blue);
+    color: white;
+}
+
+.submit-area {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.submit-area .btn {
+    font-size: 1rem;
+    padding: 0.85rem 3rem;
+}
+
+/* Results */
+.results-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.results-card h2 {
+    font-family: var(--font-title);
+    font-size: 1.4rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+}
+
+.subscale-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin: 2rem 0;
+    text-align: right;
+}
+
+.subscale-item {
+    background: var(--arctic-white);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+}
+
+.subscale-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.subscale-score {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.4rem;
+}
+
+.subscale-level {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+}
+
+.level-low      { background: #D1FAE5; color: #065F46; }
+.level-moderate { background: #FEF3C7; color: #92400E; }
+.level-high     { background: #FEE2E2; color: #991B1B; }
+
+.subscale-bar-wrap {
+    background: var(--border);
+    border-radius: 6px;
+    height: 8px;
+    margin-top: 0.6rem;
+    overflow: hidden;
+}
+
+.subscale-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+}
+
+.bar-ee { background: var(--soft-coral); }
+.bar-dp { background: var(--ocean-blue); }
+.bar-pa { background: var(--sage-teal); }
+
+.feedback-box {
+    background: var(--warm-sand);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    text-align: right;
+    color: var(--slate-blue);
+    font-size: 0.92rem;
+    line-height: 1.8;
+    margin: 1.5rem 0;
+    border: 1px solid #DDD0B8;
+}
+
+.results-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.75rem;
+}
+
+/* Footer override for this page */
+.footer {
+    background: #0d3460;
+    border-top-color: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+}
+
+@media (max-width: 640px) {
+    .likert-scale { gap: 0.25rem; }
+    .likert-btn { min-width: 40px; min-height: 54px; }
+    .likert-label { font-size: 0.58rem; }
+    .scale-legend-row { gap: 0.25rem; }
+    .scale-legend-item { font-size: 0.7rem; padding: 0.15rem 0.45rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="assessment-page">
+
+    <!-- Intro -->
+    <div class="assessment-intro">
+        <h1>پرسشنامه فرسودگی شغلی ماسلاچ</h1>
+        <p>
+            این پرسشنامه ۲۲ سؤال دارد و حدود ۵ دقیقه طول می‌کشد.
+            پاسخ‌های صادقانه شما دقیق‌ترین نتیجه را می‌دهد.
+        </p>
+        <div class="progress-bar-wrap" id="progressWrap" style="display:none">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-label" id="progressLabel"></div>
+    </div>
+
+
+    <!-- Questions (shown progressively) -->
+    <div id="questionsSection">
+        <div id="questionsList"></div>
+
+        <div class="submit-area" id="submitArea" style="display:none">
+            <p class="text-muted mb-2">لطفاً به تمام ۲۲ سؤال پاسخ دهید</p>
+            <button class="btn btn-primary" id="btnSubmit" disabled>
+                مشاهده نتایج
+            </button>
+        </div>
+    </div>
+
+    <!-- Results (hidden until submitted) -->
+    <div id="resultsSection" style="display:none">
+        <div class="results-card">
+            <h2>نتایج ارزیابی فرسودگی شغلی شما</h2>
+            <p class="text-muted" style="font-size:0.85rem;margin-bottom:0.5rem">بر اساس پرسشنامه استاندارد ماسلاچ (MBI)</p>
+
+            <div class="subscale-grid" id="subscaleGrid"></div>
+
+            <div class="feedback-box" id="feedbackBox"></div>
+
+            <p class="text-muted" style="font-size:0.8rem;line-height:1.7">
+                این نتایج جنبه آموزشی دارد و جایگزین مشاوره تخصصی نمی‌شود.
+            </p>
+
+            <div class="results-actions">
+                <a href="/chat" class="btn btn-coral">
+                    گفتگو با سای‌باما درباره نتایج
+                </a>
+                <button class="btn btn-outline" id="btnRetake">
+                    پاسخ‌دهی مجدد
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/assessment.js"></script>
+{% endblock %}

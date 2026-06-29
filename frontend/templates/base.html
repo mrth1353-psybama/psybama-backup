@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="سای‌باما — دستیار هوشمند روانشناسی در حوزه سلامت روان کارکنان">
+    <title>{% block title %}سای‌باما | Psybama{% endblock %}</title>
+
+    <link rel="stylesheet" href="/static/css/main.css">
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        /* Prevent FOUC during font load */
+        body { opacity: 0; transition: opacity 0.2s; }
+        body.fonts-loaded { opacity: 1; }
+    </style>
+</head>
+<body>
+
+{% block navbar %}
+<nav class="navbar">
+    <a href="/" class="navbar-brand">
+        <div class="navbar-logo">س</div>
+        <div class="navbar-brand-text">
+            سای‌باما
+            <span>Psybama</span>
+        </div>
+    </a>
+    <ul class="navbar-links">
+        <li><a href="/">خانه</a></li>
+        <li><a href="/assessment">پرسشنامه فرسودگی شغلی</a></li>
+        <li><a href="/shop">فروشگاه</a></li>
+        <li><a href="/chat" class="btn btn-sm" style="margin-right:0.5rem; background:#5B9BD5; color:white;">گفتگو با سای‌باما</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block footer %}
+<footer class="footer">
+    <p>سای‌باما &mdash; دستیار هوشمند سلامت روان در محیط کار</p>
+    <p class="mt-1">دکتر مرضیه فیضی &nbsp;|&nbsp; روانشناس بالینی</p>
+</footer>
+{% endblock %}
+
+<script>
+    document.fonts.ready.then(() => {
+        document.body.classList.add('fonts-loaded');
+    });
+    setTimeout(() => document.body.classList.add('fonts-loaded'), 800);
+</script>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

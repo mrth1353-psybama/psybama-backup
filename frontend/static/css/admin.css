@@ -1,0 +1,263 @@
+/* ── Admin layout ────────────────────────────────── */
+.admin-page {
+    min-height: 100vh;
+    background: var(--arctic-white);
+}
+
+.admin-header {
+    background: var(--slate-blue);
+    color: white;
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.admin-header h1 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    color: white;
+}
+
+.admin-badge {
+    background: rgba(255,255,255,0.15);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.85);
+}
+
+.admin-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ── Stats cards ─────────────────────────────────── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    text-align: center;
+}
+
+.stat-number {
+    font-family: var(--font-title);
+    font-size: 2rem;
+    color: var(--ocean-blue);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
+
+.stat-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+}
+
+/* ── Tabs ─────────────────────────────────────────── */
+.admin-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    padding: 0.65rem 1.25rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: var(--ocean-blue);
+}
+
+.tab-btn.active {
+    color: var(--ocean-blue);
+    border-bottom-color: var(--ocean-blue);
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ── Tables ──────────────────────────────────────── */
+.table-wrapper {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.data-table th {
+    background: var(--arctic-white);
+    color: var(--slate-blue);
+    font-family: var(--font-title);
+    font-size: 0.82rem;
+    padding: 0.85rem 1rem;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-primary);
+    vertical-align: middle;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background: var(--arctic-white);
+}
+
+.data-table .clickable-row {
+    cursor: pointer;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+.badge-success { background: #D1FAE5; color: #065F46; }
+.badge-warning { background: #FEF3C7; color: #92400E; }
+.badge-info    { background: var(--cloud-blue); color: var(--ocean-blue); }
+
+/* ── Search bar ──────────────────────────────────── */
+.search-bar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-family: var(--font-body);
+    direction: rtl;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--ocean-blue);
+}
+
+/* ── Conversation viewer ─────────────────────────── */
+.conv-viewer {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 1rem;
+}
+
+.conv-viewer-header {
+    background: var(--arctic-white);
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.conv-messages-list {
+    padding: 1rem;
+    max-height: 450px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.conv-message {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+}
+
+.conv-message.user { flex-direction: row-reverse; }
+
+.conv-message-role {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    padding: 0.2rem 0;
+    white-space: nowrap;
+}
+
+.conv-message-text {
+    padding: 0.6rem 0.9rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    line-height: 1.65;
+    max-width: 75%;
+}
+
+.conv-message.user   .conv-message-text { background: var(--cloud-blue); color: var(--slate-blue); }
+.conv-message.assistant .conv-message-text { background: var(--arctic-white); border: 1px solid var(--border); }
+
+/* ── Export button ───────────────────────────────── */
+.export-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ── Admin login modal ───────────────────────────── */
+.admin-login-modal .modal-box {
+    max-width: 380px;
+}
+
+.admin-login-modal .modal-box h2 {
+    font-family: var(--font-title);
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 768px) {
+    .admin-body { padding: 1rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .data-table th:nth-child(4),
+    .data-table td:nth-child(4) { display: none; }
+}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}گفتگو با سای‌باما{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/chat.css">{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+
+    <!-- OTP Login Modal -->
+    <div class="modal-backdrop" id="authModal">
+        <div class="modal-box">
+            <div class="otp-logo">س</div>
+
+            <!-- Step 1: Phone -->
+            <div id="stepPhone">
+                <h2 class="text-center" style="font-family:var(--font-title);font-size:1.25rem;margin-bottom:0.4rem">
+                    ورود به سای‌باما
+                </h2>
+                <p class="text-center text-muted mb-2">
+                    برای شروع گفتگو، شماره موبایل خود را وارد کنید
+                </p>
+
+                <div id="phoneError" class="alert alert-error hidden"></div>
+
+                <div class="form-group">
+                    <label class="form-label">شماره موبایل</label>
+                    <input type="tel" id="phoneInput" class="form-input phone-input"
+                           placeholder="09xxxxxxxxx" maxlength="11" autocomplete="tel">
+                </div>
+
+                <button class="btn btn-primary w-full" id="btnRequestOtp">
+                    دریافت کد تأیید
+                </button>
+
+                <p class="text-center text-muted mt-2" style="font-size:0.8rem">
+                    اطلاعات شما کاملاً محرمانه است
+                </p>
+            </div>
+
+            <!-- Step 2: OTP -->
+            <div id="stepOtp" class="hidden">
+                <h2 class="text-center" style="font-family:var(--font-title);font-size:1.2rem;margin-bottom:0.4rem">
+                    کد تأیید را وارد کنید
+                </h2>
+                <p class="text-center text-muted mb-2" id="otpSentTo" style="font-size:0.85rem"></p>
+
+                <div id="otpDisplayBox" class="otp-display-box hidden"></div>
+                <div id="otpError" class="alert alert-error hidden"></div>
+
+                <div class="form-group">
+                    <input type="text" id="otpInput" class="form-input phone-input"
+                           placeholder="کد ۶ رقمی" maxlength="6" inputmode="numeric"
+                           autocomplete="one-time-code">
+                </div>
+
+                <button class="btn btn-primary w-full" id="btnVerifyOtp">
+                    تأیید و ورود
+                </button>
+
+                <div class="otp-timer" id="otpTimer">انقضا در <span id="timerCount">5:00</span></div>
+
+                <div class="text-center mt-2">
+                    <button class="btn btn-ghost btn-sm hidden" id="btnResendOtp">
+                        ارسال مجدد کد
+                    </button>
+                    <button class="btn btn-ghost btn-sm" id="btnChangePhone">
+                        تغییر شماره
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Header -->
+    <header class="chat-header">
+        <div class="chat-header-brand">
+            <div class="chat-header-logo">س</div>
+            <div class="chat-header-info">
+                <h2>سای‌باما <span class="online-dot"></span></h2>
+                <p>دستیار روانشناسی &nbsp;|&nbsp; سلامت روان در محیط کار</p>
+            </div>
+        </div>
+        <div class="chat-header-actions">
+            <a href="/assessment" target="_blank" class="btn-assessment" title="پرسشنامه فرسودگی ماسلاچ">
+                📋 <span>پرسشنامه فرسودگی</span>
+            </a>
+            <button class="btn-new-chat" id="btnNewChat" title="شروع گفتگوی جدید">
+                ✦ گفتگوی جدید
+            </button>
+            <button class="btn btn-ghost btn-sm" id="btnLogout" title="خروج">
+                خروج
+            </button>
+        </div>
+    </header>
+
+    <!-- Chat Body: Sidebar + Main -->
+    <div class="chat-body">
+
+        <!-- Left Sidebar: Conversation History -->
+        <aside class="chat-sidebar" id="chatSidebar">
+            <div class="sidebar-header">تاریخچه گفتگوها</div>
+            <div class="sidebar-list" id="convList">
+                <div class="sidebar-empty">گفتگویی وجود ندارد</div>
+            </div>
+        </aside>
+
+        <!-- Right: Messages + Input -->
+        <div class="chat-main">
+            <main class="chat-messages" id="chatMessages">
+                <div class="welcome-msg" id="welcomeMsg">
+                    <p>سلام. به سای‌باما خوش آمدی.<br>اینجا یک حریم امن و بدون قضاوت است؛ هر زمان که آماده بودی، بنویس که در محیط کارت چه می‌گذرد.</p>
+                </div>
+            </main>
+
+            <div class="chat-input-bar">
+                <textarea class="chat-textarea" id="chatInput"
+                          placeholder="پیام خود را بنویسید..."
+                          rows="1" disabled></textarea>
+                <button class="btn-send" id="btnSend" disabled title="ارسال">
+                    &#x2190;
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/auth.js"></script>
+<script src="/static/js/chat.js"></script>
+{% endblock %}

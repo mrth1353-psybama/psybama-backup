@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}پرداخت — {{ product.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+.checkout-page {
+    min-height: calc(100vh - 64px - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--arctic-white);
+}
+.checkout-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: var(--shadow-md);
+}
+.checkout-product-info {
+    background: linear-gradient(135deg, #0d3460, #1D5FA6);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    color: white;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.checkout-product-info .icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+.checkout-product-info h3 {
+    color: white;
+    font-family: var(--font-title);
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+.checkout-product-info .price {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    font-family: var(--font-title);
+}
+
+.payment-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+.payment-option {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.payment-option:has(input:checked) {
+    border-color: var(--ocean-blue);
+    background: var(--cloud-blue);
+}
+.payment-option input[type=radio] {
+    accent-color: var(--ocean-blue);
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+}
+.payment-option-label strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.2rem;
+}
+.payment-option-label span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="checkout-page">
+    <div class="checkout-card">
+        <h2 style="font-family:var(--font-title);font-size:1.3rem;color:var(--slate-blue);margin-bottom:1.5rem;text-align:center">
+            انتخاب روش پرداخت
+        </h2>
+
+        {% if error %}
+        <div class="alert alert-error" style="margin-bottom:1rem">{{ error }}</div>
+        {% endif %}
+
+        <div class="checkout-product-info">
+            <div class="icon">🎓</div>
+            <div>
+                <h3>{{ product.name }}</h3>
+                <div class="price">{{ '{:,}'.format(product.price) }} تومان</div>
+            </div>
+        </div>
+
+        <form method="POST" action="/shop/checkout/{{ product.id }}/pay">
+            <div class="payment-methods">
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="online" checked>
+                    <div class="payment-option-label">
+                        <strong>💳 پرداخت آنلاین (زرین‌پال)</strong>
+                        <span>پرداخت امن از طریق درگاه بانکی — کلید فوری ارسال می‌شود</span>
+                    </div>
+                </label>
+                <label class="payment-option">
+                    <input type="radio" name="payment_method" value="card">
+                    <div class="payment-option-label">
+                        <strong>🏦 واریز به حساب</strong>
+                        <span>واریز به کارت یا شماره شبا و ارسال رسید — کلید تا ۲۴ ساعت ارسال می‌شود</span>
+                    </div>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full" style="font-size:1rem;padding:0.85rem">
+                ادامه و پرداخت
+            </button>
+        </form>
+
+        <div style="text-align:center;margin-top:1rem">
+            <a href="/shop" class="btn btn-ghost btn-sm">بازگشت به فروشگاه</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

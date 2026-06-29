@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+data/
+# knowledge_base/*.pdf  ← فایل‌های PDF باید در گیت باشند تا Render بتواند index بسازد
+*.db
+.DS_Store
+venv/
+*.egg-info/
+dist/
+build/

@@ -1,0 +1,483 @@
+{% extends "base.html" %}
+
+{% block title %}سای‌باما — همراه امن سلامت روان در محیط کار{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Page Header ──────────────────────────────── */
+.page-hero {
+    background: linear-gradient(160deg, #0d3460 0%, #1D5FA6 100%);
+    padding: 2rem 2rem 2rem;
+    text-align: center;
+}
+
+.page-hero h1 {
+    font-family: var(--font-title);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: white;
+    margin-bottom: 0;
+    line-height: 1.3;
+}
+
+.page-hero h1 em {
+    font-style: normal;
+    color: var(--ocean-blue);
+}
+
+.page-hero p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 0.5rem;
+}
+
+/* ── Service Cards ────────────────────────────── */
+.services-section {
+    padding: 1.5rem 2rem 4rem;
+    max-width: 1060px;
+    margin: 0 auto;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.75rem;
+    margin-top: 1rem;
+}
+
+.service-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.25rem;
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100%; height: 4px;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.service-card.blue::before   { background: var(--ocean-blue); }
+.service-card.teal::before   { background: var(--sage-teal); }
+.service-card.coral::before  { background: var(--soft-coral); }
+
+.service-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+}
+
+.service-icon {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 0.85rem;
+}
+
+.service-icon.blue   { background: var(--cloud-blue); }
+.service-icon.teal   { background: var(--mint-mist); }
+.service-icon.coral  { background: #FEF0EC; }
+
+.service-card h3 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+.service-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+}
+
+.service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 20px;
+    background: var(--arctic-white);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+/* ── Featured: AI Chatbot ─────────────────────── */
+.chatbot-feature {
+    background: linear-gradient(135deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
+    border-radius: var(--radius-xl);
+    padding: 4rem 3rem;
+    margin: 4rem auto;
+    max-width: 1060px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    color: white;
+}
+
+.chatbot-feature-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 0.3rem 1rem;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+.chatbot-feature h2 {
+    font-family: var(--font-title);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    color: white;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.chatbot-feature p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.85;
+    margin-bottom: 2rem;
+}
+
+.chatbot-feature-points {
+    list-style: none;
+    margin-bottom: 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.chatbot-feature-points li {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.9);
+}
+
+.chatbot-feature-points li::before {
+    content: '✓';
+    width: 20px; height: 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+}
+
+.btn-white {
+    background: white;
+    color: var(--ocean-blue);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.btn-white:hover {
+    filter: brightness(0.96);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.btn-white-outline {
+    background: transparent;
+    color: white;
+    border: 1.5px solid rgba(255,255,255,0.5);
+}
+
+.btn-white-outline:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+/* Chat Preview Box */
+.chat-preview {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.chat-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.chat-preview-logo {
+    width: 36px; height: 36px;
+    background: white;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ocean-blue);
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.chat-preview-info h4 {
+    color: white;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.chat-preview-info span {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+}
+
+.online-dot-white {
+    width: 8px; height: 8px;
+    background: #4ADE80;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.preview-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+}
+
+.preview-msg {
+    max-width: 85%;
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+
+.preview-msg.bot {
+    background: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.95);
+    align-self: flex-start;
+    border-bottom-right-radius: 4px;
+}
+
+.preview-msg.user {
+    background: rgba(255,255,255,0.9);
+    color: var(--slate-blue);
+    align-self: flex-end;
+    border-bottom-left-radius: 4px;
+}
+
+.preview-input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+}
+
+/* ── Assessment Section ───────────────────────── */
+.assessment-section {
+    background: var(--warm-sand);
+    border-top: 1px solid #DDD0B8;
+    border-bottom: 1px solid #DDD0B8;
+    padding: 5rem 2rem;
+    text-align: center;
+}
+
+.assessment-section .inner {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.assessment-section h2 {
+    font-family: var(--font-title);
+    font-size: 1.65rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.85rem;
+}
+
+.assessment-section p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.85;
+    margin-bottom: 2rem;
+}
+
+.assessment-steps {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.assessment-step {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.assessment-step-num {
+    width: 28px; height: 28px;
+    background: var(--ocean-blue);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 720px) {
+    .chatbot-feature {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 1.5rem;
+        gap: 2rem;
+    }
+    .chat-preview { display: none; }
+    .services-section { padding: 3rem 1.25rem; }
+    .page-hero { padding: 3.5rem 1.25rem 3rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<section class="page-hero">
+    <h1>سای‌باما</h1>
+    <p>دستیار هوشمند سلامت روان در محیط کار</p>
+</section>
+
+<!-- Service Cards -->
+<section class="services-section">
+    <div class="section-header">
+        <h2>چه کمکی می‌توانیم بکنیم؟</h2>
+    </div>
+
+    <div class="services-grid">
+
+        <!-- Service 1: Chatbot -->
+        <div class="service-card blue">
+            <div class="service-icon blue">🧠</div>
+            <h3>گفتگو با دستیار هوشمند سای‌باما</h3>
+            <p>یک دستیار روانشناسی آموزش‌دیده که ۲۴ ساعته در دسترس است. بدون قضاوت، بدون نوبت، در حریم خصوصی کامل.</p>
+            <a href="/chat" class="btn btn-primary">شروع گفتگو</a>
+        </div>
+
+        <!-- Service 2: Assessment -->
+        <div class="service-card teal">
+            <div class="service-icon teal">📋</div>
+            <h3>پرسشنامه استاندارد فرسودگی شغلی</h3>
+            <p>پرسشنامه ماسلاچ — معتبرترین ابزار سنجش فرسودگی شغلی در جهان. نتایج فوری با تفسیر اختصاصی.</p>
+            <a href="/assessment" class="btn btn-teal">شروع پرسشنامه</a>
+        </div>
+
+        <!-- Service 3: Online Consultation -->
+        <div class="service-card coral">
+            <div class="service-icon coral">💬</div>
+            <h3>مشاوره آنلاین با دکتر فیضی</h3>
+            <p>جلسه مشاوره فردی با دکتر مرضیه فیضی — روانشناس بالینی با تخصص در سلامت سازمانی و روانشناسی کار.</p>
+            <a href="/contact" class="btn btn-coral">درخواست مشاوره</a>
+        </div>
+
+    </div>
+</section>
+
+<!-- Featured: AI Chatbot Section -->
+<section style="padding: 0 2rem;">
+    <div class="chatbot-feature">
+
+        <!-- Left: Text -->
+        <div>
+            <span class="chatbot-feature-badge">✦ ویژه — هوش مصنوعی فارسی</span>
+            <h2>دستیار هوشمند سای‌باما</h2>
+            <p>
+                اولین دستیار روانشناسی هوشمند فارسی‌زبان با تخصص در فرسودگی شغلی و سلامت روان سازمانی.
+                پشتوانه علمی، زبان فارسی، و درک واقعیت محیط کار ایران.
+            </p>
+            <ul class="chatbot-feature-points">
+                <li>آموزش‌دیده با منابع علمی تخصصی فرسودگی شغلی</li>
+                <li>فارسی کامل — درک گویش و اصطلاحات محیط کار ایران</li>
+                <li>حریم خصوصی کامل — گفتگوها ذخیره‌سازی محرمانه</li>
+                <li>بدون نوبت‌دهی — همین الان شروع کنید</li>
+                <li>رایگان برای همه کاربران</li>
+            </ul>
+            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+                <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با سای‌باما</a>
+                <a href="/assessment" class="btn btn-white-outline btn-lg">ابتدا پرسشنامه بدهم</a>
+            </div>
+        </div>
+
+        <!-- Right: Chat Preview -->
+        <div class="chat-preview">
+            <div class="chat-preview-header">
+                <div class="chat-preview-logo">س</div>
+                <div class="chat-preview-info">
+                    <h4>سای‌باما</h4>
+                    <span><span class="online-dot-white"></span>آنلاین</span>
+                </div>
+            </div>
+            <div class="preview-messages">
+                <div class="preview-msg bot">
+                    سلام. به سای‌باما خوش آمدی. اینجا فضایی امن و بدون قضاوت است. بگو چه می‌گذرد؟
+                </div>
+                <div class="preview-msg user">
+                    خسته‌ام. انگار هرچقدر کار می‌کنم تفاوتی نمی‌کنه...
+                </div>
+                <div class="preview-msg bot">
+                    این احساس را می‌شنوم. این خستگی که کارت دیگر معنایی ندارد — یکی از نشانه‌های مهم فرسودگی شغلی است. بیشتر بگو...
+                </div>
+            </div>
+            <div class="preview-input">پیام خود را بنویسید...</div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Assessment Section -->
+<section class="assessment-section">
+    <div class="inner">
+        <h2>نمی‌دانید از کجا شروع کنید؟</h2>
+        <p>
+            پرسشنامه فرسودگی شغلی ماسلاچ را تکمیل کنید.
+            در کمتر از ۵ دقیقه دقیقاً می‌دانید وضعیت‌تان چیست.
+        </p>
+        <div class="assessment-steps">
+            <div class="assessment-step">
+                <div class="assessment-step-num">۱</div>
+                <span>۲۲ سوال ساده</span>
+            </div>
+            <div class="assessment-step">
+                <div class="assessment-step-num">۲</div>
+                <span>نمره‌دهی فوری</span>
+            </div>
+            <div class="assessment-step">
+                <div class="assessment-step-num">۳</div>
+                <span>بازخورد اختصاصی</span>
+            </div>
+        </div>
+        <a href="/assessment" class="btn btn-primary btn-lg">پرسشنامه فرسودگی شغلی</a>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}پرداخت کارت به کارت — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.card-page {
+    min-height: calc(100vh - 64px - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--arctic-white);
+}
+.card-box {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-md);
+}
+.amount-badge {
+    background: linear-gradient(135deg, #0d3460, #1D5FA6);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-align: center;
+    color: white;
+    margin-bottom: 1.75rem;
+}
+.amount-badge .label { font-size: 0.85rem; color: rgba(255,255,255,0.75); margin-bottom: 0.3rem; }
+.amount-badge .amount { font-family: var(--font-title); font-size: 1.8rem; }
+
+.card-info-box {
+    background: #F0F7FF;
+    border: 1.5px dashed #93C5FD;
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.card-info-box .card-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+.card-number {
+    font-size: 1.4rem;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 3px;
+    color: var(--slate-blue);
+    font-weight: bold;
+    direction: ltr;
+    margin-bottom: 0.3rem;
+}
+.card-owner { font-size: 0.85rem; color: var(--text-muted); }
+
+.steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+.step-num {
+    width: 24px; height: 24px;
+    background: var(--ocean-blue);
+    color: white;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.warning-note {
+    background: #FFF8E1;
+    border: 1px solid #F9C74F;
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    color: #7A5C00;
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card-page">
+    <div class="card-box">
+        <h2 style="font-family:var(--font-title);font-size:1.25rem;color:var(--slate-blue);text-align:center;margin-bottom:1.5rem">
+            پرداخت کارت به کارت
+        </h2>
+
+        <div class="amount-badge">
+            <div class="label">مبلغ قابل پرداخت</div>
+            <div class="amount">{{ '{:,}'.format(order.amount) }} تومان</div>
+        </div>
+
+        <div class="card-info-box">
+            <div class="card-label">شماره کارت</div>
+            <div class="card-number">{{ card_number }}</div>
+            <div class="card-owner">به نام {{ card_owner }}</div>
+            <div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px dashed #93C5FD">
+                <div class="card-label">یا شماره شبا</div>
+                <div class="card-number" style="font-size:1rem;letter-spacing:1px">IR210600360170011675279001</div>
+            </div>
+        </div>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">۱</div>
+                <span>مبلغ <strong>{{ '{:,}'.format(order.amount) }} تومان</strong> را به شماره کارت بالا واریز کنید.</span>
+            </div>
+            <div class="step">
+                <div class="step-num">۲</div>
+                <span>بعد از واریز، متن رسید یا شماره پیگیری را به شماره <strong>09910216842</strong> پیامک کنید.</span>
+            </div>
+            <div class="step">
+                <div class="step-num">۳</div>
+                <span>پس از تأیید پرداخت، کلید دسترسی اسپات‌پلیر از طریق پیامک به شماره شما ارسال می‌شود.</span>
+            </div>
+        </div>
+
+        <div class="warning-note">
+            ⚠️ کلید دسترسی حداکثر تا <strong>۲۴ ساعت</strong> ارسال می‌شود. لطفاً شماره موبایل خود را درست وارد کرده باشید.
+        </div>
+
+        <form method="POST" action="/shop/card/{{ order.id }}/confirm">
+            <button type="submit" class="btn btn-primary w-full" style="font-size:1rem;padding:0.85rem">
+                واریز کردم — ثبت سفارش
+            </button>
+        </form>
+
+        <div style="text-align:center;margin-top:1rem">
+            <a href="/shop" class="btn btn-ghost btn-sm">انصراف و بازگشت به فروشگاه</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

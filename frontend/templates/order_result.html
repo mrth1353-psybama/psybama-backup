@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}نتیجه سفارش — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.result-page {
+    min-height: calc(100vh - 64px - 80px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--arctic-white);
+}
+.result-box {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 3rem 2.5rem;
+    width: 100%; max-width: 460px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+.result-icon { font-size: 3rem; margin-bottom: 1rem; }
+.result-box h2 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    margin-bottom: 0.75rem;
+}
+.result-box p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="result-page">
+    <div class="result-box">
+        {% if success %}
+        <div class="result-icon">✅</div>
+        <h2 style="color:var(--sage-teal)">سفارش ثبت شد</h2>
+        <p>{{ message }}</p>
+        {% if ref_id %}
+        <p style="font-size:0.82rem;color:var(--text-muted)">کد پیگیری: <strong>{{ ref_id }}</strong></p>
+        {% endif %}
+        {% else %}
+        <div class="result-icon">❌</div>
+        <h2 style="color:var(--soft-coral)">پرداخت ناموفق</h2>
+        <p>{{ message }}</p>
+        {% endif %}
+
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
+            <a href="/shop/orders" class="btn btn-primary">مشاهده سفارش‌های من</a>
+            <a href="/shop" class="btn btn-outline">بازگشت به فروشگاه</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

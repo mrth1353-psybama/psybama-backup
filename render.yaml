@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: psybama
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt && python backend/build_knowledge_base.py
+    startCommand: gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SMS_MODE
+        value: local

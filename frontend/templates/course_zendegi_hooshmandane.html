@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+{% block title %}دوره زندگیِ هوشمندانه — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.course-hero {
+    background: linear-gradient(160deg, #0d3460 0%, #1D5FA6 100%);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    color: white;
+}
+.course-hero h1 {
+    font-family: var(--font-title);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: white;
+    margin-bottom: 0.5rem;
+}
+.course-hero .subtitle {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 1.5rem;
+}
+.course-hero .meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+.course-hero .meta-grid span {
+    color: rgba(255,255,255,0.85);
+}
+.course-hero .meta-grid strong {
+    color: white;
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+.hero-image-placeholder {
+    max-width: 700px;
+    margin: 1.5rem auto 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
+    border: 2px dashed rgba(255,255,255,0.2);
+}
+
+.course-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+.course-section h2 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--ocean-blue);
+    margin-bottom: 1rem;
+    position: relative;
+    padding-right: 1rem;
+}
+.course-section h2::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 4px;
+    background: var(--ocean-blue);
+    border-radius: 2px;
+}
+.course-section p {
+    font-size: 0.95rem;
+    line-height: 2;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+.course-section .section-bg {
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+
+.changes-list, .differences-list, .includes-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+.changes-list li, .differences-list li, .includes-list li {
+    position: relative;
+    padding-right: 1.8rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+}
+.changes-list li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: var(--sage-teal);
+    font-weight: bold;
+}
+.differences-list li::before {
+    content: '✦';
+    position: absolute;
+    right: 0;
+    color: var(--ocean-blue);
+}
+.includes-list li::before {
+    content: '📦';
+    position: absolute;
+    right: 0;
+}
+.includes-list li {
+    padding-right: 2.2rem;
+}
+
+.image-placeholder {
+    background: var(--cloud-blue);
+    border-radius: var(--radius-lg);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border: 2px dashed var(--border);
+    margin: 1rem 0;
+}
+
+.instructor-box {
+    display: flex;
+    gap: 2rem;
+    align-items: start;
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+.instructor-image-placeholder {
+    width: 140px;
+    min-width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--cloud-blue);
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+}
+.instructor-info h3 {
+    font-family: var(--font-title);
+    color: var(--slate-blue);
+    margin-bottom: 0.75rem;
+}
+.instructor-info p {
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin-bottom: 0.4rem;
+}
+.instructor-info .badge {
+    display: inline-block;
+    background: var(--cloud-blue);
+    color: var(--ocean-blue);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.faq-item {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.faq-item h4 {
+    font-size: 0.95rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+}
+.faq-item p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.section-divider {
+    text-align: center;
+    padding: 0.5rem 0;
+    color: var(--border);
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+}
+
+.btn-buy-large {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--soft-coral), #d47a64);
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: var(--radius-lg);
+    font-size: 1.1rem;
+    font-family: var(--font-title);
+    box-shadow: var(--shadow-md);
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+}
+.btn-buy-large:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    filter: brightness(1.05);
+    text-decoration: none;
+    color: white;
+}
+
+.audience-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+.audience-col {
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+}
+.audience-col h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-title);
+}
+.audience-col.yes h3 { color: var(--sage-teal); }
+.audience-col.no h3 { color: var(--soft-coral); }
+.audience-col ul {
+    list-style: none;
+    padding: 0;
+}
+.audience-col li {
+    position: relative;
+    padding-right: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+}
+.audience-col.yes li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: var(--sage-teal);
+}
+.audience-col.no li::before {
+    content: '✗';
+    position: absolute;
+    right: 0;
+    color: var(--soft-coral);
+}
+
+@media (max-width: 640px) {
+    .instructor-box {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .course-section { padding: 2rem 1rem; }
+    .audience-box { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="course-hero">
+    <h1>دوره غیرحضوری زندگیِ هوشمندانه</h1>
+    <p class="subtitle">گام‌های حساب‌شده تا خلق دستاورد</p>
+    <div class="meta-grid">
+        <div>
+            <strong>مدرس دوره</strong>
+            <span>دکتر مرضیه فیضی</span>
+        </div>
+        <div>
+            <strong>مدت زمان دوره</strong>
+            <span>۶۰ ساعت (ضبط شده)</span>
+        </div>
+        <div>
+            <strong>مخاطب</strong>
+            <span>تمامی افرادی که مشتاق موفقیت خود و یا فرزندانشان هستند</span>
+        </div>
+    </div>
+    <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    <div class="hero-image-placeholder">[تصویر شاخص دوره]</div>
+</section>
+
+<section class="course-section">
+    <h2>نظرات شرکت‌کنندگان درباره دوره‌ی زندگیِ هوشمندانه</h2>
+    <div class="image-placeholder">[تصویر نظرات شرکت‌کنندگان]</div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <div class="section-bg">
+        <h2>از کابوس تردید و درجا زدن، تا اقتدار در خلق دستاورد</h2>
+        <p>آیا شما هم این لحظات سنگین را تجربه کرده‌اید؟ شب‌هایی که به سقف خیره می‌شوید و با تردید از خودتان می‌پرسید: «آیا من واقعاً در مسیر درستی هستم؟» یا «آیا از پسِ این مسئولیت برمی‌آیم؟». روزهایی که ایده‌های درخشانی برای رشد شخصی، ارتقای شغلی یا حتی تربیت فرزندتان دارید، اما ترس از شکست، کمال‌گرایی یا قضاوت دیگران، شما را از برداشتن همان قدم اول باز می‌دارد.</p>
+        <p>این تردیدها فقط یک حس بد گذرا نیستند؛ آن‌ها مانند ترمز دستی کشیده شده عمل می‌کنند که نه تنها مانع پیشرفت شما می‌شوند، بلکه انرژی روانی شما را می‌بلعند. خطرناک‌تر اینکه، اگر شما به عنوان یک والد یا فرد اثرگذار، در تله‌ی این تردیدها گرفتار باشید، ناخودآگاه این «الگوی ترس و تردید» را به فرزندان و اطرافیان خود نیز منتقل می‌کنید.</p>
+        <p>منشأ اصلی این توقف چیست؟ مشکل، کمبود استعداد یا توانایی نیست؛ شما تا همین‌جا هم پتانسیل‌های فوق‌العاده‌ای دارید. مشکل اصلی این است که «سیستم عامل ذهنی» شما برای شرایط پیچیده و پرفشار امروز به‌روزرسانی نشده است. شما یاد نگرفته‌اید چگونه در لحظات حساس، به جای فلج شدن، به خودتان اعتماد کنید و بر مبنای روش علمی تصمیم بگیرید.</p>
+    </div>
+</section>
+
+<section class="course-section">
+    <h2>دوره زندگیِ هوشمندانه چه چیزی است؟</h2>
+    <p>دوره آموزشی " زندگیِ هوشمندانه" یک نقشه راه جامع و علمی برای به‌روزرسانی «سیستم عامل ذهنی» شماست. این دوره طراحی شده تا بنیادهای روانی یک انسان موفق، شکوفا و تأثیرگذار را در شما بسازد</p>
+    <p>بسیاری تصور می‌کنند که تنها با مثبت‌اندیشی، انگیزه لحظه‌ای یا صرفاً تلاش فیزیکی زیاد می‌توانند به موفقیت‌های بزرگ (در تحصیل، شغل یا تربیت فرزند) برسند. اما واقعیت علمی چیز دیگری است: آنچه شما را به موفقیت پایدار می‌رساند، داشتن یک «سبک زندگی هوشمندانه» است؛ سبکی که فقط شعار نیست، بلکه شامل مجموعه‌ای از مهارت‌های نرم، مدیریت ذهن و رویکردهای روانشناختی است که به شما کمک می‌کند در دنیای پرفشار امروز، متعادل، متمرکز و هدفمند زندگی کنید</p>
+</section>
+
+<section class="course-section">
+    <h2>چرا باید سبک زندگی خود را به «هوشمندانه» تغییر دهیم؟</h2>
+    <p>هدف از این تغییر، فقط رسیدن به چند هدف مادی نیست؛ هدف تبدیل شدن به نسخه‌ای از خودتان است که اکنون حتی تصورش را هم نمی‌کنید.</p>
+    <p><strong>برای شما که به دنبال موفقیت هستید:</strong> اگر به آگاهی‌ها و مهارت‌های این دوره عمل کنید، مسیر شغلی و شخصی خود را با چنان هوشمندی و سرعتی طی می‌کنید که نتایج آن برایتان باورنکردنی خواهد بود.</p>
+    <p><strong>برای شما که والد هستید:</strong> فراموش نکنید که کودکان، گوش‌هایشان بسته و چشم‌هایشان باز است؛ آن‌ها آن چیزی نمی‌شوند که شما می‌گویید، بلکه آن چیزی می‌شوند که شما هستید. با تغییر سبک زندگی خودتان، شما به قدرتمندترین الگو برای موفقیت فرزندانتان تبدیل می‌شوید</p>
+</section>
+
+<section class="course-section">
+    <h2>بعد از اجرای دوره زندگیِ هوشمندانه، چه تغییراتی در زندگی شما رخ می‌دهد؟</h2>
+    <p>این دوره به شما کمک می‌کند مشکلات را نه به صورت سطحی، بلکه از ریشه روانشناختی حل کنید و تحولی عمیق در عملکرد خود ایجاد کنید:</p>
+    <ol class="changes-list">
+        <li><strong>تبدیل تردید به یقین (عزت‌نفس):</strong> به‌جای اینکه مدام از خودتان بپرسید «آیا من (یا فرزندم) توانایی‌اش را داریم؟»، با تکیه بر عزت‌نفس واقعی و شناخت توانمندی‌هایتان با اطمینان خواهید گفت: «چگونه می‌توانیم این کار را انجام دهیم؟»</li>
+        <li><strong>پایان سردرگمی و بلاتکلیفی:</strong> با ترسیم نقشه راه (بر اساس مدل‌های علمی شخصیت‌شناسی)، اهداف خود را شفاف می‌کنید و از شاخه‌ای به شاخه‌ای دیگر پریدن نجات پیدا می‌کنید. شما دقیقاً خواهید دانست که «که هستید» و «چه می‌خواهید».</li>
+        <li><strong>مدیریت احساسات و افکار منفی (متد ACT):</strong> با استفاده از جدیدترین متدهای روان‌شناسی (مانند اکت)، یاد می‌گیرید چگونه اضطراب، استرس و نشخوار فکری را کنترل کنید. این یعنی داشتن ذهنی آرام در وسط طوفان مشکلات.</li>
+        <li><strong>خلق روابط مؤثر و عمیق:</strong> مهارت‌های ارتباطی و گوش دادن فعال را یاد می‌گیرید. این مهارت، کلید طلایی برای مذاکرات کاری موفق و همچنین ارتباط صمیمی و سازنده با فرزندان و همسر است.</li>
+        <li><strong>حذف فاصله میان «خواستن» و «توانستن»:</strong> به کمک تکنیک‌های انضباط شخصی و عادت‌سازی، بر اهمال‌کاری غلبه می‌کنید. شما به فردی تبدیل می‌شوید که وقتی تصمیمی می‌گیرد، تا پایانِ مسیر پای آن می‌ایستد.</li>
+        <li><strong>کسب دستاوردهای ارزشمند:</strong> با اعتمادبه‌نفس و باور به توانایی‌های خود، فرصت‌ها را به‌درستی شناسایی می‌کنید و پتانسیل‌های پنهان خود (و فرزندانتان) را به دستاوردهای واقعی تبدیل می‌کنید.</li>
+    </ol>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>تفاوت این دوره با دوره‌های مشابه در چیست؟</h2>
+    <p>دنیای امروز پر از دوره‌های انگیزشی و مربیانی است که وعده موفقیت می‌دهند. اما اکثر افراد پس از مدتی به نقطه اول بازمی‌گردند. چرا؟ زیرا ریشه اصلی مشکلات، مسائل روانشناختی است که با یک توصیه‌ی سطحی قابل حل نیست.</p>
+    <p>دوره «زندگیِ هوشمندانه» این شکاف حیاتی را پر می‌کند و نقطه تلاقی منحصربه‌فرد علم و عمل است:</p>
+    <ul class="differences-list">
+        <li><strong>اعتبار بالینی در مقابل توصیه‌های زرد:</strong> بیشتر مربیان حوزه ذهنیت، عمق بالینی و درک علمی از روان انسان را ندارند. صحبت‌هایشان اغلب در سطح «حال خوب کن» باقی می‌ماند. ما در این دوره، توسط یک دکترای روانشناسی بالینی و نه یک مربی صرف، هدایت می‌شویم. این یعنی هر راهکار، هر مهارت و هر تکنیک، پشتوانه علمی قوی دارد.</li>
+        <li><strong>کاربرد علمی برای چالش‌های دنیای واقعی:</strong> از سوی دیگر، بسیاری از روانشناسان، درکی از فشارهای خردکننده عملکرد بالا، عدم قطعیت دنیای کسب‌وکار، یا چالش‌های منحصر به فرد تربیت فرزندان نسل جدید ندارند. ما در این دوره، ابزارهای قدرتمند درمانی را برای نیازهای خاص شما سفارشی‌سازی می‌کنیم.</li>
+    </ul>
+    <p><strong>بنیادهای علمی که سیستم عامل ذهنی شما را می‌سازند:</strong></p>
+    <ul>
+        <li><strong>ACT (درمان مبتنی بر پذیرش و تعهد):</strong> برای عبور از موانع ذهنی، مدیریت افکار منفی و اقدام مؤثر در راستای ارزش‌ها.</li>
+        <li><strong>لوگوتراپی (معنادرمانی):</strong> برای یافتن «چرایی» زندگی و ایجاد انگیزه و تاب‌آوری پایدار در برابر رنج‌ها.</li>
+        <li><strong>مدل OCEAN و طرح‌واره‌درمانی:</strong> برای درک ریشه‌های عمیق الگوهای رفتاری و ساختن یک هویت قوی و آگاه.</li>
+        <li><strong>نظریه عزت‌نفس ناتانیل براندن:</strong> برای ساختن هسته درونی قدرتمند و اعتماد به نفس واقعی (و نه کاذب).</li>
+    </ul>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>با تهیه دوره زندگیِ هوشمندانه چه مواردی را دریافت خواهید کرد؟</h2>
+    <ul class="includes-list">
+        <li><strong>فیلم‌های جلسات:</strong> ۱۲ فیلم پنج‌ساعته باکیفیت بالا، به‌صورت محافظت شده دریافت می‌کنید. این فیلم‌ها روی سیستم ویندوز و مک و همچنین موبایل اندرویدی قابل‌مشاهده هستند.</li>
+        <li><strong>تمرین‌های عملی دوره:</strong> تمرینات دوره زندگی هوشمندانه را در قالب فایل PDF دریافت می‌کنید که در آن لینک چند آزمون روان‌شناسی هم قرار داده شده است.</li>
+        <li><strong>وبینار پرسش و پاسخ:</strong> ۲ وبینار پرسش‌وپاسخ دارید که می‌توانید سوالاتتان را در وبینار بپرسید. همچنین فیلم وبینارهای قبلی را هم دریافت می‌کنید.</li>
+        <li><strong>پشتیبانی ۱۲ ماهه:</strong> در طول دوره شما از پشتیبانی کامل بهره‌مند خواهید بود. به مدت ۱۲ ماه می‌توانید هر سؤالی را که دارید از طریق تلگرام با پشتیبان مطرح کنید.</li>
+        <li><strong>گواهی تکمیل دوره:</strong> به پاس قدردانی از حضور شما، یک گواهی معتبر شرکت در دوره در اختیار شما قرار خواهد گرفت.</li>
+    </ul>
+    <div class="image-placeholder">[تصویر نمونه فیلم دوره]</div>
+</section>
+
+<section class="course-section">
+    <h2>نگاهی به محتوای دوره زندگیِ هوشمندانه</h2>
+    <p><strong>مخاطب:</strong> تمام افرادی که مشتاق موفقیت خود و یا فرزندانشان هستند</p>
+
+    <div class="audience-box">
+        <div class="audience-col yes">
+            <h3>مناسب چه کسانی است؟</h3>
+            <ul>
+                <li>متخصصان و رهبران در مسیر رشد: افرادی که در شغل فعلی خود احساس رضایت ندارند یا می‌خواهند از سطح فعلی فراتر رفته و رهبری زندگی خود را به دست بگیرند.</li>
+                <li>والدین آگاه و مسئولیت‌پذیر: والدینی که مشتاق موفقیت و آرامش روانی فرزندان خود هستند و می‌دانند که بهترین آموزش، تبدیل شدن به بهترین الگوست.</li>
+                <li>دانشجویان و جوانان در بزنگاه‌های مهم زندگی: کسانی که به دنبال توسعه فردی عمیق، یافتن رسالت و ارزش‌های اصلی خود هستند.</li>
+                <li>هر فردی که از جنگ دائمی با افکار خود خسته است: کسانی که می‌خواهند تکنیک‌های علمی برای مدیریت استرس، غلبه بر اهمال‌کاری را فرابگیرند.</li>
+            </ul>
+        </div>
+        <div class="audience-col no">
+            <h3>مناسب چه کسانی نیست؟</h3>
+            <ul>
+                <li>راه‌حل‌های یک شبه و سریع: اگر به دنبال «قرص جادویی» برای موفقیت فوری هستید و حاضر به کار عمیق درونی نیستید.</li>
+                <li>آموزش‌های فنی و تخصصی: این دوره درباره آموزش دیجیتال مارکتینگ، سئو، یا برنامه‌نویسی نیست. این دوره راندمان ذهنی شما را ارتقا می‌دهد.</li>
+                <li>فرار از مسئولیت: اگر منتظرید کسی بیاید و تمام مشکلات شما را حل کند، این دوره کمکی به شما نخواهد کرد.</li>
+                <li>محتوای صرفاً انگیزشی: اگر فقط به دنبال جملات انگیزشی بدون پشتوانه عملی و علمی هستید.</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="course-section">
+    <h2>بخشی از سرفصل‌های دوره جامع زندگیِ هوشمندانه</h2>
+    <div class="section-bg">
+        <ol class="changes-list">
+            <li><strong>ترسیم نقشه راه و یافتن معنا:</strong> چرا اینجا هستید و به کجا می‌روید؟ با استفاده از "معنادرمانی"، قطب‌نمای درونی خود را فعال می‌کنید.</li>
+            <li><strong>از درماندگی تا خوش‌بینی:</strong> با "درماندگی آموخته‌شده" خداحافظی کنید. یاد می‌گیرید با تکنیک‌های علمی، بدبینی را به خوش‌بینی سازنده تبدیل کنید.</li>
+            <li><strong>نصب سیستم عامل رشد و مسئولیت‌پذیری:</strong> "طرز فکر رشد" را در خود نهادینه کرده و از جایگاه قربانی به یک خالق قدرتمند صعود می‌کنید.</li>
+            <li><strong>خودشناسی عمیق (بخش اول):</strong> با استفاده از مدل پنج عاملی شخصیت (Big Five)، به درک دقیقی از نقاط قوت و ضعف‌های خود می‌رسید.</li>
+            <li><strong>خودشناسی عمیق (بخش دوم):</strong> استعدادهای پنهان خود را کشف کرده، ارزش‌های بنیادین‌تان را شفاف می‌کنید و "بیانیه رسالت شخصی" خود را می‌نویسید.</li>
+            <li><strong>هدف‌گذاری قدرتمند:</strong> چشم‌انداز و رسالت خود را به اهداف هوشمندانه (SMART) و قابل اجرا تبدیل کنید.</li>
+            <li><strong>بهبود عزت نفس (بر اساس شش ستون براندن):</strong> با یادگیری شش ستون علمی عزت نفس، باوری واقع‌گرایانه به توانایی‌های خود پیدا می‌کنید.</li>
+            <li><strong>غلبه بر افکار و هیجانات منفی (روانشناسی ACT):</strong> یاد می‌گیرید بدون جنگیدن با افکار منفی، از آن‌ها فاصله بگیرید و قدرتشان را خنثی کنید.</li>
+            <li><strong>خروج از تله‌های کمال‌گرایی و اهمال‌کاری:</strong> دو مورد از بزرگ‌ترین قاتلان بهره‌وری را شناسایی و ریشه‌کن کنید.</li>
+            <li><strong>مدیریت پیشرفته زمان و انرژی:</strong> فراتر از تکنیک‌های مدیریت زمان، یاد می‌گیرید چگونه "انرژی" خود را مدیریت کنید.</li>
+            <li><strong>تبدیل شدن به یک یادگیرنده و تصمیم‌گیرنده حرفه‌ای:</strong> مهارت یادگیری و تصمیم‌گیری در شرایط عدم قطعیت را کسب کنید.</li>
+            <li><strong>هنر رهبری و ارتباطات الهام‌بخش:</strong> مهارت‌های کلیدی رهبری و ارتباط بدون خشونت (NVC) را بیاموزید.</li>
+            <li><strong>ساخت انضباط شخصی و عادت‌های پایدار:</strong> با علم ساخت عادت، سیستم‌هایی در زندگی خود ایجاد کنید که موفقیت را به امری خودکار تبدیل کنند.</li>
+            <li><strong>رسیدن به اوج: شکوفایی پایدار (نظریه PERMA):</strong> با مدل علمی شکوفایی مارتین سلیگمن، تمام ابعاد یک زندگی غنی را پرورش دهید.</li>
+        </ol>
+    </div>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>با مرضیه فیضی بیشتر آشنا شوید!</h2>
+    <div class="instructor-box">
+        <div class="instructor-image-placeholder">[تصویر مدرس]</div>
+        <div class="instructor-info">
+            <h3>دکتر مرضیه فیضی</h3>
+            <p>دکترای روان‌شناسی بالینی از دانشگاه علوم پزشکی شهید بهشتی</p>
+            <p>روان‌درمانگر و متخصص روان‌شناسی اکت (ACT)</p>
+            <p>مدرس دوره جامع زندگی هوشمندانه (دوره خودیاری مبتنی بر روان‌شناسی اکت)</p>
+            <p><strong>نویسنده کتاب‌های:</strong> مدیر هوشمند؛ صفر تا صد هوش هیجانی برای مدیران، زندگی هوشمندانه؛ گام‌های حساب شده تا خلق دستاورد</p>
+            <p>همکاری در ترجمه کتاب «درمانگری تخصصی در سلامت، آموزش و هنر خلق»</p>
+            <p>نویسنده اول و مسئول چند مقاله بین‌المللی ISI, Scopus, Pubmed</p>
+            <p style="margin-top:0.5rem">
+                <span class="badge">عضو سازمان نظام روان‌شناسی (شماره پروانه: 35599)</span>
+                <span class="badge">عضو انجمن روان‌شناسی ایران</span>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="course-section">
+    <h2>سوالات متداول</h2>
+
+    <div class="faq-item">
+        <h4>با تهیه فیلم این دوره چه مواردی دریافت می‌کنم؟</h4>
+        <p>۶۰ ساعت فیلم آموزشی با کیفیت بالا دریافت می‌کنید. یک فایل pdf که تمرینات دوره و لینک آزمون‌های روان‌شناسی در آن قرار داده شده است. در وبینار پرسش‌وپاسخ شرکت می‌کنید تا سوالاتتان را بپرسید.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>من در جلسات مشاوره و گروه‌درمانی شرکت می‌کنم، آیا این دوره برای من مفید است؟</h4>
+        <p>این دوره مکمل جلسات درمانی است و می‌تواند به شما در درک بهتر مفاهیم و تمرین مهارت‌ها کمک کند.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>من دوره «راز ارزشمندی» را گذرانده‌ام. آیا فیلم این دوره برایم مفید است؟</h4>
+        <p>بله، این دوره محتوای جامع‌تر و عمیق‌تری دارد و می‌تواند مکمل خوبی برای دانسته‌های قبلی شما باشد.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>پس از گذراندن دوره زندگی هوشمندانه و اجرای مطالب چه توقعی می‌توانم داشته باشم؟</h4>
+        <p>با اجرای کامل مطالب دوره، بهبود قابل توجهی در عزت نفس، مدیریت هیجانات، هدف‌گذاری و کیفیت روابط خود تجربه خواهید کرد.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>چرا مرضیه فیضی فرد مناسبی برای آموزش دوره جامع زندگی هوشمندانه است؟</h4>
+        <p>دکتر مرضیه فیضی دارای دکترای روان‌شناسی بالینی از دانشگاه علوم پزشکی شهید بهشتی است و به عنوان روان‌درمانگر و متخصص ACT فعالیت می‌کند. ایشان علاوه بر تدریس، کتاب‌های متعددی در این حوزه تألیف کرده و مقالات بین‌المللی متعددی نیز دارند.</p>
+    </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}سفارش‌های من — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.orders-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+.orders-page h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--slate-blue);
+    margin-bottom: 2rem;
+}
+.order-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+.order-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+.order-card-header h3 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--slate-blue);
+}
+.status-badge {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: bold;
+}
+.status-pending_payment { background: #FFF8E1; color: #7A5C00; }
+.status-pending_key     { background: #E6F1FB; color: #1D5FA6; }
+.status-completed       { background: #E8F5E9; color: #2E7D54; }
+.status-cancelled       { background: #FEE2E2; color: #B91C1C; }
+
+.order-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+.order-key-box {
+    background: #E8F5E9;
+    border: 1px solid #B7E0CE;
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    color: #2E7D54;
+    margin-top: 0.75rem;
+    word-break: break-all;
+    direction: ltr;
+    text-align: center;
+}
+.empty-orders {
+    text-align: center;
+    padding: 4rem 0;
+    color: var(--text-muted);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <h1>📦 سفارش‌های من</h1>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="order-card">
+            <div class="order-card-header">
+                <h3>🎓 {{ order.product.name }}</h3>
+                <span class="status-badge status-{{ order.status }}">
+                    {{ status_label.get(order.status, order.status) }}
+                </span>
+            </div>
+            <div class="order-meta">
+                <span>مبلغ: <strong>{{ '{:,}'.format(order.amount) }} تومان</strong></span>
+                <span>روش: {{ 'آنلاین' if order.payment_method == 'online' else 'کارت به کارت' }}</span>
+                <span>تاریخ: {{ order.created_at.strftime('%Y/%m/%d — %H:%M') if order.created_at else '—' }}</span>
+            </div>
+            {% if order.spotplayer_key %}
+            <div class="order-key-box">
+                🔑 کلید دسترسی: <strong>{{ order.spotplayer_key }}</strong>
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+    <div class="empty-orders">
+        <div style="font-size:2.5rem;margin-bottom:1rem">📭</div>
+        <p>هنوز سفارشی ندارید.</p>
+        <a href="/shop" class="btn btn-primary" style="margin-top:1rem">رفتن به فروشگاه</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

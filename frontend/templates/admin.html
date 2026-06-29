@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}پنل مدیریت | سای‌باما{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/admin.css">{% endblock %}
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block content %}
+
+<!-- Admin Login Modal -->
+<div class="modal-backdrop admin-login-modal" id="adminLoginModal">
+    <div class="modal-box">
+        <div style="text-align:center;margin-bottom:1.5rem">
+            <div style="width:52px;height:52px;background:var(--slate-blue);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;color:white;font-family:var(--font-title);font-size:1.2rem;margin-bottom:1rem">🔐</div>
+            <h2>پنل مدیریت</h2>
+            <p class="text-muted" style="font-size:0.85rem">دسترسی اختصاصی روانشناس</p>
+        </div>
+
+        <div id="adminLoginError" class="alert alert-error hidden"></div>
+
+        <div class="form-group">
+            <label class="form-label">پسورد مدیریت</label>
+            <input type="password" id="adminPasswordInput" class="form-input"
+                   placeholder="••••••••" autocomplete="current-password">
+        </div>
+
+        <button class="btn btn-primary w-full" id="btnAdminLogin">ورود</button>
+
+        <div class="text-center mt-2">
+            <a href="/" class="btn btn-ghost btn-sm">بازگشت به سایت</a>
+        </div>
+    </div>
+</div>
+
+<!-- Admin Panel (hidden until login) -->
+<div id="adminPanel" class="admin-page hidden">
+
+    <header class="admin-header">
+        <h1>🔐 پنل مدیریت سای‌باما</h1>
+        <div style="display:flex;align-items:center;gap:1rem">
+            <span class="admin-badge">Psybama Admin</span>
+            <button class="btn btn-ghost btn-sm" id="btnAdminLogout"
+                    style="color:rgba(255,255,255,0.7)">خروج</button>
+        </div>
+    </header>
+
+    <div class="admin-body">
+
+        <!-- Stats row -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-number" id="statUsers">—</div>
+                <div class="stat-label">کاربران کل</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statVerified">—</div>
+                <div class="stat-label">کاربران تأیید شده</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statConvs">—</div>
+                <div class="stat-label">گفتگوها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statMsgs">—</div>
+                <div class="stat-label">پیام‌ها</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statAssess">—</div>
+                <div class="stat-label">پرسشنامه‌ها</div>
+            </div>
+        </div>
+
+        <!-- Export button -->
+        <div class="export-area">
+            <a href="/admin/export" class="btn btn-teal" id="btnExport">
+                ⬇ دانلود Excel (تمام اطلاعات)
+            </a>
+        </div>
+
+        <!-- Tabs -->
+        <div class="admin-tabs">
+            <button class="tab-btn active" data-tab="users">👥 کاربران</button>
+            <button class="tab-btn" data-tab="conversations">💬 گفتگوها</button>
+            <button class="tab-btn" data-tab="contacts">📩 درخواست مشاوره <span id="unreadBadge" class="hidden" style="background:#E53E3E;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
+            <button class="tab-btn" data-tab="orders">🛍 سفارش‌ها <span id="pendingOrdersBadge" class="hidden" style="background:#E53E3E;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
+            <button class="tab-btn" data-tab="products">📦 محصولات</button>
+            <button class="tab-btn" data-tab="search">🔍 جستجو</button>
+        </div>
+
+        <!-- Users Tab -->
+        <div class="tab-content active" id="tab-users">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>شماره موبایل</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ ثبت</th>
+                            <th>گفتگوها</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="5" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="usersPagination" style="display:flex;gap:0.5rem;justify-content:center;padding:1rem"></div>
+        </div>
+
+        <!-- Conversations Tab -->
+        <div class="tab-content" id="tab-conversations">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>شماره موبایل</th>
+                            <th>تعداد پیام</th>
+                            <th>شروع گفتگو</th>
+                            <th>مشاهده</th>
+                        </tr>
+                    </thead>
+                    <tbody id="convsTableBody">
+                        <tr><td colspan="5" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Conversation viewer -->
+            <div class="conv-viewer hidden" id="convViewer">
+                <div class="conv-viewer-header">
+                    <span id="convViewerTitle">گفتگوی #</span>
+                    <button class="btn btn-ghost btn-sm" id="btnCloseViewer">✕ بستن</button>
+                </div>
+                <div class="conv-messages-list" id="convMessagesList"></div>
+            </div>
+        </div>
+
+        <!-- Contacts Tab -->
+        <div class="tab-content" id="tab-contacts">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>نام</th>
+                            <th>شماره موبایل</th>
+                            <th>پیام</th>
+                            <th>تاریخ</th>
+                            <th>وضعیت</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTableBody">
+                        <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="tab-content" id="tab-orders">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>شماره موبایل</th>
+                            <th>محصول</th>
+                            <th>مبلغ (تومان)</th>
+                            <th>روش</th>
+                            <th>وضعیت</th>
+                            <th>تاریخ</th>
+                            <th>عملیات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <tr><td colspan="8" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Key input panel -->
+            <div id="keyPanel" class="hidden" style="background:var(--pure-white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-top:1.5rem;max-width:500px">
+                <h3 style="font-family:var(--font-title);font-size:1rem;color:var(--slate-blue);margin-bottom:1rem">ثبت کلید اسپات‌پلیر</h3>
+                <p id="keyPanelProduct" style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.75rem"></p>
+                <input type="text" id="keyInput" class="form-input" placeholder="کلید اسپات‌پلیر را وارد کنید" style="margin-bottom:0.75rem;direction:ltr">
+                <div style="display:flex;gap:0.75rem">
+                    <button class="btn btn-primary" onclick="Admin.submitKey()">ثبت و ارسال SMS</button>
+                    <button class="btn btn-ghost" onclick="Admin.closeKeyPanel()">انصراف</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="tab-content" id="tab-products">
+            <div id="productsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;padding:0.5rem 0"></div>
+        </div>
+
+        <!-- Search Tab -->
+        <div class="tab-content" id="tab-search">
+            <div class="search-bar">
+                <input type="text" id="searchInput" class="search-input"
+                       placeholder="کلمه‌ای را جستجو کنید...">
+                <button class="btn btn-primary" id="btnSearch">جستجو</button>
+            </div>
+
+            <div id="searchResults"></div>
+        </div>
+
+    </div><!-- /admin-body -->
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}
