@@ -64,7 +64,7 @@ PROVIDERS = [
 ]
 
 
-def _call_provider(provider: dict, api_messages: list) -> str:
+def _call_provider(provider: dict, api_messages: list, temperature: float = 0.7, max_tokens: int = 400) -> str:
     api_key = os.getenv(provider['api_key_env'], '')
     if not api_key:
         raise ValueError(f"No API key for {provider['name']}")
@@ -75,8 +75,8 @@ def _call_provider(provider: dict, api_messages: list) -> str:
     response = client.chat.completions.create(
         model=model,
         messages=api_messages,
-        temperature=0.7,
-        max_tokens=400,
+        temperature=temperature,
+        max_tokens=max_tokens,
     )
     content = response.choices[0].message.content
     return content or '...'

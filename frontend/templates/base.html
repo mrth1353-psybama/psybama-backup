@@ -51,6 +51,11 @@
     setTimeout(() => document.body.classList.add('fonts-loaded'), 800);
 </script>
 
+{% block faq_widget %}
+<link rel="stylesheet" href="/static/css/faq-widget.css">
+<script src="/static/js/faq-widget.js" defer></script>
+{% endblock %}
+
 {% block extra_js %}{% endblock %}
 </body>
 </html>

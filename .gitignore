@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 data/
-knowledge_base/*.pdf
+knowledge_base/
 *.db
 .DS_Store
 venv/

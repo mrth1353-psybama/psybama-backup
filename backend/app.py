@@ -279,6 +279,27 @@ def create_app():
             })
         return jsonify({'conversations': result})
 
+    # ── FAQ Widget API ────────────────────────────────────────────────────────
+
+    @app.route('/api/faq/message', methods=['POST'])
+    def faq_message():
+        from faq_handler import get_faq_reply
+
+        data = request.get_json()
+        text = (data or {}).get('message', '').strip()
+
+        if not text:
+            return jsonify({'error': 'empty_message', 'message': 'پیام خالی است'}), 400
+        if len(text) > 300:
+            return jsonify({'error': 'message_too_long', 'message': 'پیام خیلی طولانی است'}), 400
+
+        try:
+            reply = get_faq_reply(text)
+        except Exception as e:
+            return jsonify({'error': f'ai_error: {e}'}), 500
+
+        return jsonify({'reply': reply})
+
     # ── Assessment API ────────────────────────────────────────────────────────
 
     @app.route('/api/assessment/submit', methods=['POST'])
