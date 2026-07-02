@@ -7,8 +7,10 @@ from sms_service import send_sms
 
 shop_bp = Blueprint('shop', __name__)
 
-CARD_NUMBER = '6063731250080547'
+CARD_NUMBER = '6060731250080547'
+CARD_SHEBA  = 'IR470600360170011675279001'
 CARD_OWNER  = 'محمد رضا تدریس حسنی'
+CONTACT_PHONE = '09910216842'
 
 
 @shop_bp.route('/')
@@ -50,18 +52,7 @@ def pay(product_id):
     db.session.add(order)
     db.session.commit()
 
-    if method == 'online':
-        callback_url = request.host_url.rstrip('/') + f'/shop/verify/{order.id}'
-        result = create_payment(product.price, product.name, callback_url)
-        if result['success']:
-            order.zarinpal_authority = result['authority']
-            db.session.commit()
-            return redirect(result['pay_url'])
-        db.session.delete(order)
-        db.session.commit()
-        return render_template('checkout.html', product=product, error=result['error'])
-
-    # card to card
+    # Both payment methods go to bank transfer page for now
     return redirect(f'/shop/card/{order.id}')
 
 
@@ -89,7 +80,8 @@ def verify(order_id):
 def card_payment(order_id):
     order = Order.query.get_or_404(order_id)
     return render_template('payment_card.html', order=order,
-                           card_number=CARD_NUMBER, card_owner=CARD_OWNER)
+                           card_number=CARD_NUMBER, card_sheba=CARD_SHEBA,
+                           card_owner=CARD_OWNER, contact_phone=CONTACT_PHONE)
 
 
 @shop_bp.route('/card/<int:order_id>/confirm', methods=['POST'])
@@ -99,7 +91,7 @@ def card_confirm(order_id):
     order.status = 'pending_payment'
     db.session.commit()
     return render_template('order_result.html', order=order, success=True,
-                           message='درخواست شما ثبت شد. پس از بررسی رسید، کلید دسترسی از طریق پیامک ارسال می‌شود.')
+                           message='از خرید شما متشکریم. پس از ارسال فیش واریزی با شما تماس می‌گیریم و لایسنس محصول در اختیار شما قرار می‌گیرد.')
 
 
 @shop_bp.route('/orders')
