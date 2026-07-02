@@ -28,17 +28,12 @@ def shop_login():
 
 @shop_bp.route('/checkout/<int:product_id>')
 def checkout(product_id):
-    if not session.get('user_id'):
-        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     product = Product.query.get_or_404(product_id)
     return render_template('checkout.html', product=product)
 
 
 @shop_bp.route('/checkout/<int:product_id>/pay', methods=['POST'])
 def pay(product_id):
-    if not session.get('user_id'):
-        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
-
     product = Product.query.get_or_404(product_id)
     method = request.form.get('payment_method')
 
@@ -46,7 +41,7 @@ def pay(product_id):
         return render_template('checkout.html', product=product, error='روش پرداخت نامعتبر است')
 
     order = Order(
-        user_id=session['user_id'],
+        user_id=session.get('user_id'),
         product_id=product_id,
         payment_method=method,
         amount=product.price,
@@ -92,22 +87,14 @@ def verify(order_id):
 
 @shop_bp.route('/card/<int:order_id>')
 def card_payment(order_id):
-    if not session.get('user_id'):
-        return redirect('/shop/login?next=/shop')
     order = Order.query.get_or_404(order_id)
-    if order.user_id != session['user_id']:
-        return redirect('/shop')
     return render_template('payment_card.html', order=order,
                            card_number=CARD_NUMBER, card_owner=CARD_OWNER)
 
 
 @shop_bp.route('/card/<int:order_id>/confirm', methods=['POST'])
 def card_confirm(order_id):
-    if not session.get('user_id'):
-        return redirect('/shop/login?next=/shop')
     order = Order.query.get_or_404(order_id)
-    if order.user_id != session['user_id']:
-        return redirect('/shop')
     # Mark as pending_payment (waiting admin to verify the SMS receipt)
     order.status = 'pending_payment'
     db.session.commit()

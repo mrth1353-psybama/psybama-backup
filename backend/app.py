@@ -349,6 +349,17 @@ def create_app():
         except Exception:
             db.session.rollback()
 
+        # Migration: allow guest orders (user_id nullable)
+        try:
+            from sqlalchemy import text
+            db.session.execute(text(
+                'ALTER TABLE orders ALTER COLUMN user_id DROP NOT NULL'
+            ))
+            db.session.commit()
+            print('[DB] Migration: orders.user_id is now nullable')
+        except Exception:
+            db.session.rollback()
+
         # Seed placeholder products if none exist
         from models import Product
         if Product.query.count() == 0:
