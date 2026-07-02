@@ -17,11 +17,19 @@ def shop():
     return render_template('shop.html', products=products)
 
 
+@shop_bp.route('/login')
+def shop_login():
+    if session.get('user_id'):
+        next_url = request.args.get('next', '/shop')
+        return redirect(next_url)
+    next_url = request.args.get('next', '/shop')
+    return render_template('shop_login.html', next_url=next_url)
+
+
 @shop_bp.route('/checkout/<int:product_id>')
 def checkout(product_id):
     if not session.get('user_id'):
-        session['next'] = f'/shop/checkout/{product_id}'
-        return redirect('/chat')  # chat page handles auth, then redirects back
+        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     product = Product.query.get_or_404(product_id)
     return render_template('checkout.html', product=product)
 
@@ -29,7 +37,7 @@ def checkout(product_id):
 @shop_bp.route('/checkout/<int:product_id>/pay', methods=['POST'])
 def pay(product_id):
     if not session.get('user_id'):
-        return redirect('/chat')
+        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
 
     product = Product.query.get_or_404(product_id)
     method = request.form.get('payment_method')
@@ -85,7 +93,7 @@ def verify(order_id):
 @shop_bp.route('/card/<int:order_id>')
 def card_payment(order_id):
     if not session.get('user_id'):
-        return redirect('/chat')
+        return redirect('/shop/login?next=/shop')
     order = Order.query.get_or_404(order_id)
     if order.user_id != session['user_id']:
         return redirect('/shop')
@@ -96,7 +104,7 @@ def card_payment(order_id):
 @shop_bp.route('/card/<int:order_id>/confirm', methods=['POST'])
 def card_confirm(order_id):
     if not session.get('user_id'):
-        return redirect('/chat')
+        return redirect('/shop/login?next=/shop')
     order = Order.query.get_or_404(order_id)
     if order.user_id != session['user_id']:
         return redirect('/shop')
@@ -110,8 +118,7 @@ def card_confirm(order_id):
 @shop_bp.route('/orders')
 def orders():
     if not session.get('user_id'):
-        session['next'] = '/shop/orders'
-        return redirect('/chat')
+        return redirect('/shop/login?next=/shop/orders')
     user_orders = (Order.query
                    .filter_by(user_id=session['user_id'])
                    .order_by(Order.created_at.desc())

@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}ورود برای خرید — سای‌باما{% endblock %}
+
+{% block content %}
+<div class="shop-login-page">
+    <div class="shop-login-card">
+
+        <div class="otp-logo-shop">س</div>
+
+        <h1 class="shop-login-title">ورود برای ادامه خرید</h1>
+        <p class="shop-login-sub">برای تکمیل سفارش، شماره موبایل خود را وارد کنید</p>
+
+        <!-- Step 1: Phone -->
+        <div id="stepPhone">
+            <div id="phoneError" class="alert alert-error hidden"></div>
+
+            <div class="form-group">
+                <label class="form-label">شماره موبایل</label>
+                <input type="tel" id="phoneInput" class="form-input phone-input"
+                       placeholder="09xxxxxxxxx" maxlength="11" autocomplete="tel">
+            </div>
+
+            <button class="btn btn-primary w-full" id="btnRequestOtp" data-label="دریافت کد تأیید">
+                دریافت کد تأیید
+            </button>
+
+            <p class="shop-login-note">اطلاعات شما کاملاً محرمانه است</p>
+        </div>
+
+        <!-- Step 2: OTP -->
+        <div id="stepOtp" class="hidden">
+            <p class="text-center text-muted mb-2" id="otpSentTo" style="font-size:0.85rem"></p>
+
+            <div id="otpDisplayBox" class="otp-display-box hidden"></div>
+            <div id="otpError" class="alert alert-error hidden"></div>
+
+            <div class="form-group">
+                <label class="form-label">کد تأیید</label>
+                <input type="text" id="otpInput" class="form-input phone-input"
+                       placeholder="کد ۶ رقمی" maxlength="6" inputmode="numeric"
+                       autocomplete="one-time-code">
+            </div>
+
+            <button class="btn btn-primary w-full" id="btnVerifyOtp" data-label="تأیید و ادامه خرید">
+                تأیید و ادامه خرید
+            </button>
+
+            <div class="otp-timer-shop" id="otpTimer">
+                انقضا در <span id="timerCount">5:00</span>
+            </div>
+
+            <div class="text-center mt-2" style="display:flex;gap:0.5rem;justify-content:center;">
+                <button class="btn btn-ghost btn-sm hidden" id="btnResendOtp">ارسال مجدد کد</button>
+                <button class="btn btn-ghost btn-sm" id="btnChangePhone">تغییر شماره</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+.shop-login-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+.shop-login-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: var(--shadow-md);
+    text-align: right;
+}
+.otp-logo-shop {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 auto 1.25rem;
+}
+.shop-login-title {
+    font-family: var(--font-title);
+    font-size: 1.2rem;
+    color: var(--ocean-blue);
+    text-align: center;
+    margin-bottom: 0.35rem;
+}
+.shop-login-sub {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.shop-login-note {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-align: center;
+    margin-top: 0.75rem;
+}
+.otp-display-box {
+    background: var(--cloud-blue);
+    border: 1px dashed var(--ocean-blue);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 0.15em;
+    color: var(--ocean-blue);
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    direction: ltr;
+}
+.otp-timer-shop {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+}
+.otp-timer-shop.expired { color: var(--error); }
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+'use strict';
+(function() {
+    const NEXT_URL = {{ next_url | tojson }};
+
+    let currentPhone = '';
+    let timerInterval = null;
+    let timerSeconds = 300;
+
+    const stepPhone  = document.getElementById('stepPhone');
+    const stepOtp    = document.getElementById('stepOtp');
+    const phoneInput = document.getElementById('phoneInput');
+    const otpInput   = document.getElementById('otpInput');
+    const phoneError = document.getElementById('phoneError');
+    const otpError   = document.getElementById('otpError');
+    const otpDisplay = document.getElementById('otpDisplayBox');
+    const otpSentTo  = document.getElementById('otpSentTo');
+    const timerEl    = document.getElementById('timerCount');
+    const timerLabel = document.getElementById('otpTimer');
+    const btnRequest = document.getElementById('btnRequestOtp');
+    const btnVerify  = document.getElementById('btnVerifyOtp');
+    const btnResend  = document.getElementById('btnResendOtp');
+    const btnChange  = document.getElementById('btnChangePhone');
+
+    function showError(el, msg) { el.textContent = msg; el.classList.remove('hidden'); }
+    function hideError(el)      { el.classList.add('hidden'); }
+
+    function setLoading(btn, loading) {
+        btn.disabled = loading;
+        btn.innerHTML = loading
+            ? '<span class="spinner"></span>'
+            : btn.dataset.label;
+    }
+
+    function startTimer() {
+        timerSeconds = 300;
+        clearInterval(timerInterval);
+        btnResend.classList.add('hidden');
+        timerLabel.classList.remove('expired');
+
+        timerInterval = setInterval(() => {
+            timerSeconds--;
+            const m = Math.floor(timerSeconds / 60);
+            const s = timerSeconds % 60;
+            timerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+            if (timerSeconds <= 0) {
+                clearInterval(timerInterval);
+                timerLabel.classList.add('expired');
+                timerEl.textContent = '0:00';
+                btnResend.classList.remove('hidden');
+            }
+        }, 1000);
+    }
+
+    async function requestOtp() {
+        const phone = phoneInput.value.trim();
+        hideError(phoneError);
+        if (!/^09\d{9}$/.test(phone)) {
+            showError(phoneError, 'شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود');
+            return;
+        }
+        setLoading(btnRequest, true);
+        try {
+            const res  = await fetch('/api/auth/request-otp', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({phone_number: phone})
+            });
+            const data = await res.json();
+            if (!res.ok) { showError(phoneError, data.message || 'خطا در ارسال کد'); return; }
+            currentPhone = phone;
+            otpSentTo.textContent = `کد به ${phone} ارسال شد`;
+            if (data.display_otp) {
+                otpDisplay.textContent = data.display_otp;
+                otpDisplay.classList.remove('hidden');
+            } else {
+                otpDisplay.classList.add('hidden');
+            }
+            stepPhone.classList.add('hidden');
+            stepOtp.classList.remove('hidden');
+            otpInput.focus();
+            startTimer();
+        } catch (e) {
+            showError(phoneError, 'خطا در اتصال به سرور');
+        } finally {
+            setLoading(btnRequest, false);
+        }
+    }
+
+    async function verifyOtp() {
+        const code = otpInput.value.trim();
+        hideError(otpError);
+        if (!code || code.length < 4) { showError(otpError, 'کد تأیید را وارد کنید'); return; }
+        setLoading(btnVerify, true);
+        try {
+            const res  = await fetch('/api/auth/verify-otp', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({phone_number: currentPhone, otp_code: code})
+            });
+            const data = await res.json();
+            if (!res.ok) { showError(otpError, data.message || 'کد اشتباه است'); return; }
+            clearInterval(timerInterval);
+            window.location.href = NEXT_URL;
+        } catch (e) {
+            showError(otpError, 'خطا در اتصال به سرور');
+        } finally {
+            setLoading(btnVerify, false);
+        }
+    }
+
+    btnRequest.addEventListener('click', requestOtp);
+    btnVerify.addEventListener('click', verifyOtp);
+
+    btnResend.addEventListener('click', () => {
+        stepOtp.classList.add('hidden');
+        stepPhone.classList.remove('hidden');
+        otpInput.value = '';
+        hideError(otpError);
+        otpDisplay.classList.add('hidden');
+    });
+
+    btnChange.addEventListener('click', () => {
+        stepOtp.classList.add('hidden');
+        stepPhone.classList.remove('hidden');
+        otpInput.value = '';
+        hideError(otpError);
+        otpDisplay.classList.add('hidden');
+        clearInterval(timerInterval);
+    });
+
+    phoneInput.addEventListener('keydown', e => { if (e.key === 'Enter') requestOtp(); });
+    otpInput.addEventListener('keydown',   e => { if (e.key === 'Enter') verifyOtp();  });
+})();
+</script>
+{% endblock %}
