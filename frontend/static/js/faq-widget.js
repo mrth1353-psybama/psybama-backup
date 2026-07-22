@@ -16,7 +16,7 @@
             </div>
             <div class="faq-widget-messages"></div>
             <div class="faq-widget-input">
-                <input type="text" placeholder="سوالت رو بپرس..." maxlength="300" />
+                <input type="text" placeholder="سوال خود را بپرسید..." maxlength="300" />
                 <button type="button" class="faq-widget-send">ارسال</button>
             </div>
         `;
@@ -29,7 +29,7 @@
         const sendBtn = panel.querySelector('.faq-widget-send');
         const closeBtn = panel.querySelector('.faq-widget-close');
 
-        appendMessage(messagesEl, 'assistant', 'سلام! درباره خدمات، قیمت‌ها یا رزرو مشاوره سوال داری؟');
+        appendMessage(messagesEl, 'assistant', 'سلام! درباره خدمات، قیمت‌ها یا رزرو مشاوره سوال دارید؟');
 
         btn.addEventListener('click', () => {
             panel.classList.toggle('open');
@@ -56,7 +56,7 @@
                     appendMessage(messagesEl, 'assistant', data.reply || data.message || 'خطایی رخ داد.');
                 })
                 .catch(() => {
-                    appendMessage(messagesEl, 'assistant', 'ارتباط برقرار نشد. دوباره تلاش کن.');
+                    appendMessage(messagesEl, 'assistant', 'ارتباط برقرار نشد. دوباره تلاش کنید.');
                 })
                 .finally(() => {
                     isLoading = false;

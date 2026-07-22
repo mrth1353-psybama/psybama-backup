@@ -11,7 +11,7 @@ const Chat = (() => {
     const btnLogout   = document.getElementById('btnLogout');
     const convListEl  = document.getElementById('convList');
 
-    const WELCOME_TEXT = 'سلام. به سای‌باما خوش آمدی.\nاینجا یک حریم امن و بدون قضاوت است؛ هر زمان که آماده بودی، بنویس که در محیط کارت چه می‌گذرد.';
+    const WELCOME_TEXT = 'سلام. به سای‌باما خوش آمدید.\nاینجا یک حریم امن و بدون قضاوت است؛ هر زمان که آماده بودید، بنویسید که در محیط کارتان چه می‌گذرد.';
 
     function formatTime(isoString) {
         if (!isoString) return '';
@@ -180,7 +180,7 @@ const Chat = (() => {
         const welcome = document.createElement('div');
         welcome.className = 'welcome-msg';
         welcome.id = 'welcomeMsg';
-        welcome.innerHTML = '<p>سلام. به سای‌باما خوش آمدی.<br>اینجا یک حریم امن و بدون قضاوت است؛ هر زمان که آماده بودی، بنویس که در محیط کارت چه می‌گذرد.</p>';
+        welcome.innerHTML = '<p>سلام. به سای‌باما خوش آمدید.<br>اینجا یک حریم امن و بدون قضاوت است؛ هر زمان که آماده بودید، بنویسید که در محیط کارتان چه می‌گذرد.</p>';
         messagesEl.appendChild(welcome);
     }
 

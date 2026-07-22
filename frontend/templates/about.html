@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}درباره من — دکتر مرضیه فیضی{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ── Page Header ──────────────────────────────── */
+.page-hero {
+    background: linear-gradient(160deg, var(--pure-white) 0%, var(--cloud-blue) 60%, var(--mint-mist) 100%);
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+}
+
+.page-hero h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
+}
+
+.page-hero h1 em {
+    font-style: normal;
+    color: var(--ocean-blue);
+}
+
+.page-hero p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.85;
+}
+
+/* ── About section ────────────────────────────── */
+.about-section {
+    padding: 4rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.about-portrait {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    margin: 0 auto 2rem;
+    background: linear-gradient(160deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: var(--font-title);
+    font-size: 3rem;
+}
+
+.about-intro {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.about-intro h2 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.75rem;
+}
+
+.about-intro p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.9;
+}
+
+.about-belief {
+    background: var(--cloud-blue);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem 1.75rem;
+    margin: 2rem 0;
+    color: var(--slate-blue);
+    font-size: 0.95rem;
+    line-height: 1.9;
+    border-inline-start: 4px solid var(--ocean-blue);
+}
+
+/* ── Brand story ───────────────────────────────── */
+.story-section {
+    background: var(--arctic-white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 2rem;
+}
+
+.story-inner {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.story-inner h2 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--slate-blue);
+    margin-bottom: 1.75rem;
+    text-align: center;
+}
+
+.story-inner p {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 2;
+    margin-bottom: 1.25rem;
+}
+
+.story-path {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+}
+
+.story-path span {
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    color: var(--ocean-blue);
+    background: var(--cloud-blue);
+    padding: 0.5rem 1.1rem;
+    border-radius: 20px;
+}
+
+.story-path i {
+    color: var(--text-muted);
+    font-style: normal;
+}
+
+/* ── Credentials ───────────────────────────────── */
+.credentials-section {
+    max-width: 680px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+    text-align: center;
+}
+
+.credentials-section h2 {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    color: var(--slate-blue);
+    margin-bottom: 1.5rem;
+}
+
+.credentials-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.credentials-list li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.credentials-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage-teal);
+    flex-shrink: 0;
+}
+
+.about-cta {
+    text-align: center;
+    padding: 0 2rem 5rem;
+}
+
+.about-cta a {
+    display: inline-block;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Page Hero -->
+<section class="page-hero">
+    <h1>همراه امن <em>سلامت روان در محیط کار</em></h1>
+    <p>روان‌شناس سازمانی؛ گره‌های کور شغلی را از ریشه پیدا می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم.</p>
+</section>
+
+<!-- Bio -->
+<section class="about-section">
+    <div class="about-portrait">س</div>
+    <div class="about-intro">
+        <h2>مرضیه فیضی هستم</h2>
+        <p>
+            دکترای روان‌شناسی با تمرکز بر روان‌شناسی سازمانی از دانشگاه علوم پزشکی شهید بهشتی، ساکن ایران.
+            قوت اصلی‌ام تبدیل علم پیچیده روان‌شناسی به زبان ساده و قابل‌استفاده است — و مهارت انسانی‌ام
+            دیدن الگوهایی است که دیگران نمی‌بینند. این دو با هم به من کمک می‌کنند ریشه واقعی مشکل را پیدا کنم،
+            نه فقط علائمش را.
+        </p>
+    </div>
+    <div class="about-belief">
+        عمیقاً باور دارم که هر انسانی — حتی در سخت‌ترین شرایط — پتانسیل حرکت دارد. این باور هر تصمیم حرفه‌ای‌ام را هدایت می‌کند.
+    </div>
+</section>
+
+<!-- Brand Story -->
+<section class="story-section">
+    <div class="story-inner">
+        <h2>لحظه تحول</h2>
+        <p>خیلی از متخصصانی که پیشم می‌آیند یک چیز مشترک دارند — سخت کار کرده‌اند، چیزهای زیادی امتحان کرده‌اند، اما هنوز گم‌اند. می‌دانند چیزی درست نیست، اما نمی‌دانند کجا.</p>
+        <p>من این حس را می‌شناسم — نه از کتاب، بلکه از تجربه.</p>
+        <p>دو سال در دانشگاه علوم پزشکی کار کردم. حجم اثرگذاری‌ام آن‌قدر بود که حتی مدیران باورشان نمی‌شد. موقع تمدید قرارداد — رد شدم. می‌توانستم تسلیم شرایط شوم. اما یک سوال پرسیدم: پتانسیل واقعی‌ام کجاست؟</p>
+        <p>دکترا گرفتم. پیشنهاد هیئت علمی را رد کردم. کسب‌وکار خودم را ساختم — در کرونا، در جنگ، در هر شرایطی. نه به‌خاطر اینکه شرایط آسان بود، بلکه چون یاد گرفتم مسیرم را در همین شرایط ببینم.</p>
+        <p>حالا همین را به متخصصان ایرانی یاد می‌دهم.</p>
+
+        <div class="story-path">
+            <span>پذیرش</span>
+            <i>←</i>
+            <span>دیدن پتانسیل</span>
+            <i>←</i>
+            <span>ساختن در همین شرایط</span>
+        </div>
+    </div>
+</section>
+
+<!-- Credentials -->
+<section class="credentials-section">
+    <h2>اعتبار علمی</h2>
+    <ul class="credentials-list">
+        <li>دکترای روان‌شناسی بالینی، تمرکز بر روان‌شناسی سازمانی — دانشگاه علوم پزشکی شهید بهشتی</li>
+        <li>بنیان‌گذار سای‌باما، دستیار هوشمند فارسی برای سلامت روان در محیط کار</li>
+        <li>بیش از ۵۰۰۰ جلسه مشاوره فردی و سازمانی</li>
+    </ul>
+</section>
+
+<!-- CTA -->
+<section class="about-cta">
+    <a href="/chat" class="btn btn-primary btn-lg">شروع گفتگو با سای‌باما</a>
+</section>
+
+{% endblock %}

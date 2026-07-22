@@ -186,7 +186,7 @@ input, textarea {
 }
 
 .btn-primary:hover {
-    background: #1a54967;
+    background: var(--ocean-blue);
     filter: brightness(1.08);
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);

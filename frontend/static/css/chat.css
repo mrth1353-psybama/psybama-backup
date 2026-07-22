@@ -96,7 +96,7 @@
 
 .btn-assessment:hover {
     background: #ebe5d8;
-    border-color: #C9A84C;
+    border-color: var(--sage-teal);
 }
 
 /* ── Chat body: sidebar + main ───────────────────── */
