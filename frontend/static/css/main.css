@@ -419,11 +419,11 @@ input, textarea {
 
 /* ── Footer ──────────────────────────────────────── */
 .footer {
-    background: var(--pure-white);
+    background: var(--arctic-white);
     border-top: 1px solid var(--border);
     padding: 2rem;
     text-align: center;
-    color: var(--text-muted);
+    color: var(--slate-blue);
     font-size: 0.85rem;
     margin-top: auto;
 }
