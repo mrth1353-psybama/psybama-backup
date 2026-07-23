@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify, session, send_file, render_templa
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from auth import admin_required
-from models import db, User, Conversation, Message, Assessment, ContactRequest, Order, Product
+from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product
 from models import iran_now
 
 admin_bp = Blueprint('admin', __name__)
@@ -143,6 +143,27 @@ def mark_contact_read(req_id):
 def delete_contact_request(req_id):
     cr = ContactRequest.query.get_or_404(req_id)
     db.session.delete(cr)
+    db.session.commit()
+    return jsonify({'success': True})
+
+
+@admin_bp.route('/assessment-leads')
+@admin_required
+def list_assessment_leads():
+    leads = AssessmentLead.query.order_by(AssessmentLead.created_at.desc()).all()
+    result = []
+    for lead in leads:
+        d = lead.to_dict()
+        d['has_assessment'] = Assessment.query.filter_by(lead_id=lead.id).first() is not None
+        result.append(d)
+    return jsonify({'leads': result})
+
+
+@admin_bp.route('/assessment-leads/<int:lead_id>/delete', methods=['POST'])
+@admin_required
+def delete_assessment_lead(lead_id):
+    lead = AssessmentLead.query.get_or_404(lead_id)
+    db.session.delete(lead)
     db.session.commit()
     return jsonify({'success': True})
 

@@ -68,6 +68,7 @@ const Admin = (() => {
         loadUsers();
         loadConversations();
         loadContacts();
+        loadLeads();
         loadOrders();
         loadProducts();
     }
@@ -398,6 +399,49 @@ const Admin = (() => {
         } catch (e) {}
     }
 
+    // ── Assessment Leads ─────────────────────────────────
+
+    async function loadLeads() {
+        const tbody = document.getElementById('leadsTableBody');
+        try {
+            const res = await fetch('/admin/assessment-leads');
+            const data = await res.json();
+
+            if (!data.leads.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="padding:2rem">هنوز لیدی ثبت نشده است</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.leads.map(l => `
+                <tr id="lead-row-${l.id}">
+                    <td>${l.id}</td>
+                    <td>${escapeHtml(l.name)}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(l.email)}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(l.phone)}</td>
+                    <td style="white-space:nowrap">${formatDateTime(l.created_at)}</td>
+                    <td>
+                        ${l.has_assessment
+                            ? '<span class="badge badge-success">تکمیل شد ✓</span>'
+                            : '<span class="badge">—</span>'}
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteLead(${l.id})">🗑 حذف</button>
+                    </td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    async function deleteLead(id) {
+        if (!confirm('این لید حذف شود؟')) return;
+        try {
+            await fetch(`/admin/assessment-leads/${id}/delete`, {method: 'POST'});
+            await loadLeads();
+        } catch (e) {}
+    }
+
     // ── Search ────────────────────────────────────────
 
     async function doSearch() {
@@ -514,5 +558,5 @@ const Admin = (() => {
 
     return {viewConversation, markContactRead, deleteContact,
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
-            saveProduct, toggleProduct};
+            saveProduct, toggleProduct, deleteLead};
 })();

@@ -5,6 +5,12 @@ services:
     buildCommand: pip install -r backend/requirements.txt
     startCommand: gunicorn --chdir backend app:app --bind 0.0.0.0:$PORT --workers 1 --timeout 120
     envVars:
+      - key: PRIMARY_API_KEY
+        sync: false
+      - key: PRIMARY_BASE_URL
+        sync: false
+      - key: PRIMARY_MODEL
+        value: claude-haiku-4-5
       - key: GROQ_API_KEY
         sync: false
       - key: GROQ_MODEL

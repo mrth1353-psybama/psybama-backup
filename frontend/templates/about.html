@@ -39,18 +39,36 @@
     margin: 0 auto;
 }
 
-.about-portrait {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
+/* Photo slot: shows the real photo once dropped in /static/images/;
+   falls back to the gradient monogram if the file is missing. */
+.photo-slot {
+    position: relative;
+    width: 240px;
+    height: 300px;
+    border-radius: var(--radius-xl);
     margin: 0 auto 2rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+}
+
+.photo-slot-fallback {
+    position: absolute;
+    inset: 0;
     background: linear-gradient(160deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     font-family: var(--font-title);
-    font-size: 3rem;
+    font-size: 3.5rem;
+}
+
+.photo-slot img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .about-intro {
@@ -191,12 +209,20 @@
 <!-- Page Hero -->
 <section class="page-hero">
     <h1>همراه امن <em>سلامت روان در محیط کار</em></h1>
-    <p>روان‌شناس سازمانی؛ گره‌های کور شغلی را از ریشه پیدا می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم.</p>
+    <p>روان‌شناس سازمانی؛ گره‌های کور شغلی را ریشه‌یابی می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم.</p>
 </section>
 
 <!-- Bio -->
 <section class="about-section">
-    <div class="about-portrait">س</div>
+    <!--
+        محل عکس: صحنه «تخصص» از راهنمای عکاسی برندگاید.
+        فایل را با نام about-portrait.jpg و ابعاد ۱۲۰۰×۱۵۰۰ پیکسل (نسبت ۴:۵، عمودی)
+        در مسیر frontend/static/images/ قرار دهید — خودکار جایگزین این جعبه می‌شود.
+    -->
+    <div class="photo-slot">
+        <div class="photo-slot-fallback">س</div>
+        <img src="/static/images/about-portrait.jpg" alt="دکتر مرضیه فیضی" onerror="this.style.display='none'">
+    </div>
     <div class="about-intro">
         <h2>مرضیه فیضی هستم</h2>
         <p>

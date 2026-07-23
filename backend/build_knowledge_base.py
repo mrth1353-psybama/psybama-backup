@@ -23,16 +23,21 @@ CHUNK_OVERLAP = 100
 
 def extract_pdf(path: Path) -> str:
     try:
-        from pypdf import PdfReader
-        reader = PdfReader(str(path))
+        import pdfplumber
+        from bidi.algorithm import get_display
         pages = []
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                pages.append(text)
+        with pdfplumber.open(str(path)) as pdf:
+            for page in pdf.pages:
+                text = page.extract_text()
+                if not text:
+                    continue
+                # PDFs with RTL (Persian/Arabic) content extract in visual glyph
+                # order, not logical reading order — bidi reorders each line.
+                fixed_lines = [get_display(line, base_dir='L') for line in text.split('\n')]
+                pages.append('\n'.join(fixed_lines))
         return '\n'.join(pages)
     except ImportError:
-        print('  ERROR: pypdf not installed. Run: pip install pypdf')
+        print('  ERROR: pdfplumber/python-bidi not installed. Run: pip install pdfplumber python-bidi')
         return ''
     except Exception as e:
         print(f'  ERROR reading PDF: {e}')

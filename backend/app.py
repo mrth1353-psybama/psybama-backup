@@ -18,6 +18,8 @@ from shop_routes import shop_bp
 from rag_handler import load_knowledge_base
 
 
+EBOOK_PRODUCT_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
+
 MBI_ITEMS = {
     'EE': [1, 2, 3, 6, 8, 13, 14, 16, 20],
     'DP': [5, 10, 11, 15, 22],
@@ -144,7 +146,9 @@ def create_app():
 
     @app.route('/assessment')
     def assessment():
-        return render_template('assessment.html')
+        from models import Product
+        ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        return render_template('assessment.html', ebook_product=ebook_product)
 
     # ── Auth API ──────────────────────────────────────────────────────────────
 
@@ -306,6 +310,30 @@ def create_app():
 
     # ── Assessment API ────────────────────────────────────────────────────────
 
+    @app.route('/api/assessment/lead', methods=['POST'])
+    def submit_assessment_lead():
+        import re
+        data = request.get_json()
+        name = ((data or {}).get('name') or '').strip()
+        email = ((data or {}).get('email') or '').strip()
+        phone = ((data or {}).get('phone') or '').strip()
+
+        if not name:
+            return jsonify({'error': 'invalid_name', 'message': 'نام و نام خانوادگی الزامی است'}), 400
+        if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+            return jsonify({'error': 'invalid_email', 'message': 'ایمیل معتبر نیست'}), 400
+        if not re.match(r'^09\d{9}$', phone):
+            return jsonify({'error': 'invalid_phone', 'message': 'شماره موبایل معتبر نیست'}), 400
+
+        from models import AssessmentLead
+        lead = AssessmentLead(name=name, email=email, phone=phone)
+        db.session.add(lead)
+        db.session.commit()
+
+        session['assessment_lead_id'] = lead.id
+
+        return jsonify({'success': True})
+
     @app.route('/api/assessment/submit', methods=['POST'])
     def submit_assessment():
         data = request.get_json()
@@ -324,8 +352,10 @@ def create_app():
 
         from models import Assessment
         user_id = session.get('user_id')
+        lead_id = session.get('assessment_lead_id')
         assessment = Assessment(
             user_id=user_id,
+            lead_id=lead_id,
             emotional_exhaustion=scores['ee']['score'],
             depersonalization=scores['dp']['score'],
             personal_accomplishment=scores['pa']['score'],
@@ -364,6 +394,17 @@ def create_app():
         except Exception:
             db.session.rollback()
 
+        # Migration: add lead_id column to assessments if it doesn't exist yet
+        try:
+            from sqlalchemy import text
+            db.session.execute(text(
+                'ALTER TABLE assessments ADD COLUMN lead_id INTEGER'
+            ))
+            db.session.commit()
+            print('[DB] Migration: added lead_id column to assessments')
+        except Exception:
+            db.session.rollback()
+
         # Seed placeholder products if none exist
         from models import Product
         if Product.query.count() == 0:
@@ -392,6 +433,18 @@ def create_app():
             zendegi_product.price = 28000000
             db.session.commit()
             print('[DB] Updated "دوره زندگیِ هوشمندانه" price to 28,000,000')
+
+        # Seed placeholder ebook product for the post-assessment popup (name/price to be finalized)
+        ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        if not ebook_product:
+            ebook_product = Product(
+                name=EBOOK_PRODUCT_NAME,
+                description='توضیح کوتاه ایبوک — بعداً جایگزین می‌شود.',
+                price=190000
+            )
+            db.session.add(ebook_product)
+            db.session.commit()
+            print('[DB] Seeded placeholder ebook product')
 
         load_knowledge_base()
 

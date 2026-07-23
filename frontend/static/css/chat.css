@@ -80,7 +80,7 @@
 .btn-assessment {
     background: var(--warm-sand);
     color: var(--slate-blue);
-    border: 1.5px solid #DDD0B8;
+    border: 1.5px solid var(--warm-sand-border);
     padding: 0.45rem 1rem;
     border-radius: var(--radius-md);
     font-size: 0.82rem;
@@ -95,7 +95,7 @@
 }
 
 .btn-assessment:hover {
-    background: #ebe5d8;
+    background: var(--warm-sand-border);
     border-color: var(--sage-teal);
 }
 

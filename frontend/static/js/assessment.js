@@ -119,7 +119,7 @@ function levelFa(level) {
 function renderResults(scores) {
     document.getElementById('questionsSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'block';
-    document.querySelector('.assessment-intro').style.display = 'none';
+    document.getElementById('mainIntro').style.display = 'none';
 
     const grid = document.getElementById('subscaleGrid');
     const subscales = [
@@ -170,6 +170,11 @@ async function submitAssessment() {
 
         renderResults(data.scores);
 
+        const ebookModal = document.getElementById('ebookModal');
+        if (ebookModal) {
+            setTimeout(() => ebookModal.classList.remove('hidden'), 10000);
+        }
+
     } catch (e) {
         alert('خطا در اتصال به سرور');
         btn.disabled = false;
@@ -177,16 +182,83 @@ async function submitAssessment() {
     }
 }
 
+async function submitLead(e) {
+    e.preventDefault();
+
+    const errorBox = document.getElementById('leadGateError');
+    const name = document.getElementById('leadName').value.trim();
+    const email = document.getElementById('leadEmail').value.trim();
+    const phone = document.getElementById('leadPhone').value.trim();
+
+    errorBox.classList.add('hidden');
+
+    if (!name) {
+        errorBox.textContent = 'نام و نام خانوادگی الزامی است';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errorBox.textContent = 'ایمیل معتبر نیست';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+    if (!/^09\d{9}$/.test(phone)) {
+        errorBox.textContent = 'شماره موبایل معتبر نیست';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+
+    const btn = document.getElementById('btnLeadSubmit');
+    btn.disabled = true;
+    btn.textContent = 'در حال ثبت...';
+
+    try {
+        const res = await fetch('/api/assessment/lead', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({name, email, phone})
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            errorBox.textContent = data.message || 'خطا در ثبت اطلاعات. لطفاً دوباره امتحان کنید.';
+            errorBox.classList.remove('hidden');
+            btn.disabled = false;
+            btn.textContent = 'شروع پرسشنامه';
+            return;
+        }
+
+        document.getElementById('leadGateSection').style.display = 'none';
+        document.getElementById('mainIntro').style.display = 'block';
+        document.getElementById('questionsSection').style.display = 'block';
+        buildQuestions();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+
+    } catch (e) {
+        errorBox.textContent = 'خطا در اتصال به سرور';
+        errorBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'شروع پرسشنامه';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    buildQuestions();
+    document.getElementById('leadGateForm').addEventListener('submit', submitLead);
 
     document.getElementById('btnSubmit').addEventListener('click', submitAssessment);
+
+    const btnSkipEbook = document.getElementById('btnSkipEbook');
+    if (btnSkipEbook) {
+        btnSkipEbook.addEventListener('click', () => {
+            document.getElementById('ebookModal').classList.add('hidden');
+        });
+    }
 
     document.getElementById('btnRetake').addEventListener('click', () => {
         responses = new Array(22).fill(null);
         document.getElementById('resultsSection').style.display = 'none';
         document.getElementById('questionsSection').style.display = 'block';
-        document.querySelector('.assessment-intro').style.display = 'block';
+        document.getElementById('mainIntro').style.display = 'block';
         buildQuestions();
         document.getElementById('progressFill').style.width = '0%';
         document.getElementById('progressLabel').textContent = '';

@@ -81,7 +81,7 @@
 
 .service-icon.blue   { background: var(--cloud-blue); }
 .service-icon.teal   { background: var(--mint-mist); }
-.service-icon.coral  { background: #FEF0EC; }
+.service-icon.coral  { background: var(--coral-mist); }
 
 .service-card h3 {
     font-family: var(--font-title);
@@ -247,7 +247,7 @@
 
 .online-dot-white {
     width: 8px; height: 8px;
-    background: #4ADE80;
+    background: var(--success);
     border-radius: 50%;
     display: inline-block;
     margin-right: 4px;
@@ -292,11 +292,71 @@
     text-align: right;
 }
 
+/* ── Meet Dr. Feyzi ────────────────────────────── */
+.meet-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 2rem 4rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.meet-photo {
+    position: relative;
+    width: 200px;
+    height: 250px;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+}
+
+.meet-photo-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: var(--font-title);
+    font-size: 3rem;
+}
+
+.meet-photo img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.meet-text {
+    flex: 1;
+    min-width: 260px;
+    max-width: 480px;
+}
+
+.meet-text h2 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.75rem;
+}
+
+.meet-text p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.85;
+    margin-bottom: 1.25rem;
+}
+
 /* ── Assessment Section ───────────────────────── */
 .assessment-section {
-    background: var(--warm-sand);
-    border-top: 1px solid #DDD0B8;
-    border-bottom: 1px solid #DDD0B8;
+    background: linear-gradient(160deg, #3D5166 0%, #1D5FA6 100%);
     padding: 5rem 2rem;
     text-align: center;
 }
@@ -309,12 +369,12 @@
 .assessment-section h2 {
     font-family: var(--font-title);
     font-size: 1.65rem;
-    color: var(--slate-blue);
+    color: white;
     margin-bottom: 0.85rem;
 }
 
 .assessment-section p {
-    color: var(--text-muted);
+    color: rgba(255,255,255,0.8);
     font-size: 0.95rem;
     line-height: 1.85;
     margin-bottom: 2rem;
@@ -333,13 +393,13 @@
     align-items: center;
     gap: 0.6rem;
     font-size: 0.85rem;
-    color: var(--text-primary);
+    color: white;
 }
 
 .assessment-step-num {
     width: 28px; height: 28px;
-    background: var(--ocean-blue);
-    color: white;
+    background: white;
+    color: var(--ocean-blue);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.75rem;
@@ -388,7 +448,7 @@
         <div class="service-card teal">
             <div class="service-icon teal">📋</div>
             <h3>پرسشنامه استاندارد فرسودگی شغلی</h3>
-            <p>پرسشنامه ماسلاچ — معتبرترین ابزار سنجش فرسودگی شغلی در جهان. نتایج فوری با تفسیر اختصاصی.</p>
+            <p>پرسشنامه ماسلاچ (MBI) — ابزار علمی استاندارد برای سنجش فرسودگی شغلی. نتایج فوری با تفسیر اختصاصی.</p>
             <a href="/assessment" class="btn btn-teal">شروع پرسشنامه</a>
         </div>
 
@@ -416,11 +476,11 @@
                 پشتوانه علمی، زبان فارسی، و درک واقعیت محیط کار ایران.
             </p>
             <ul class="chatbot-feature-points">
-                <li>آموزش‌دیده با منابع علمی تخصصی فرسودگی شغلی</li>
-                <li>فارسی کامل — درک گویش و اصطلاحات محیط کار ایران</li>
-                <li>گفتگوها محرمانه و رازدار ذخیره می‌شوند</li>
+                <li>آموزش‌دیده با منابع علمی تخصصی</li>
+                <li>فارسی کامل — درک شرایط محیط کار ایران</li>
+                <li>گفتگوها کاملا محرمانه است</li>
                 <li>همین الان شروع کنید — بدون نوبت‌دهی</li>
-                <li>رایگان برای همه کاربران</li>
+                <li>رایگان( موقتا برای همه کاربران)</li>
             </ul>
             <div style="display:flex; gap:1rem; flex-wrap:wrap;">
                 <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با سای‌باما</a>
@@ -445,12 +505,30 @@
                     خسته‌ام. انگار هرچقدر کار می‌کنم تفاوتی نمی‌کنه...
                 </div>
                 <div class="preview-msg bot">
-                    این احساس را می‌شنوم. این خستگی که کارتان دیگر معنایی ندارد — یکی از نشانه‌های مهم فرسودگی شغلی است. بیشتر بگویید...
+                    این خستگی که کارتان دیگر معنایی ندارد — یکی از نشانه‌های مهم فرسودگی شغلی است. بیشتر بگویید...
                 </div>
             </div>
             <div class="preview-input">پیام خود را بنویسید...</div>
         </div>
 
+    </div>
+</section>
+
+<!-- Meet Dr. Feyzi -->
+<section class="meet-section">
+    <!--
+        محل عکس: صحنه «تخصص» یا «تفکر» از راهنمای عکاسی برندگاید.
+        فایل را با نام home-portrait.jpg و ابعاد ۱۲۰۰×۱۵۰۰ پیکسل (نسبت ۴:۵، عمودی)
+        در مسیر frontend/static/images/ قرار دهید — خودکار جایگزین این جعبه می‌شود.
+    -->
+    <div class="meet-photo">
+        <div class="meet-photo-fallback">س</div>
+        <img src="/static/images/home-portrait.jpg" alt="دکتر مرضیه فیضی" onerror="this.style.display='none'">
+    </div>
+    <div class="meet-text">
+        <h2>مرضیه فیضی هستم</h2>
+        <p>روان‌شناس سازمانی؛ گره‌های کور شغلی را ریشه‌یابی می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم — برای واقعیت محیط کار ایران.</p>
+        <a href="/about" class="btn btn-outline">بیشتر بدانید</a>
     </div>
 </section>
 
@@ -476,7 +554,7 @@
                 <span>بازخورد اختصاصی</span>
             </div>
         </div>
-        <a href="/assessment" class="btn btn-primary btn-lg">پرسشنامه فرسودگی شغلی</a>
+        <a href="/assessment" class="btn btn-white btn-lg">پرسشنامه فرسودگی شغلی</a>
     </div>
 </section>
 

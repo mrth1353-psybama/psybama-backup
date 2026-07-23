@@ -82,8 +82,9 @@
         <div class="admin-tabs">
             <button class="tab-btn active" data-tab="users">👥 کاربران</button>
             <button class="tab-btn" data-tab="conversations">💬 گفتگوها</button>
-            <button class="tab-btn" data-tab="contacts">📩 درخواست مشاوره <span id="unreadBadge" class="hidden" style="background:#E53E3E;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
-            <button class="tab-btn" data-tab="orders">🛍 سفارش‌ها <span id="pendingOrdersBadge" class="hidden" style="background:#E53E3E;color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
+            <button class="tab-btn" data-tab="contacts">📩 درخواست مشاوره <span id="unreadBadge" class="hidden" style="background:var(--error);color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
+            <button class="tab-btn" data-tab="leads">📝 لیدهای پرسشنامه</button>
+            <button class="tab-btn" data-tab="orders">🛍 سفارش‌ها <span id="pendingOrdersBadge" class="hidden" style="background:var(--error);color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
             <button class="tab-btn" data-tab="products">📦 محصولات</button>
             <button class="tab-btn" data-tab="search">🔍 جستجو</button>
         </div>
@@ -155,6 +156,28 @@
                     </thead>
                     <tbody id="contactsTableBody">
                         <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Assessment Leads Tab -->
+        <div class="tab-content" id="tab-leads">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>نام</th>
+                            <th>ایمیل</th>
+                            <th>تلفن</th>
+                            <th>تاریخ</th>
+                            <th>تکمیل پرسشنامه</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leadsTableBody">
+                        <tr><td colspan="7" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
                     </tbody>
                 </table>
             </div>

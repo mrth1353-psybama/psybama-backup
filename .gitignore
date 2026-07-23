@@ -4,6 +4,8 @@ __pycache__/
 *.pyo
 data/
 knowledge_base/
+archive/
+reference/
 *.db
 .DS_Store
 venv/

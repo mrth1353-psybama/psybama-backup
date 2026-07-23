@@ -97,6 +97,25 @@ class ContactRequest(db.Model):
         }
 
 
+class AssessmentLead(db.Model):
+    __tablename__ = 'assessment_leads'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    created_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
 class Product(db.Model):
     __tablename__ = 'products'
 
@@ -157,6 +176,7 @@ class Assessment(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
 
     # MBI subscale raw scores
     emotional_exhaustion = db.Column(db.Float, nullable=False)      # EE: 0-54
@@ -174,6 +194,7 @@ class Assessment(db.Model):
         return {
             'id': self.id,
             'user_id': self.user_id,
+            'lead_id': self.lead_id,
             'emotional_exhaustion': self.emotional_exhaustion,
             'depersonalization': self.depersonalization,
             'personal_accomplishment': self.personal_accomplishment,
