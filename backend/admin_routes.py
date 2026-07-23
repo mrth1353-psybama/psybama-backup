@@ -356,6 +356,56 @@ def export_excel():
     ws_contacts.column_dimensions['D'].width = 40
     ws_contacts.column_dimensions['E'].width = 22
 
+    # Sheet 5: Assessment Leads
+    ws_leads = wb.create_sheet('لیدهای پرسشنامه')
+    headers_l = ['شناسه', 'نام', 'ایمیل', 'تلفن', 'تاریخ', 'تکمیل پرسشنامه']
+    ws_leads.append(headers_l)
+    for cell in ws_leads[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for lead in AssessmentLead.query.order_by(AssessmentLead.created_at.desc()).all():
+        has_assessment = Assessment.query.filter_by(lead_id=lead.id).first() is not None
+        ws_leads.append([
+            lead.id,
+            lead.name,
+            lead.email,
+            lead.phone,
+            str(lead.created_at)[:19] if lead.created_at else '',
+            'بله' if has_assessment else 'خیر'
+        ])
+
+    ws_leads.column_dimensions['B'].width = 20
+    ws_leads.column_dimensions['C'].width = 26
+    ws_leads.column_dimensions['D'].width = 18
+    ws_leads.column_dimensions['E'].width = 22
+
+    # Sheet 6: Orders
+    ws_orders = wb.create_sheet('سفارش‌ها')
+    headers_o = ['شناسه', 'شماره موبایل', 'محصول', 'مبلغ', 'روش پرداخت', 'وضعیت', 'تاریخ ثبت']
+    ws_orders.append(headers_o)
+    for cell in ws_orders[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for o in Order.query.order_by(Order.created_at.desc()).all():
+        phone = o.user.phone_number if o.user else ''
+        ws_orders.append([
+            o.id,
+            phone,
+            o.product.name if o.product else '',
+            o.amount,
+            o.payment_method,
+            o.status,
+            str(o.created_at)[:19] if o.created_at else ''
+        ])
+
+    ws_orders.column_dimensions['B'].width = 18
+    ws_orders.column_dimensions['C'].width = 26
+    ws_orders.column_dimensions['G'].width = 22
+
     buf = io.BytesIO()
     wb.save(buf)
     buf.seek(0)
