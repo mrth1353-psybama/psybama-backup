@@ -58,9 +58,26 @@
 }
 .product-card-top h3 {
     font-family: var(--font-title);
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     color: white;
     line-height: 1.4;
+}
+.product-card-top h3 a {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    background: rgba(255,255,255,0.15);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255,255,255,0.25);
+    transition: all 0.25s;
+    cursor: pointer;
+}
+.product-card-top h3 a:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
 .product-card-body {
@@ -114,11 +131,11 @@
         {% for product in products %}
         <div class="product-card">
             <div class="product-card-top">
-                <div class="product-icon">🎓</div>
-                <h3>{% if 'زندگیِ هوشمندانه' in product.name %}<a href="/course/zendegi-hooshmandane" style="color:white;text-decoration:none;">{{ product.name }}</a>{% else %}{{ product.name }}{% endif %}</h3>
+                <div class="product-icon"></div>
+                <h3>{% if 'زندگیِ هوشمندانه' in product.name %}<a href="/course/zendegi-hooshmandane">{{ product.name }}</a>{% elif 'راز ارزشمندی' in product.name %}<a href="/course/raze-arzeshmandi">{{ product.name }}</a>{% else %}{{ product.name }}{% endif %}</h3>
             </div>
             <div class="product-card-body">
-                <p class="product-desc">{{ product.description }}</p>
+                <p class="product-desc">{{ product.description|replace('مدرس: دکتر مرضیه فیضی', '')|replace('مدرس: مرضیه فیضی', '')|trim }}</p>
                 <div class="product-price">
                     {{ '{:,}'.format(product.price) }} تومان
                 </div>
@@ -129,7 +146,7 @@
     </div>
     {% else %}
     <div style="text-align:center;padding:4rem 0;color:var(--text-muted)">
-        <div style="font-size:2.5rem;margin-bottom:1rem">🛍</div>
+        <div style="font-size:2.5rem;margin-bottom:1rem"></div>
         <p>محصولی موجود نیست. به زودی اضافه می‌شود.</p>
     </div>
     {% endif %}

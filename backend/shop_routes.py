@@ -7,9 +7,9 @@ from sms_service import send_sms
 
 shop_bp = Blueprint('shop', __name__)
 
-CARD_NUMBER = '6060731250080547'
-CARD_SHEBA  = 'IR470600360170011675279001'
-CARD_OWNER  = 'محمد رضا تدریس حسنی'
+CARD_NUMBER = '6104337935480440'
+CARD_SHEBA  = 'IR8701200000001524891721'
+CARD_OWNER  = 'مرضیه فیضی'
 CONTACT_PHONE = '09910216842'
 
 

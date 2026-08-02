@@ -203,3 +203,45 @@ class Assessment(db.Model):
             'pa_level': self.pa_level,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
         }
+
+
+class WaaqAssessment(db.Model):
+    __tablename__ = 'waaq_assessments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
+
+    # Individual item scores (1-7 each, after reverse-scoring)
+    item1 = db.Column(db.Integer, nullable=False)
+    item2 = db.Column(db.Integer, nullable=False)
+    item3 = db.Column(db.Integer, nullable=False)
+    item4 = db.Column(db.Integer, nullable=False)
+    item5 = db.Column(db.Integer, nullable=False)
+    item6 = db.Column(db.Integer, nullable=False)
+    item7 = db.Column(db.Integer, nullable=False)
+
+    # Total score (7-49)
+    total_score = db.Column(db.Integer, nullable=False)
+
+    # Level: 'low', 'moderate', 'high'
+    level = db.Column(db.String(10))
+
+    completed_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'lead_id': self.lead_id,
+            'item1': self.item1,
+            'item2': self.item2,
+            'item3': self.item3,
+            'item4': self.item4,
+            'item5': self.item5,
+            'item6': self.item6,
+            'item7': self.item7,
+            'total_score': self.total_score,
+            'level': self.level,
+            'completed_at': self.completed_at.isoformat() if self.completed_at else None
+        }

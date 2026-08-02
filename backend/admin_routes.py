@@ -4,7 +4,7 @@ from flask import Blueprint, request, jsonify, session, send_file, render_templa
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from auth import admin_required
-from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product
+from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product, WaaqAssessment
 from models import iran_now
 
 admin_bp = Blueprint('admin', __name__)
@@ -245,6 +245,7 @@ def get_stats():
         'total_conversations': Conversation.query.count(),
         'total_messages': Message.query.count(),
         'total_assessments': Assessment.query.count(),
+        'total_waaq_assessments': WaaqAssessment.query.count(),
         'total_contact_requests': ContactRequest.query.count(),
         'unread_contact_requests': ContactRequest.query.filter_by(is_read=False).count(),
         'pending_orders': pending,
@@ -405,6 +406,28 @@ def export_excel():
     ws_orders.column_dimensions['B'].width = 18
     ws_orders.column_dimensions['C'].width = 26
     ws_orders.column_dimensions['G'].width = 22
+
+    # Sheet 7: WAAQ Assessments
+    ws_waaq = wb.create_sheet('پرسشنامه WAAQ')
+    headers_w = ['شناسه', 'شماره موبایل', 'سوال ۱', 'سوال ۲', 'سوال ۳', 'سوال ۴', 'سوال ۵', 'سوال ۶', 'سوال ۷', 'نمره کل', 'سطح', 'تاریخ']
+    ws_waaq.append(headers_w)
+    for cell in ws_waaq[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for wa in WaaqAssessment.query.order_by(WaaqAssessment.completed_at.desc()).all():
+        phone = wa.user.phone_number if wa.user else ''
+        level_map = {'low': 'پایین', 'moderate': 'متوسط', 'high': 'بالا'}
+        ws_waaq.append([
+            wa.id, phone,
+            wa.item1, wa.item2, wa.item3, wa.item4, wa.item5, wa.item6, wa.item7,
+            wa.total_score, level_map.get(wa.level, ''),
+            str(wa.completed_at)[:19] if wa.completed_at else ''
+        ])
+
+    ws_waaq.column_dimensions['B'].width = 18
+    ws_waaq.column_dimensions['K'].width = 22
 
     buf = io.BytesIO()
     wb.save(buf)

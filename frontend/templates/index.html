@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}سای‌باما — همراه امن سلامت روان در محیط کار{% endblock %}
+{% block title %}<strong>سای‌باما</strong> — متخصص سلامت روان در محیط کار{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -52,6 +52,13 @@
     transition: box-shadow 0.25s, transform 0.25s;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.service-card .btn {
+    margin-top: auto;
+    align-self: center;
 }
 
 .service-card::before {
@@ -63,25 +70,16 @@
 }
 
 .service-card.blue::before   { background: var(--ocean-blue); }
+.service-card.blue           { background: var(--cloud-blue); }
 .service-card.teal::before   { background: var(--sage-teal); }
+.service-card.teal           { background: var(--mint-mist); }
 .service-card.coral::before  { background: var(--soft-coral); }
+.service-card.coral          { background: var(--coral-mist); }
 
 .service-card:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-4px);
 }
-
-.service-icon {
-    width: 40px; height: 40px;
-    border-radius: var(--radius-md);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2rem;
-    margin-bottom: 0.85rem;
-}
-
-.service-icon.blue   { background: var(--cloud-blue); }
-.service-icon.teal   { background: var(--mint-mist); }
-.service-icon.coral  { background: var(--coral-mist); }
 
 .service-card h3 {
     font-family: var(--font-title);
@@ -306,8 +304,8 @@
 
 .meet-photo {
     position: relative;
-    width: 200px;
-    height: 250px;
+    width: 280px;
+    height: 420px;
     border-radius: var(--radius-xl);
     overflow: hidden;
     flex-shrink: 0;
@@ -424,8 +422,8 @@
 
 <!-- Page Hero -->
 <section class="page-hero">
-    <h1>سای‌باما</h1>
-    <p>دستیار هوشمند سلامت روان در محیط کار</p>
+    <h1><strong>سای‌باما</strong></h1>
+    <p>همراه امنِ سلامت روان در محیط کار</p>
 </section>
 
 <!-- Service Cards -->
@@ -438,15 +436,13 @@
 
         <!-- Service 1: Chatbot -->
         <div class="service-card blue">
-            <div class="service-icon blue">🧠</div>
-            <h3>گفتگو با دستیار هوشمند سای‌باما</h3>
-            <p>یک دستیار روانشناسی آموزش‌دیده که ۲۴ ساعته، بدون نوبت، در دسترس شماست.</p>
+            <h3>گفتگو با <strong>سای‌باما</strong><br><span style="font-size:0.8rem; font-weight:normal;">(دستیار هوشمند سلامت روان در محیط کار)</span></h3>
+            <p>این دستیار آموزش دیده است تا 24 ساعته در دسترس شما باشد ( نسخه آزمایشی).</p>
             <a href="/chat" class="btn btn-primary">شروع گفتگو</a>
         </div>
 
         <!-- Service 2: Assessment -->
         <div class="service-card teal">
-            <div class="service-icon teal">📋</div>
             <h3>پرسشنامه استاندارد فرسودگی شغلی</h3>
             <p>پرسشنامه ماسلاچ (MBI) — ابزار علمی استاندارد برای سنجش فرسودگی شغلی. نتایج فوری با تفسیر اختصاصی.</p>
             <a href="/assessment" class="btn btn-teal">شروع پرسشنامه</a>
@@ -454,7 +450,6 @@
 
         <!-- Service 3: Online Consultation -->
         <div class="service-card coral">
-            <div class="service-icon coral">💬</div>
             <h3>مشاوره آنلاین با دکتر فیضی</h3>
             <p>جلسه مشاوره فردی با دکتر مرضیه فیضی — متخصص سلامت روان در محیط کار، با تمرکز بر ریشه‌یابی گره‌های کور شغلی.</p>
             <a href="/contact" class="btn btn-coral">درخواست مشاوره</a>
@@ -470,7 +465,7 @@
         <!-- Left: Text -->
         <div>
             <span class="chatbot-feature-badge">✦ ویژه — هوش مصنوعی فارسی</span>
-            <h2>دستیار هوشمند سای‌باما</h2>
+            <h2>دستیار هوشمند <strong>سای‌باما</strong></h2>
             <p>
                 دستیار روانشناسی هوشمند فارسی‌زبان با تخصص در فرسودگی شغلی و سلامت روان سازمانی.
                 پشتوانه علمی، زبان فارسی، و درک واقعیت محیط کار ایران.
@@ -483,7 +478,7 @@
                 <li>رایگان( موقتا برای همه کاربران)</li>
             </ul>
             <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با سای‌باما</a>
+                <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با <strong>سای‌باما</strong></a>
                 <a href="/assessment" class="btn btn-white-outline btn-lg">ابتدا پرسشنامه بدهم</a>
             </div>
         </div>
@@ -493,13 +488,13 @@
             <div class="chat-preview-header">
                 <div class="chat-preview-logo">س</div>
                 <div class="chat-preview-info">
-                    <h4>سای‌باما</h4>
+                    <h4><strong>سای‌باما</strong></h4>
                     <span><span class="online-dot-white"></span>آنلاین</span>
                 </div>
             </div>
             <div class="preview-messages">
                 <div class="preview-msg bot">
-                    سلام. به سای‌باما خوش آمدید. اینجا فضایی امن و بدون قضاوت است. بگویید چه می‌گذرد؟
+                    سلام. به <strong>سای‌باما</strong> خوش آمدید. اینجا فضایی امن و بدون قضاوت است. بگویید چه می‌گذرد؟
                 </div>
                 <div class="preview-msg user">
                     خسته‌ام. انگار هرچقدر کار می‌کنم تفاوتی نمی‌کنه...
@@ -518,7 +513,7 @@
 <section class="meet-section">
     <!--
         محل عکس: صحنه «تخصص» یا «تفکر» از راهنمای عکاسی برندگاید.
-        فایل را با نام home-portrait.jpg و ابعاد ۱۲۰۰×۱۵۰۰ پیکسل (نسبت ۴:۵، عمودی)
+        فایل را با نام home-portrait.jpg و ابعاد ۱۲۰۰×۱۸۰۰ پیکسل (نسبت ۲:۳، عمودی)
         در مسیر frontend/static/images/ قرار دهید — خودکار جایگزین این جعبه می‌شود.
     -->
     <div class="meet-photo">

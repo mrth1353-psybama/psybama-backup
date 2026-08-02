@@ -1,51 +1,40 @@
 'use strict';
 
-const MBI_QUESTIONS = [
-    'احساس می‌کنم کارم به لحاظ روانی توان و نیروی مرا گرفته است.',
-    'در پایان یک روز کاری احساس می‌کنم مثل یک لیمو چلانده شده‌ام (کلاً تخلیه شده‌ام).',
-    'صبح‌ها وقتی بیدار می‌شوم و باید یک روز دیگر را در سر کار بگذرانم، احساس خستگی می‌کنم.',
-    'به خوبی می‌توانم احساسات مراجعان/مشتریان/همکارانم را درک کنم.',
-    'احساس می‌کنم با برخی از مراجعان یا همکارانم، مانند اشیایی بی‌جان و بدون شخصیت انسانی برخورد می‌کنم.',
-    'کار کردن با مردم در تمام طول روز، برای من واقعاً فشار سنگینی است.',
-    'من مشکلات و کارهای مراجعان یا همکارانم را بسیار مؤثر و خوب حل‌و‌فصل می‌کنم.',
-    'احساس می‌کنم به خاطر شغلم، دچار فرسودگی و خستگی مفرط شده‌ام.',
-    'احساس می‌کنم از طریق کارم، تأثیر مثبتی روی زندگی دیگران می‌گذارم.',
-    'از زمانی که این شغل را شروع کرده‌ام، نسبت به مردم بی‌احساستر و سخت‌گیرتر شده‌ام.',
-    'نگرانم که این شغل، مرا از نظر عاطفی به فردی سخت و خشن تبدیل کند.',
-    'احساس می‌کنم بسیار پرانرژی و بانشاط هستم.',
-    'از کار خود احساس ناامیدی و ناکامی می‌کنم.',
-    'احساس می‌کنم در شغلم بیش از حد و توانم کار می‌کنم.',
-    'واقعاً برایم مهم نیست که برای بعضی از مراجعان یا همکارانم چه اتفاقی می‌افتد.',
-    'کار کردن مستقیم با مردم، استرس و فشار زیادی به من وارد می‌کند.',
-    'به‌راحتی می‌توانم یک فضای آرام و راحت برای مراجعان یا همکارانم ایجاد کنم.',
-    'بعد از کار کردنِ نزدیک با مراجعان یا همکاران، احساس شادابی و زنده بودن می‌کنم.',
-    'در این شغل توانسته‌ام کارهای ارزشمند و سودمندی انجام دهم.',
-    'در محیط کار با مشکلات عاطفی و روانی، بسیار آرام و با متانت برخورد می‌کنم.',
-    'احساس می‌کنم مراجعان یا همکارانم، من را مقصرِ برخی از مشکلات خود می‌دانند.',
-    'احساس می‌کنم به آخر خط رسیده‌ام و دیگر کشش کار ندارم.'
+const WAAQ_QUESTIONS = [
+    'من با وجود داشتن افکار و احساسات منفی در مورد کارم، وظایفم را با موفقیت انجام می‌دهم.',
+    'من می‌توانم به اهداف کاری‌ام برسم، حتی اگر نسبت به کارم دچار تردید شوم.',
+    'من می‌توانم با وجود نگرانی‌هایی که دارم، برای انجام کارم به‌طور مؤثر برنامه‌ریزی کنم.',
+    'وقتی افکار و احساسات منفی درباره کارم به سراغم می‌آید، باز هم می‌توانم به کارهایی که باید انجام شوند، تعهد داشته باشم.',
+    'من به دلیل داشتن افکار و احساسات منفی، کارم را به تعویق نمی‌اندازم.',
+    'من با وجود نگرانی‌هایی که دارم، کارهایم را به‌خوبی اجرا می‌کنم.',
+    'من می‌توانم با وجود داشتن افکار منفی درباره کارم، به وظایف شغلی‌ام ادامه دهم.'
 ];
+
+// No reverse-scored items — all items are direct scoring
 
 const SCALE_LABELS = [
-    { num: 0, full: 'هرگز',            short: 'هرگز' },
-    { num: 1, full: 'چند بار در سال',  short: 'چند بار در سال' },
-    { num: 2, full: 'ماهی یک بار',     short: 'ماهی یک بار' },
-    { num: 3, full: 'چند بار در ماه',  short: 'چند بار در ماه' },
-    { num: 4, full: 'هفته‌ای یک بار',  short: 'هفته‌ای یک بار' },
-    { num: 5, full: 'چند بار در هفته', short: 'چند بار در هفته' },
-    { num: 6, full: 'هر روز',          short: 'هر روز' }
+    { num: 1, full: 'هرگز درست نیست',  short: 'هرگز' },
+    { num: 2, full: 'به‌ندرت درست است', short: 'به‌ندرت' },
+    { num: 3, full: 'گاهی درست است', short: 'گاهی' },
+    { num: 4, full: 'تاحدودی درست است', short: 'تاحدودی' },
+    { num: 5, full: 'بیشتر اوقات درست است', short: 'بیشتر اوقات' },
+    { num: 6, full: 'تقریباً همیشه درست است', short: 'تقریباً همیشه' },
+    { num: 7, full: 'همیشه درست است', short: 'همیشه' }
 ];
 
-let responses = new Array(22).fill(null);
+const WAAQ_QUESTIONS_COUNT = 7;
+
+let responses = new Array(WAAQ_QUESTIONS_COUNT).fill(null);
 
 function updateProgress() {
     const answered = responses.filter(r => r !== null).length;
-    const pct = Math.round((answered / 22) * 100);
+    const pct = Math.round((answered / WAAQ_QUESTIONS_COUNT) * 100);
 
     document.getElementById('progressFill').style.width = pct + '%';
-    document.getElementById('progressLabel').textContent = `${answered} از ۲۲ سؤال پاسخ داده شد`;
+    document.getElementById('progressLabel').textContent = `${answered} از ${WAAQ_QUESTIONS_COUNT} سؤال پاسخ داده شد`;
     document.getElementById('progressWrap').style.display = 'block';
 
-    const allDone = answered === 22;
+    const allDone = answered === WAAQ_QUESTIONS_COUNT;
     document.getElementById('submitArea').style.display = 'block';
     document.getElementById('btnSubmit').disabled = !allDone;
 
@@ -60,26 +49,20 @@ function buildQuestions() {
     const list = document.getElementById('questionsList');
     list.innerHTML = '';
 
-    MBI_QUESTIONS.forEach((q, idx) => {
+    WAAQ_QUESTIONS.forEach((q, idx) => {
         const card = document.createElement('div');
         card.className = 'question-card';
         card.id = `qcard-${idx}`;
 
-        const legendItems = SCALE_LABELS.map(s =>
-            `<div class="scale-legend-item">
-                <span class="scale-legend-num">${s.num}</span>
-                <span class="scale-legend-text">${s.full}</span>
-             </div>`
-        ).join('');
-
         const buttons = SCALE_LABELS.map(s =>
             `<button class="likert-btn" data-q="${idx}" data-val="${s.num}">
+                <span class="likert-num">${s.num}</span>
                 <span class="likert-label">${s.short}</span>
              </button>`
         ).join('');
 
         card.innerHTML = `
-            <div class="question-number">سؤال ${idx + 1} از ۲۲</div>
+            <div class="question-number">سؤال ${idx + 1} از ${WAAQ_QUESTIONS_COUNT}</div>
             <div class="question-text">${q}</div>
             <div class="likert-scale">${buttons}</div>`;
 
@@ -112,6 +95,21 @@ function buildQuestions() {
     });
 }
 
+function classifyWaaq(totalScore) {
+    if (totalScore >= 7 && totalScore <= 26) return 'low';
+    if (totalScore >= 27 && totalScore <= 39) return 'moderate';
+    return 'high';
+}
+
+function getFeedback(level) {
+    const messages = {
+        low: 'انعطاف‌پذیری روانی پایین: نشان‌دهنده اجتناب تجربی بالا در محیط کار است. شما در مواجهه با استرس‌ها و افکار منفی، عملکرد کاری خود را از دست می‌دهید یا دچار فرسودگی می‌شوید.',
+        moderate: 'انعطاف‌پذیری روانی متوسط: نشان می‌دهد تا حدودی می‌توانید وظایفتان را پیش ببرید، اما در موقعیت‌های بسیار چالش‌برانگیز ممکن است دچار توقف یا افت عملکرد شوید.',
+        high: 'انعطاف‌پذیری روانی بالا: نشان‌دهنده مهارت عالی در پذیرش و عمل است. شما علی‌رغم وجود چالش‌ها، اضطراب‌ها یا افکار ناخوشایند شغلی، تمرکز و کارایی خود را کاملاً حفظ می‌کنید و به اهداف کاری‌تان متعهد می‌مانید.'
+    };
+    return messages[level] || '';
+}
+
 function levelFa(level) {
     return {low: 'پایین', moderate: 'متوسط', high: 'بالا'}[level] || level;
 }
@@ -121,31 +119,27 @@ function renderResults(scores) {
     document.getElementById('resultsSection').style.display = 'block';
     document.getElementById('mainIntro').style.display = 'none';
 
-    const grid = document.getElementById('subscaleGrid');
-    const subscales = [
-        {key: 'ee', label: 'خستگی عاطفی', barClass: 'bar-ee', note: '(کمتر = بهتر)'},
-        {key: 'dp', label: 'مسخ شخصیت', barClass: 'bar-dp', note: '(کمتر = بهتر)'},
-        {key: 'pa', label: 'کفایت فردی', barClass: 'bar-pa', note: '(بیشتر = بهتر)'}
-    ];
+    const totalScore = scores.total_score;
+    const level = scores.level;
 
-    grid.innerHTML = subscales.map(s => {
-        const d = scores[s.key];
-        const pct = Math.round((d.score / d.max) * 100);
-        return `
-        <div class="subscale-item">
-            <div class="subscale-label">${s.label} <span style="font-size:0.72rem;opacity:0.7">${s.note}</span></div>
-            <div class="subscale-score">${d.score} <span style="font-size:0.9rem;color:var(--text-muted)">/ ${d.max}</span></div>
-            <span class="subscale-level level-${d.level}">${levelFa(d.level)}</span>
-            <div class="subscale-bar-wrap">
-                <div class="subscale-bar-fill ${s.barClass}" style="width:${pct}%"></div>
-            </div>
-        </div>`;
-    }).join('');
+    document.getElementById('totalScore').textContent = totalScore;
+
+    const badgeContainer = document.getElementById('levelBadgeContainer');
+    badgeContainer.innerHTML = `<span class="level-badge level-${level}">${levelFa(level)}</span>`;
+
+    const pct = Math.round((totalScore / 49) * 100);
+    document.getElementById('scoreBarFill').style.width = pct + '%';
 
     document.getElementById('feedbackBox').innerHTML =
-        '<strong>تفسیر:</strong> ' + scores.feedback;
+        '<strong>تفسیر:</strong> ' + getFeedback(level);
 
     window.scrollTo({top: 0, behavior: 'smooth'});
+
+    // Show ebook promo popup after 10 seconds
+    const ebookModal = document.getElementById('ebookModal');
+    if (ebookModal) {
+        setTimeout(() => ebookModal.classList.remove('hidden'), 10000);
+    }
 }
 
 async function submitAssessment() {
@@ -154,7 +148,7 @@ async function submitAssessment() {
     btn.textContent = 'در حال پردازش...';
 
     try {
-        const res = await fetch('/api/assessment/submit', {
+        const res = await fetch('/api/waaq/submit', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({responses})
@@ -169,11 +163,6 @@ async function submitAssessment() {
         }
 
         renderResults(data.scores);
-
-        const ebookModal = document.getElementById('ebookModal');
-        if (ebookModal) {
-            setTimeout(() => ebookModal.classList.remove('hidden'), 10000);
-        }
 
     } catch (e) {
         alert('خطا در اتصال به سرور');
@@ -255,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('btnRetake').addEventListener('click', () => {
-        responses = new Array(22).fill(null);
+        responses = new Array(WAAQ_QUESTIONS_COUNT).fill(null);
         document.getElementById('resultsSection').style.display = 'none';
         document.getElementById('questionsSection').style.display = 'block';
         document.getElementById('mainIntro').style.display = 'block';

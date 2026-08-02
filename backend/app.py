@@ -21,9 +21,9 @@ from rag_handler import load_knowledge_base
 EBOOK_PRODUCT_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
 
 MBI_ITEMS = {
-    'EE': [1, 2, 3, 6, 8, 13, 14, 16, 20],
-    'DP': [5, 10, 11, 15, 22],
-    'PA': [4, 7, 9, 12, 17, 18, 19, 21]
+    'EE': [1, 2, 3, 6, 8, 13, 14, 16, 22],
+    'DP': [5, 10, 11, 15, 21],
+    'PA': [4, 7, 9, 12, 17, 18, 19, 20]
 }
 
 THRESHOLDS = {
@@ -34,22 +34,61 @@ THRESHOLDS = {
 
 MBI_FEEDBACK = {
     ('high', 'high', 'high'):
-        'نشانه‌های جدی فرسودگی شغلی در هر سه حوزه دارید. مشاوره با متخصص را حتماً در اولویت قرار دهید.',
+        'نشانه‌های جدی فرسودگی شغلی در هر سه حوزه دارید. خستگی عاطفی شدید (نمره ۲۷ یا بالاتر) نشان می‌دهد از نظر روانی و جسمی به خاطر کار کاملاً تخلیه شده‌اید. مسخ شخصیت بالا (نمره ۱۳ یا بالاتر) حاکی از بی‌تفاوتی و بدبینی نسبت به مراجعان یا همکاران است. موفقیت فردی پایین (نمره ۳۱ یا کمتر) نشان‌دهنده احساس بی‌کفایتی و عدم اثربخشی در کار است. مشاوره با متخصص را حتماً در اولویت قرار دهید.',
     ('high', 'high', 'low'):
-        'سطح فرسودگی شما بالا است. خستگی عاطفی و احساس فاصله از کار هر دو نیاز به توجه دارند.',
+        'سطح فرسودگی شما بالا است. خستگی عاطفی (نمره ۲۷ یا بالاتر) و مسخ شخصیت (نمره ۱۳ یا بالاتر) هر دو نیاز به توجه دارند. از نظر روانی و جسمی به خاطر کار تخلیه شده‌اید و نسبت به مراجعان یا همکاران بی‌تفاوت و بدبین شده‌اید. با این حال احساس کفایت فردی شما در سطح قابل قبولی است.',
     ('high', 'moderate', 'low'):
-        'خستگی عاطفی قابل توجهی دارید. استراحت هدفمند و بازنگری در مرزهای کاری می‌تواند کمک کند.',
+        'خستگی عاطفی قابل توجهی دارید (نمره ۲۷ یا بالاتر). استراحت هدفمند و بازنگری در مرزهای کاری می‌تواند کمک کند. مسخ شخصیت در حد متوسط است و احساس کفایت فردی شما قابل قبول می‌باشد.',
     ('high', 'low', 'low'):
-        'احساس فرسودگی عاطفی می‌کنید. مرزبندی در کار و استراحت کافی را جدی بگیرید.',
+        'احساس فرسودگی عاطفی می‌کنید (نمره ۲۷ یا بالاتر). مرزبندی در کار و استراحت کافی را جدی بگیرید. مسخ شخصیت و موفقیت فردی شما در سطح نرمال است.',
     ('moderate', 'moderate', 'moderate'):
-        'در مرحله میانی فرسودگی هستید. هنوز فرصت برای پیشگیری وجود دارد.',
+        'در مرحله میانی فرسودگی هستید. هر سه بعد در سطح متوسط قرار دارند. هنوز فرصت برای پیشگیری و بهبود وجود دارد. بازنگری در عادات کاری و مراقبت از سلامت روان را در اولویت قرار دهید.',
     ('moderate', 'high', 'low'):
-        'احساس فاصله و بی‌تفاوتی نسبت به کار در شما نگران‌کننده است. با یک متخصص صحبت کنید.',
+        'مسخ شخصیت در شما نگران‌کننده است (نمره ۱۳ یا بالاتر). نسبت به مراجعان یا همکاران بی‌تفاوت و بدبین شده‌اید. خستگی عاطفی در حد متوسط است. با یک متخصص صحبت کنید.',
     ('low', 'low', 'low'):
-        'سطح فرسودگی شما پایین است. احساس کفایت شغلی‌تان نیاز به تقویت دارد.',
+        'خستگی عاطفی و مسخ شخصیت شما پایین است که نشانه خوبی است. اما موفقیت فردی شما پایین است (نمره ۳۱ یا کمتر) که نشان‌دهنده احساس بی‌کفایتی و عدم اثربخشی در کار است. روی شناسایی و تقویت نقاط قوت شغلی‌تان کار کنید.',
     ('low', 'low', 'high'):
-        'احساس کفایت شغلی پایینی دارید اما خستگی عاطفی ندارید. این می‌تواند نشانه نیاز به چالش‌های حرفه‌ای جدید باشد.',
+        'خستگی عاطفی و مسخ شخصیت شما پایین است. اما احساس کفایت شغلی پایینی دارید (نمره ۳۱ یا کمتر). این می‌تواند نشانه نیاز به چالش‌های حرفه‌ای جدید یا بازتعریف نقش شغلی باشد.',
+    ('high', 'low', 'high'):
+        'خستگی عاطفی بالایی دارید (نمره ۲۷ یا بالاتر) اما مسخ شخصیت پایین و موفقیت فردی در سطح نرمال است. به نظر می‌رسد با وجود خستگی، همچنان ارتباط انسانی و احساس کارآمدی خود را حفظ کرده‌اید. به استراحت و مرزبندی بیشتر نیاز دارید.',
+    ('high', 'moderate', 'high'):
+        'خستگی عاطفی بالایی دارید (نمره ۲۷ یا بالاتر) و مسخ شخصیت در حد متوسط است. اما احساس موفقیت فردی شما پایین است (نمره ۳۱ یا کمتر). این ترکیب نشان می‌دهد با وجود خستگی، همچنان برای حفظ کیفیت کار خود تلاش می‌کنید اما احساس ناکارآمدی دارید.',
+    ('moderate', 'low', 'low'):
+        'خستگی عاطفی در حد متوسط است اما مسخ شخصیت و موفقیت فردی شما پایین است. احساس بی‌کفایتی در کار دارید. روی تقویت مهارت‌ها و بازتعریف اهداف شغلی کار کنید.',
+    ('moderate', 'low', 'high'):
+        'خستگی عاطفی متوسط و مسخ شخصیت پایین است. اما موفقیت فردی پایین (نمره ۳۱ یا کمتر) نشان‌دهنده احساس ناکارآمدی است. با وجود حفظ ارتباط انسانی، احساس می‌کنید در کارتان اثربخش نیستید.',
+    ('low', 'moderate', 'low'):
+        'خستگی عاطفی پایین است اما مسخ شخصیت در حد متوسط و موفقیت فردی پایین است. نیاز به تقویت احساس کفایت و کارآمدی در محیط کار دارید.',
+    ('low', 'moderate', 'high'):
+        'خستگی عاطفی پایین و مسخ شخصیت متوسط است. اما موفقیت فردی پایین (نمره ۳۱ یا کمتر) نیاز به توجه دارد. روی شناسایی دستاوردها و ارزش‌آفرینی در کار تمرکز کنید.',
+    ('moderate', 'moderate', 'low'):
+        'هر سه بعد در سطح متوسط تا پایین هستند. خستگی عاطفی و مسخ شخصیت در حد متوسط و موفقیت فردی پایین است. نیاز به برنامه جامع برای بهبود سلامت شغلی دارید.',
+    ('moderate', 'moderate', 'high'):
+        'خستگی عاطفی و مسخ شخصیت در حد متوسط است. موفقیت فردی پایین (نمره ۳۱ یا کمتر) نشان‌دهنده احساس ناکارآمدی است. با وجود تلاش، احساس می‌کنید به اندازه کافی مؤثر نیستید.',
 }
+
+
+# ── WAAQ (Work-related Acceptance and Action Questionnaire) ──────────────────
+
+def score_waaq(responses):
+    """Score the WAAQ (7 items, scale 1-7, all items direct scoring)."""
+    assert len(responses) == 7, "WAAQ requires exactly 7 responses"
+
+    items = [int(v) for v in responses]
+    total = sum(items)
+
+    if 7 <= total <= 26:
+        level = 'low'
+    elif 27 <= total <= 39:
+        level = 'moderate'
+    else:
+        level = 'high'
+
+    return {
+        'items': items,
+        'total_score': total,
+        'level': level
+    }
 
 
 def classify(score, subscale):
@@ -121,6 +160,12 @@ def create_app():
         product = Product.query.filter_by(name='دوره زندگیِ هوشمندانه').first()
         return render_template('course_zendegi_hooshmandane.html', product_id=product.id if product else 0)
 
+    @app.route('/course/raze-arzeshmandi')
+    def course_raze_arzeshmandi():
+        from models import Product
+        product = Product.query.filter_by(name='دوره راز ارزشمندی').first()
+        return render_template('course_raze_arzeshmandi.html', product_id=product.id if product else 0)
+
     @app.route('/services')
     def services():
         return render_template('services.html')
@@ -149,6 +194,12 @@ def create_app():
         from models import Product
         ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
         return render_template('assessment.html', ebook_product=ebook_product)
+
+    @app.route('/waaq')
+    def waaq():
+        from models import Product
+        ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        return render_template('waaq.html', ebook_product=ebook_product)
 
     # ── Auth API ──────────────────────────────────────────────────────────────
 
@@ -368,6 +419,46 @@ def create_app():
 
         return jsonify({'success': True, 'scores': scores})
 
+    # ── WAAQ API ──────────────────────────────────────────────────────────────
+
+    @app.route('/api/waaq/submit', methods=['POST'])
+    def submit_waaq():
+        data = request.get_json()
+        responses = (data or {}).get('responses', [])
+
+        if len(responses) != 7:
+            return jsonify({'error': 'invalid_responses', 'message': 'باید ۷ پاسخ ارسال شود'}), 400
+
+        try:
+            responses = [int(r) for r in responses]
+            assert all(1 <= r <= 7 for r in responses)
+        except (ValueError, AssertionError):
+            return jsonify({'error': 'invalid_values', 'message': 'مقادیر باید بین ۱ تا ۷ باشند'}), 400
+
+        scores = score_waaq(responses)
+
+        from models import WaaqAssessment
+        user_id = session.get('user_id')
+        lead_id = session.get('assessment_lead_id')
+        items = scores['items']
+        assessment = WaaqAssessment(
+            user_id=user_id,
+            lead_id=lead_id,
+            item1=items[0],
+            item2=items[1],
+            item3=items[2],
+            item4=items[3],
+            item5=items[4],
+            item6=items[5],
+            item7=items[6],
+            total_score=scores['total_score'],
+            level=scores['level']
+        )
+        db.session.add(assessment)
+        db.session.commit()
+
+        return jsonify({'success': True, 'scores': scores})
+
     # ── DB Init ───────────────────────────────────────────────────────────────
 
     with app.app_context():
@@ -433,6 +524,22 @@ def create_app():
             zendegi_product.price = 28000000
             db.session.commit()
             print('[DB] Updated "دوره زندگیِ هوشمندانه" price to 28,000,000')
+
+        # Seed "دوره راز ارزشمندی" product if not exists (update price if exists)
+        raze_product = Product.query.filter_by(name='دوره راز ارزشمندی').first()
+        if not raze_product:
+            raze_product = Product(
+                name='دوره راز ارزشمندی',
+                description='دوره راز ارزشمندی — با تقویت عزت‌نفس، از اسارت سرزنش‌ها و تردیدها رها شوید. مدرس: مرضیه فیضی',
+                price=3800000
+            )
+            db.session.add(raze_product)
+            db.session.commit()
+            print('[DB] Seeded "دوره راز ارزشمندی" product')
+        elif raze_product.price != 3800000:
+            raze_product.price = 3800000
+            db.session.commit()
+            print('[DB] Updated "دوره راز ارزشمندی" price to 3,800,000')
 
         # Seed placeholder ebook product for the post-assessment popup (name/price to be finalized)
         ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()

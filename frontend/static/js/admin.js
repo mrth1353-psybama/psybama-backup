@@ -84,6 +84,7 @@ const Admin = (() => {
             document.getElementById('statConvs').textContent = data.total_conversations;
             document.getElementById('statMsgs').textContent = data.total_messages;
             document.getElementById('statAssess').textContent = data.total_assessments;
+            document.getElementById('statWaaq').textContent = data.total_waaq_assessments;
 
             const badge = document.getElementById('unreadBadge');
             if (data.unread_contact_requests > 0) {

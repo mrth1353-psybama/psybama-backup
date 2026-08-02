@@ -1,0 +1,527 @@
+{% extends "base.html" %}
+{% block title %}دوره راز ارزشمندی — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.course-hero {
+    background: linear-gradient(160deg, #3D5166 0%, #1D5FA6 100%);
+    padding: 3.5rem 2rem 3rem;
+    text-align: center;
+    color: white;
+}
+.course-hero h1 {
+    font-family: var(--font-title);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: white;
+    margin-bottom: 0.5rem;
+}
+.course-hero .subtitle {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+}
+.course-hero .meta-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+}
+.course-hero .meta-grid span {
+    color: rgba(255,255,255,0.85);
+}
+.course-hero .meta-grid strong {
+    color: white;
+    display: block;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+.hero-image-placeholder {
+    max-width: 700px;
+    margin: 1.5rem auto 0;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--radius-lg);
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
+    border: 2px dashed rgba(255,255,255,0.2);
+}
+
+.course-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+.course-section h2 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--ocean-blue);
+    margin-bottom: 1rem;
+    position: relative;
+    padding-right: 1rem;
+}
+.course-section h2::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0.2rem;
+    bottom: 0.2rem;
+    width: 4px;
+    background: var(--ocean-blue);
+    border-radius: 2px;
+}
+.course-section p {
+    font-size: 0.95rem;
+    line-height: 2;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+.course-section .section-bg {
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+
+.changes-list, .differences-list, .includes-list, .reasons-list {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+.changes-list li, .differences-list li, .includes-list li, .reasons-list li {
+    position: relative;
+    padding-right: 1.8rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+}
+.changes-list li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: var(--sage-teal);
+    font-weight: bold;
+}
+.differences-list li::before {
+    content: '✦';
+    position: absolute;
+    right: 0;
+    color: var(--ocean-blue);
+}
+.reasons-list li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: var(--sage-teal);
+    font-weight: bold;
+}
+
+.image-placeholder {
+    background: var(--cloud-blue);
+    border-radius: var(--radius-lg);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border: 2px dashed var(--border);
+    margin: 1rem 0;
+}
+
+.instructor-box {
+    display: flex;
+    gap: 2rem;
+    align-items: start;
+    background: var(--pure-white);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+.instructor-image-placeholder {
+    width: 140px;
+    min-width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: var(--cloud-blue);
+    border: 2px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-align: center;
+}
+.instructor-info h3 {
+    font-family: var(--font-title);
+    color: var(--slate-blue);
+    margin-bottom: 0.75rem;
+}
+.instructor-info p {
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin-bottom: 0.4rem;
+}
+.instructor-info .badge {
+    display: inline-block;
+    background: var(--cloud-blue);
+    color: var(--ocean-blue);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.faq-item {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.75rem;
+}
+.faq-item h4 {
+    font-size: 0.95rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+}
+.faq-item p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.section-divider {
+    text-align: center;
+    padding: 0.5rem 0;
+    color: var(--border);
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+}
+
+.btn-buy-large {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--soft-coral), #d47a64);
+    color: white;
+    padding: 1rem 3rem;
+    border-radius: var(--radius-lg);
+    font-size: 1.1rem;
+    font-family: var(--font-title);
+    box-shadow: var(--shadow-md);
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+}
+.btn-buy-large:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    filter: brightness(1.05);
+    text-decoration: none;
+    color: white;
+}
+
+.course-info-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.course-info-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    text-align: center;
+}
+.course-info-card .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.course-info-card .value {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--slate-blue);
+}
+
+.inspiring-women {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+.inspiring-women .woman-tag {
+    background: var(--cloud-blue);
+    color: var(--ocean-blue);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .instructor-box {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .course-section { padding: 2rem 1rem; }
+    .course-info-table { grid-template-columns: 1fr 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="course-hero">
+    <h1>دوره راز ارزشمندی</h1>
+    <p class="subtitle">با تقویت عزت‌نفس، از اسارت سرزنش‌ها و تردیدها رها شوید.<br>آموزشی بی‌نظیر، الهام‌گرفته از داستان زندگی ۱۰ زن برجسته و موفق.</p>
+    <div class="meta-grid">
+        <div>
+            <strong>مدرس</strong>
+            <span>مرضیه فیضی</span>
+        </div>
+        <div>
+            <strong>مدت زمان</strong>
+            <span>۳ ساعت (ضبط شده)</span>
+        </div>
+        <div>
+            <strong>مخاطب</strong>
+            <span>تمام بانوانی که می‌خواهند احساس ارزشمندی بیشتری بکنند</span>
+        </div>
+    </div>
+    <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+</section>
+
+<section class="course-section">
+    <div class="section-bg">
+        <h2>از زخم‌های کودکی تا آرامش بزرگسالی</h2>
+        <p>شاید این صدا در ذهن تو آشنا باشد:<br><em>«کافی نیستی! اشتباه کردی! چرا شبیه بقیه نیستی؟»</em></p>
+        <p>شاید در کودکی، با هر اشتباه کوچک سرزنش شده باشی و این احساس هنوز همراهت باشد؛ صدای انتقادهایی که مدام تو را زیر سوال می‌برند و آرامش را از تو گرفته‌اند. حالا در بزرگسالی، دائم در تلاش برای تأیید دیگرانی هستی که هیچ‌وقت راضی نمی‌شوند…</p>
+        <p><strong>«راز ارزشمندی» اینجاست تا به تو کمک کند:</strong></p>
+        <ul class="changes-list">
+            <li>خودسرزنشی را رها کنی،</li>
+            <li>مهربانی با خودت را جایگزین انتقاد کنی،</li>
+            <li>و به عزت نفس واقعی برسی.</li>
+        </ul>
+        <p><strong>با عزت نفس بالا، زندگی‌ای خواهی ساخت که نه دیگران، بلکه خودت به آن افتخار کنی و به آرامش برسی.</strong></p>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>عزت نفس چیست؟</h2>
+    <p>عزت نفس، همان احساس درونی ارزشمند بودن و شایستگی است که به ما قدرت می‌دهد به خودمان و توانایی‌هایمان باور داشته باشیم. افرادی که عزت نفس بالایی دارند، با اعتماد به‌نفس بیشتری تصمیم می‌گیرند، به سادگی از شکست‌ها عبور می‌کنند و می‌دانند که ارزش آن‌ها وابسته به نظر دیگران نیست. آن‌ها خود و دیگران را سرزنش نمی‌کنند. نگران قضاوت دیگران نیستند و برای خود زندگی می‌کنند و نه برای دیگران.</p>
+    <p>عزت نفس، پایه و اساس رضایت از زندگی، روابط قوی‌تر، و موفقیت در کار و تحصیل است.</p>
+    <p><strong>چرا به عزت نفس بالا نیاز داریم؟</strong></p>
+    <ol class="changes-list">
+        <li><strong>انگیزه و هدفمندی:</strong> افرادی که عزت نفس بالایی دارند، احساس می‌کنند توانایی رسیدن به اهدافشان را دارند و برای تحقق رویاهایشان تلاش می‌کنند.</li>
+        <li><strong>روابط قوی‌تر:</strong> عزت نفس بالا به ما کمک می‌کند تا روابط سالم‌تری با دیگران برقرار کنیم، زیرا افرادی که خود را ارزشمند می‌دانند، به دیگران نیز احترام می‌گذارند و به راحتی می‌توانند به دیگران اعتماد کنند.</li>
+        <li><strong>مقاومت در برابر مشکلات:</strong> افرادی که عزت نفس بالایی دارند، در برابر شکست‌ها و چالش‌های زندگی مقاوم‌تر هستند و سریع‌تر می‌توانند از پس مشکلات برآیند.</li>
+        <li><strong>سلامت روان:</strong> عزت نفس بالا، عاملی کلیدی در حفظ سلامت روان است. افرادی که عزت نفس پایینی دارند، بیشتر در معرض ابتلا به افسردگی، اضطراب و سایر اختلالات روانی هستند.</li>
+        <li><strong>رضایت از زندگی:</strong> افرادی که عزت نفس بالایی دارند، از زندگی خود رضایت بیشتری دارند و احساس خوشبختی بیشتری می‌کنند.</li>
+    </ol>
+</section>
+
+<section class="course-section">
+    <h2>چه افرادی باید عزت نفس خود را بالا ببرند؟</h2>
+    <p>اگر پاسخ شما حتی به یکی از سوالات زیر مثبت است، نیاز دارید که به بهبود عزت نفس خود بیندیشید.</p>
+    <ol class="changes-list">
+        <li>آیا شما در تصمیم‌گیری به تأیید دیگران نیاز دارید و دچار تردید هستید؟</li>
+        <li>آیا از ابراز نظرات و خواسته‌های خود به دلیل ترس از قضاوت دیگران می‌ترسید؟</li>
+        <li>آیا احساس بی‌ارزشی و ناتوانی در زندگی دارید؟</li>
+        <li>آیا نمی‌توانید انتقادات را به‌درستی مدیریت کنید و دچار ناامیدی می‌شوید؟</li>
+        <li>آیا در برقراری روابط سالم و مثبت مشکل دارید و به دنبال تأیید دیگران هستید؟</li>
+        <li>آیا احساس عدم کفایت و ترس از عدم پذیرش شما را دچار استرس و اضطراب می‌کند؟</li>
+        <li>آیا به دلیل ترس از شکست، از پذیرش چالش‌های جدید اجتناب می‌کنید؟</li>
+        <li>آیا استرس و نگرانی‌های ناشی از عزت نفس پایین بر سلامت جسمی شما تأثیر منفی گذاشته است؟</li>
+        <li>آیا احساس می‌کنید به دلیل عزت نفس پایین، در دستیابی به اهداف خود ناکام هستید؟</li>
+        <li>آیا به راحتی مورد سوءاستفاده دیگران قرار می‌گیرید و نمی‌توانید مرزهای سالمی در روابط خود تعیین کنید؟</li>
+    </ol>
+    <div class="section-bg" style="margin-top: 1.5rem;">
+        <p><strong>داستان زندگی من و تو:</strong></p>
+        <p><strong>اجازه نده تجربیات تلخ گذشته، مسیر زندگی تو را تعیین کنند</strong></p>
+        <p>آیا به یاد داری روزهایی که در مسیر مدرسه یا خانه، <strong>ترس از انتقادات</strong> معلمان و والدین، مثل باری سنگین روی قلبت فشار می‌آورد؟ زندگی‌ات انگار به دو بخش تقسیم شده بود:</p>
+        <ul class="changes-list">
+            <li>یک سوی آن، <strong>امیدها و آرزوهایت</strong></li>
+            <li>و سوی دیگر، <strong>ناامیدی و سرزنش‌هایی</strong> که تو را سردرگم می‌کرد.</li>
+        </ul>
+        <p>هر انتقاد کوچک، زخمی عمیق بر روحت می‌گذاشت؛ زخمی که سال‌ها با تو ماند. وقتی دیگران را می‌دیدی که با <strong>اعتمادبه‌نفس درخشیده‌اند</strong>، احساس می‌کردی که زندگی تو در پس‌زمینه‌ای تاریک و بی‌رنگ قرار دارد.</p>
+        <p><strong>اما آیا این تجربیات باید آینده تو را تعیین کنند؟</strong></p>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>نگاهی به فیلم دوره راز ارزشمندی</h2>
+    <div class="course-info-table">
+        <div class="course-info-card">
+            <div class="label">مدرس</div>
+            <div class="value">مرضیه فیضی</div>
+        </div>
+        <div class="course-info-card">
+            <div class="label">مخاطب</div>
+            <div class="value">تمام بانوانی که می‌خواهند احساس ارزشمندی بیشتری بکنند</div>
+        </div>
+        <div class="course-info-card">
+            <div class="label">مدت زمان</div>
+            <div class="value">۳ ساعت</div>
+        </div>
+        <div class="course-info-card">
+            <div class="label">فرمت</div>
+            <div class="value">فیلم محافظت‌شده (مشاهده آنلاین در پلیر مخصوص)</div>
+        </div>
+        <div class="course-info-card">
+            <div class="label">قابل مشاهده</div>
+            <div class="value">در فقط یک دستگاه کامپیوتر و یا موبایل اندرویدی</div>
+        </div>
+        <div class="course-info-card">
+            <div class="label">قیمت</div>
+            <div class="value">۳,۸۰۰,۰۰۰ تومان</div>
+        </div>
+    </div>
+    <div style="text-align:center; margin:1rem 0;">
+        <a href="https://www.aparat.com/v/oajucq5" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg" style="display:inline-block; padding:0.75rem 2rem; font-size:1.1rem; border-radius:var(--radius-lg); text-decoration:none;">مشاهده نمونه فیلم دوره راز ارزشمندی</a>
+    </div>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>دوره «راز ارزشمندی» چگونه به شما کمک می‌کند؟</h2>
+    <div class="section-bg">
+        <p><strong>دوره «راز ارزشمندی»</strong> برای کمک به تو طراحی شده است؛ تا بتوانی:</p>
+        <ul class="changes-list">
+            <li><strong>بر زخم‌های گذشته غلبه کنی</strong></li>
+            <li>قدرت‌ها و ارزش‌های درونی‌ات را کشف کنی</li>
+            <li>و خودت را با عشق و مهربانی بپذیری.</li>
+        </ul>
+        <p>این برنامه بر اساس سال‌ها تجربه روان‌شناسی و با الهام از زندگی <strong>۱۰ زن موفق تاریخ</strong> از جمله:</p>
+        <div class="inspiring-women">
+            <span class="woman-tag">هلن کلر</span>
+            <span class="woman-tag">مریم میرزاخانی</span>
+            <span class="woman-tag">ماری کوری</span>
+            <span class="woman-tag">آن فرانک</span>
+        </div>
+        <p>در این دوره یاد می‌گیری که مثل زنان اثرگذار تاریخ اشتباهات را به <strong>فرصت‌های یادگیری</strong> تبدیل کنی و داستان زندگی‌ات را دوباره بنویسی.</p>
+    </div>
+</section>
+
+<section class="course-section">
+    <h2>چرا دوره «راز ارزشمندی» انتخاب مناسبی برای شماست؟</h2>
+    <ul class="reasons-list">
+        <li><strong>الهام از زندگی زنان موفق:</strong> در این دوره، داستان زندگی ۱۰ زن تأثیرگذار، از جمله هلن کلر، مریم میرزاخانی و آن فرانک، بررسی می‌شود تا به شما نشان دهد عزت‌نفس چگونه می‌تواند مسیر موفقیت را تغییر دهد.</li>
+        <li><strong>آموزش علمی و حرفه‌ای:</strong> این دوره بر پایه اصول روان‌شناسی و تکنیک‌های اثبات‌شده طراحی شده است. محتوای آن معتبر و کاربردی است و از مطالب غیرمفید و زرد دوری شده است تا وقت و هزینه شما به بهترین شکل استفاده شود.</li>
+        <li><strong>مدرس متخصص و باتجربه:</strong> دوره توسط روانشناس بالینی با بیش از ۱۰ سال تجربه و تحصیلات تخصصی طراحی و تدریس شده است که کاربردی و علمی بودن محتوا را تضمین می‌کند.</li>
+        <li><strong>کیفیت بالای ویدیوها:</strong> تمام ویدیوها با بهترین تجهیزات فیلم‌برداری ضبط شده‌اند تا تجربه‌ای راحت و لذت‌بخش از آموزش داشته باشید.</li>
+        <li><strong>پشتیبانی سریع و موثر:</strong> تیم پشتیبانی دوره همیشه آماده پاسخگویی به سوالات و مشکلات شماست تا تجربه‌ای بدون دغدغه داشته باشید.</li>
+        <li><strong>آموزش‌های کوتاه و کاربردی:</strong> محتوای دوره به صورت آموزشی کوتاه و در عین حال بسیار کاربردی طراحی شده است، به گونه‌ای که به راحتی قابل استفاده در زندگی روزمره شما باشد.</li>
+    </ul>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>بخشی از سرفصل‌های کلیدی دوره «راز ارزشمندی»</h2>
+    <div class="section-bg">
+        <ol class="changes-list">
+            <li><strong>درک مفهوم عزت نفس و تأثیرات آن بر زندگی:</strong> آشنایی با پایه‌های عزت نفس و تأثیر آن بر جنبه‌های مختلف زندگی شخصی و اجتماعی.</li>
+            <li><strong>شناسایی علائم عزت نفس پایین:</strong> روش‌های ارزیابی وضعیت عزت نفس و شناسایی نشانه‌های آن در زندگی روزمره.</li>
+            <li><strong>پاسخ به ۷ سوال مهمی که ذهن شما را درگیر کرده:</strong> با بررسی زندگی ۱۰ زن موفق و الهام‌بخش در تاریخ، به سوالاتی بنیادین پاسخ داده می‌شود:
+                <ul style="margin-top: 0.5rem; padding-right: 1rem;">
+                    <li>آیا با وجود ضعف‌هایم، شایسته دوست داشته شدن هستم؟</li>
+                    <li>چگونه می‌توانم با تمام ضعف‌هایم، خودم را دوست داشته باشم؟</li>
+                    <li>چرا با وجود تلاش‌های بسیار، هنوز احساس ناکافی بودن دارم؟</li>
+                    <li>دیگران درباره من چگونه فکر می‌کنند؟</li>
+                    <li>آیا من هم می‌توانم مانند دیگران موفق، زیبا، یا باهوش باشم؟</li>
+                    <li>اگر در کاری شکست بخورم، چه کنم؟</li>
+                    <li>آیا توانایی موفقیت در کارهای بزرگ را دارم؟</li>
+                </ul>
+            </li>
+            <li><strong>بهبود عزت نفس با رویکرد ناتانیل براندن:</strong> در این بخش، اصول عملی و قابل اجرا بر اساس نظریه معتبر ناتانیل براندن به شما آموزش داده می‌شود.</li>
+        </ol>
+    </div>
+    <div class="text-center mt-3">
+        <a href="/shop/checkout/{{ product_id }}" class="btn-buy-large">خرید دوره</a>
+    </div>
+</section>
+
+<div class="section-divider">•••</div>
+
+<section class="course-section">
+    <h2>با مرضیه فیضی بیشتر آشنا شوید!</h2>
+    <div class="instructor-box">
+        <div class="instructor-image-placeholder">[تصویر مدرس]</div>
+        <div class="instructor-info">
+            <h3>دکتر مرضیه فیضی</h3>
+            <ul class="changes-list" style="margin-top: 0.5rem;">
+                <li>دکترای روان‌شناسی بالینی از دانشگاه علوم پزشکی شهید بهشتی</li>
+                <li>روان‌درمانگر متخصص در درمان کمبود عزت‌نفس و مشکلات ناشی از آن با استفاده از رویکردهای مختلف، از جمله روان‌شناسی اکت (ACT)</li>
+                <li>مدرس دوره جامع زندگیِ هوشمندانه که حدود ۶۰ ساعت آموزش علمی و کاربردی جهت افزایش عزت‌نفس و بهبود هوش هیجانی دارد.</li>
+            </ul>
+            <p style="margin-top: 0.75rem;"><strong>نویسنده‌ی کتاب‌های:</strong></p>
+            <ul class="changes-list">
+                <li>مدیر هوشمند؛ صفر تا صد هوش هیجانی برای مدیران</li>
+                <li>زندگی هوشمندانه؛ گام‌های حساب شده تا خلق دستاورد</li>
+                <li>همکاری در ترجمه کتاب «درمانگری تخصصی در سلامت، آموزش و هنر خلاق»، انتشارات آموزشی و پژوهشی بوعلی</li>
+                <li>نویسنده اول و مسئول چند مقاله بین‌المللی ISI، Scopus، Pubmed</li>
+            </ul>
+            <p style="margin-top: 0.75rem;"><strong>عضویت‌ها:</strong></p>
+            <p style="margin-top: 0.3rem;">
+                <span class="badge">عضو سازمان نظام روان‌شناسی (شماره عضویت: ۲۰۴۴۷)</span>
+                <span class="badge">عضو انجمن روان‌شناسی ایران</span>
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="course-section">
+    <h2>سوالات متداول</h2>
+
+    <div class="faq-item">
+        <h4>من دوره «زندگی هوشمندانه» را گذرانده‌ام، آیا فیلم دوره راز ارزشمندی برایم مفید است؟</h4>
+        <p><strong>بله، حتماً!</strong> به شما تبریک می‌گویم که دوره «زندگی هوشمندانه» را گذرانده‌اید، این نشان‌دهنده تعهد شما به رشد شخصی است. دوره «راز ارزشمندی» نیز می‌تواند مکملی عالی برای مسیر شما باشد. درحالی‌که دوره قبلی ابزارهای عملی برای تقویت عزت‌نفس ارائه کرده است، این دوره با تمرکز بر <strong>ریشه‌های باورهای محدودکننده</strong> به شما کمک می‌کند تغییرات عمیق‌تر و پایدارتری ایجاد کنید. این دو دوره مانند <strong>دو قطعه پازل</strong> هستند که کنار هم، تصویر کامل‌تری از رشد و عزت‌نفس شما می‌سازند.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>پس از گذراندن دوره «راز ارزشمندی»، چه تغییراتی خواهید دید؟</h4>
+        <ul class="changes-list" style="margin-top: 0.5rem;">
+            <li><strong>خداحافظی با مقایسه:</strong> به ارزش‌های منحصربه‌فرد خود پی می‌برید و دیگر خودتان را با دیگران مقایسه نمی‌کنید.</li>
+            <li><strong>پذیرش اشتباهات:</strong> اشتباهات را فرصتی برای رشد می‌بینید، نه دلیلی برای سرزنش خود.</li>
+            <li><strong>دوستی با خود:</strong> مهربانی با خود و تقویت خوددوستی را تجربه می‌کنید.</li>
+            <li><strong>مسئولیت‌پذیری بیشتر:</strong> کنترل زندگی‌تان را به دست می‌گیرید و تغییرات مثبت ایجاد می‌کنید.</li>
+            <li><strong>اعتمادبه‌نفس بالا:</strong> با اطمینان بیشتری تصمیم‌گیری می‌کنید و با چالش‌ها روبه‌رو می‌شوید.</li>
+            <li><strong>کاهش استرس و اضطراب:</strong> احساس آرامش بیشتری را تجربه خواهید کرد.</li>
+            <li><strong>روابط قوی‌تر:</strong> ارتباطات سالم‌تری با اطرافیان خود برقرار می‌کنید.</li>
+            <li><strong>شادی و رضایت بیشتر:</strong> با افزایش عزت‌نفس، زندگی‌تان شادتر و معنادارتر خواهد شد.</li>
+        </ul>
+    </div>
+
+    <div class="faq-item">
+        <h4>من در جلسات مشاوره و گروه‌درمانی شرکت می‌کنم، آیا این دوره برای من مفید است؟</h4>
+        <p>شرکت در جلسات درمانی عالی است، و دوره «راز ارزشمندی» می‌تواند مکملی قدرتمند باشد. این دوره با ارائه ابزارهای عملی، به شما کمک می‌کند باورهای محدودکننده را شناسایی و تغییر دهید و مسیر رشدتان را سریع‌تر و پایدارتر کنید.</p>
+    </div>
+
+    <div class="faq-item">
+        <h4>چرا مرضیه فیضی فرد مناسبی برای آموزش عزت‌نفس است؟</h4>
+        <p>دکتر مرضیه فیضی، با سال‌ها تجربه در مشاوره و آموزش، فردی متخصص و قابل‌اعتماد در زمینه تقویت عزت‌نفس است. دوره‌های او بر پایه اصول علمی روان‌شناسی طراحی شده‌اند و به‌دور از توصیه‌های سطحی، ابزارهای عملی و مؤثری برای تغییر پایدار ارائه می‌دهند.</p>
+    </div>
+</section>
+
+{% endblock %}
