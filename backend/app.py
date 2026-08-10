@@ -188,6 +188,13 @@ def create_app():
                 cr = ContactRequest(name=name, phone=phone, message=message)
                 db.session.add(cr)
                 db.session.commit()
+                try:
+                    from email_service import send_contact_notification
+                    result = send_contact_notification(name, phone, message)
+                    if not result.get('success'):
+                        print(f"[EMAIL NOTIFICATION] Failed: {result.get('error')}")
+                except Exception as e:
+                    print(f"[EMAIL NOTIFICATION] Error: {e}")
                 return render_template('contact.html', success=True)
             return render_template('contact.html', error=True)
         return render_template('contact.html')
