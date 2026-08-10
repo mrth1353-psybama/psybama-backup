@@ -18,7 +18,10 @@ from shop_routes import shop_bp
 from rag_handler import load_knowledge_base
 
 
-EBOOK_PRODUCT_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
+EBOOK_PRODUCT_NAME = 'کتاب مدیر هوشمند'
+EBOOK_PRODUCT_LEGACY_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
+EBOOK_PRODUCT_DESCRIPTION = 'کتاب مدیر هوشمند — راهنمای کاربردی برای مدیرانی که می‌خواهند هوشمندانه‌تر تصمیم بگیرند و تیمشان را مؤثرتر هدایت کنند.'
+EBOOK_PRODUCT_PRICE = 220000
 
 MBI_ITEMS = {
     'EE': [1, 2, 3, 6, 8, 13, 14, 16, 22],
@@ -541,17 +544,42 @@ def create_app():
             db.session.commit()
             print('[DB] Updated "دوره راز ارزشمندی" price to 3,800,000')
 
-        # Seed placeholder ebook product for the post-assessment popup (name/price to be finalized)
+        # Sync "کتاب مدیر هوشمند" ebook product (rename legacy placeholder if present)
         ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
-        if not ebook_product:
-            ebook_product = Product(
-                name=EBOOK_PRODUCT_NAME,
-                description='توضیح کوتاه ایبوک — بعداً جایگزین می‌شود.',
-                price=190000
-            )
-            db.session.add(ebook_product)
+        if ebook_product:
+            changed = False
+            if ebook_product.description != EBOOK_PRODUCT_DESCRIPTION:
+                ebook_product.description = EBOOK_PRODUCT_DESCRIPTION
+                changed = True
+            if ebook_product.price != EBOOK_PRODUCT_PRICE:
+                ebook_product.price = EBOOK_PRODUCT_PRICE
+                changed = True
+            if changed:
+                db.session.commit()
+        else:
+            legacy = Product.query.filter_by(name=EBOOK_PRODUCT_LEGACY_NAME).first()
+            if legacy:
+                legacy.name = EBOOK_PRODUCT_NAME
+                legacy.description = EBOOK_PRODUCT_DESCRIPTION
+                legacy.price = EBOOK_PRODUCT_PRICE
+                db.session.commit()
+                print('[DB] Renamed legacy ebook product to "کتاب مدیر هوشمند"')
+            else:
+                ebook_product = Product(
+                    name=EBOOK_PRODUCT_NAME,
+                    description=EBOOK_PRODUCT_DESCRIPTION,
+                    price=EBOOK_PRODUCT_PRICE
+                )
+                db.session.add(ebook_product)
+                db.session.commit()
+                print('[DB] Seeded "کتاب مدیر هوشمند" ebook product')
+
+        # Deactivate any remaining legacy placeholder so it disappears from the shop
+        legacy_placeholder = Product.query.filter_by(name=EBOOK_PRODUCT_LEGACY_NAME).first()
+        if legacy_placeholder and legacy_placeholder.is_active:
+            legacy_placeholder.is_active = False
             db.session.commit()
-            print('[DB] Seeded placeholder ebook product')
+            print('[DB] Deactivated legacy ebook placeholder product')
 
         load_knowledge_base()
 

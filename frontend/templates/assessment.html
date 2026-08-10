@@ -393,30 +393,6 @@
     </div>
 </div>
 
-<!-- Ebook promo popup (shown after results) -->
-{% if ebook_product %}
-<div class="modal-backdrop hidden" id="ebookModal">
-    <div class="modal-box text-center">
-        <div style="font-size:2.5rem;margin-bottom:0.75rem">📘</div>
-        <h2 style="font-family:var(--font-title);font-size:1.2rem;color:var(--slate-blue);margin-bottom:0.5rem">
-            {{ ebook_product.name }}
-        </h2>
-        <p class="text-muted mb-2" style="line-height:1.8">
-            راهنمای گام‌به‌گام برای عبور از فرسودگی شغلی — بر اساس نتایج پرسشنامه‌ای که همین الان تکمیل کردید.
-        </p>
-        <div style="font-family:var(--font-title);font-size:1.3rem;color:var(--slate-blue);margin-bottom:1.25rem">
-            {{ '{:,}'.format(ebook_product.price) }}
-            <span style="font-size:0.85rem;color:var(--text-muted);font-family:var(--font-body)">تومان</span>
-        </div>
-        <a href="/shop/checkout/{{ ebook_product.id }}" class="btn btn-primary w-full mb-2">
-            خرید ایبوک
-        </a>
-        <button class="btn btn-ghost w-full" id="btnSkipEbook">
-            شاید بعداً
-        </button>
-    </div>
-</div>
-{% endif %}
 {% endblock %}
 
 {% block extra_js %}
