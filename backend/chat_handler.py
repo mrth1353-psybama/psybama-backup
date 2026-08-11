@@ -27,12 +27,21 @@ CRISIS_KEYWORDS = [
     'نمیخوام زنده باشم', 'نمی‌خوام زنده باشم',
     'زندگی ارزش نداره', 'زندگیم ارزش نداره', 'زندگی دیگه ارزش نداره',
     'خودم رو بکشم', 'خودمو بکشم',
+    'مرگ', 'مردن', 'کشتن',
+    'از بین بردن خودم', 'از بین بردن دیگران', 'از بین بردن دیگری',
+    'خودسوزی', 'کشتن خودم', 'کشتن دیگران',
+    'آسیب زدن به خودم', 'آسیب زدن', 'آسیب زدن به دیگری', 'آسیب زدن به افراد',
+    'آسیب رساندن',
+    'منفجر کردن', 'طلب مرگ', 'طلب مردن',
+    'دار زدن', 'حلق آویز',
 ]
 
 CRISIS_RESPONSE = (
-    'این وضعیت فوری است — نباید به‌تنهایی با آن بمانی. با اورژانس اجتماعی ۱۲۳ یا اورژانس ۱۱۵ تماس بگیر.\n'
+    'این یک وضعیت فوری است — نباید ‌تنها بمانی. سریعاً با اورژانس اجتماعی ۱۲۳ یا اورژانس ۱۱۵ تماس بگیر.\n'
     'الان در امنیتی؟'
 )
+
+COMING_SOON_RESPONSE = 'فعلاً نمی‌توانم پاسخ بدهم.'
 
 
 def _is_crisis_message(text: str) -> bool:
@@ -188,7 +197,6 @@ def build_context(conversation_id: int) -> list:
 
 def send_message(user_id: int, user_text: str, conversation_id: int = None) -> dict:
     from models import db, Message, Conversation
-    from rag_handler import get_relevant_context
 
     if conversation_id:
         conv = Conversation.query.filter_by(id=conversation_id, user_id=user_id).first()
@@ -213,38 +221,11 @@ def send_message(user_id: int, user_text: str, conversation_id: int = None) -> d
             'message_id': assistant_msg.id
         }
 
-    context = build_context(conv.id)
-
-    rag_context = get_relevant_context(user_text)
-    system_content = SYSTEM_PROMPT
-    if rag_context:
-        system_content += f"\n\nمنابع مرتبط از پایگاه دانش:\n{rag_context}"
-
-    api_messages = [{'role': 'system', 'content': system_content}] + context
-
-    reply_text = None
-    last_error = None
-
-    for provider in PROVIDERS:
-        try:
-            reply_text = _call_provider(provider, api_messages)
-            print(f'[AI] OK via {provider["name"]}')
-            break
-        except Exception as e:
-            print(f'[AI] {provider["name"]} failed: {type(e).__name__}: {e}')
-            last_error = e
-            continue
-
-    if reply_text is None:
-        db.session.rollback()
-        return {'error': f'ai_error: {last_error}'}
-
-    assistant_msg = Message(conversation_id=conv.id, role='assistant', content=reply_text)
+    assistant_msg = Message(conversation_id=conv.id, role='assistant', content=COMING_SOON_RESPONSE)
     db.session.add(assistant_msg)
     db.session.commit()
-
     return {
-        'reply': reply_text,
+        'reply': COMING_SOON_RESPONSE,
         'conversation_id': conv.id,
         'message_id': assistant_msg.id
     }
