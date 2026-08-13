@@ -222,7 +222,13 @@ def create_app():
             return jsonify({'error': 'invalid_phone', 'message': 'شماره موبایل معتبر نیست'}), 400
 
         user, otp = create_or_update_otp(phone)
-        result = send_otp(phone, otp)
+        try:
+            result = send_otp(phone, otp)
+        except Exception as e:
+            return jsonify({
+                'error': 'sms_failed',
+                'message': f'خطا در ارسال پیامک: {e}'
+            }), 500
 
         return jsonify({
             'success': True,
