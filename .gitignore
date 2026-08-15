@@ -12,3 +12,7 @@ venv/
 *.egg-info/
 dist/
 build/
+
+# backup copies - keep out of git
+.env.save*
+*.bak
