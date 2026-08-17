@@ -70,8 +70,9 @@ def online_pay(product_id):
     full_name = (request.form.get('full_name') or '').strip()
     phone = (request.form.get('phone') or '').strip()
     address = (request.form.get('address') or '').strip()
+    postal_code = (request.form.get('postal_code') or '').strip()
 
-    if not full_name or not phone or not address:
+    if not full_name or not phone or not address or not postal_code:
         return render_template('payment_online.html', product=product,
                                error='لطفاً تمام فیلدها را پر کنید.')
 
@@ -83,6 +84,7 @@ def online_pay(product_id):
         customer_name=full_name,
         customer_phone=phone,
         customer_address=address,
+        customer_postal_code=postal_code,
         status='pending_payment'
     )
     db.session.add(order)

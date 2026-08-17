@@ -502,7 +502,7 @@ def create_app():
             db.session.rollback()
 
         # Migration: add customer info columns to orders
-        for col in ('customer_name', 'customer_phone', 'customer_address'):
+        for col in ('customer_name', 'customer_phone', 'customer_address', 'customer_postal_code'):
             try:
                 from sqlalchemy import text
                 db.session.execute(text(

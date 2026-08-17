@@ -150,6 +150,7 @@ class Order(db.Model):
     customer_name = db.Column(db.String(200), nullable=True)
     customer_phone = db.Column(db.String(20), nullable=True)
     customer_address = db.Column(db.Text, nullable=True)
+    customer_postal_code = db.Column(db.String(10), nullable=True)
     spotplayer_key = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=iran_now)
     paid_at = db.Column(db.DateTime, nullable=True)
