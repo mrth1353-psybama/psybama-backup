@@ -42,18 +42,70 @@ def pay(product_id):
     if method not in ('online', 'card'):
         return render_template('checkout.html', product=product, error='روش پرداخت نامعتبر است')
 
+    if method == 'online':
+        return redirect(f'/shop/checkout/{product_id}/online')
+
     order = Order(
         user_id=session.get('user_id'),
         product_id=product_id,
-        payment_method=method,
+        payment_method='card',
         amount=product.price,
         status='pending_payment'
     )
     db.session.add(order)
     db.session.commit()
-
-    # Both payment methods go to bank transfer page for now
     return redirect(f'/shop/card/{order.id}')
+
+
+@shop_bp.route('/checkout/<int:product_id>/online', methods=['GET'])
+def online_form(product_id):
+    product = Product.query.get_or_404(product_id)
+    return render_template('payment_online.html', product=product)
+
+
+@shop_bp.route('/checkout/<int:product_id>/online', methods=['POST'])
+def online_pay(product_id):
+    product = Product.query.get_or_404(product_id)
+
+    full_name = (request.form.get('full_name') or '').strip()
+    phone = (request.form.get('phone') or '').strip()
+    address = (request.form.get('address') or '').strip()
+
+    if not full_name or not phone or not address:
+        return render_template('payment_online.html', product=product,
+                               error='لطفاً تمام فیلدها را پر کنید.')
+
+    order = Order(
+        user_id=session.get('user_id'),
+        product_id=product_id,
+        payment_method='online',
+        amount=product.price,
+        customer_name=full_name,
+        customer_phone=phone,
+        customer_address=address,
+        status='pending_payment'
+    )
+    db.session.add(order)
+    db.session.commit()
+
+    site_url = os.getenv('SITE_URL', request.host_url.rstrip('/'))
+    callback_url = f'{site_url}/shop/verify/{order.id}'
+
+    result = create_payment(
+        amount_tomans=product.price,
+        description=f'خرید {product.name} - {full_name}',
+        callback_url=callback_url
+    )
+
+    if result['success']:
+        order.zarinpal_authority = result['authority']
+        db.session.commit()
+        return redirect(result['pay_url'])
+
+    db.session.delete(order)
+    db.session.commit()
+    return render_template('payment_online.html', product=product,
+                           error=result.get('error', 'خطا در اتصال به درگاه پرداخت.'))
 
 
 @shop_bp.route('/verify/<int:order_id>')
@@ -68,7 +120,8 @@ def verify(order_id):
             order.status   = 'pending_key'
             order.paid_at  = iran_now()
             db.session.commit()
-            return render_template('order_success.html', order=order, ref_id=result['ref_id'], online=True)
+            return render_template('order_result.html', order=order, success=True,
+                                   message=f'پرداخت موفق بود. کد پیگیری: {result["ref_id"]}')
 
     order.status = 'cancelled'
     db.session.commit()
@@ -87,7 +140,6 @@ def card_payment(order_id):
 @shop_bp.route('/card/<int:order_id>/confirm', methods=['POST'])
 def card_confirm(order_id):
     order = Order.query.get_or_404(order_id)
-    # Mark as pending_payment (waiting admin to verify the SMS receipt)
     order.status = 'pending_payment'
     db.session.commit()
     return render_template('order_result.html', order=order, success=True,

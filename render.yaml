@@ -37,3 +37,9 @@ services:
         value: "false"
       - key: NOTIFY_EMAIL
         sync: false
+      - key: ZARINPAL_MERCHANT_ID
+        sync: false
+      - key: ZARINPAL_SANDBOX
+        value: "false"
+      - key: SITE_URL
+        value: "https://psybama.ir"

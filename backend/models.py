@@ -147,6 +147,9 @@ class Order(db.Model):
     # pending_payment | pending_key | completed | cancelled
     amount = db.Column(db.Integer, nullable=False)  # Tomans
     zarinpal_authority = db.Column(db.String(100), nullable=True)
+    customer_name = db.Column(db.String(200), nullable=True)
+    customer_phone = db.Column(db.String(20), nullable=True)
+    customer_address = db.Column(db.Text, nullable=True)
     spotplayer_key = db.Column(db.String(500), nullable=True)
     created_at = db.Column(db.DateTime, default=iran_now)
     paid_at = db.Column(db.DateTime, nullable=True)

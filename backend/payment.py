@@ -1,7 +1,7 @@
 import os
 import requests
 
-SANDBOX = True  # False after getting real merchant ID
+SANDBOX = os.getenv('ZARINPAL_SANDBOX', 'true').lower() == 'true'
 
 if SANDBOX:
     REQUEST_URL  = 'https://sandbox.zarinpal.com/pg/v4/payment/request.json'
@@ -14,7 +14,9 @@ else:
 
 
 def create_payment(amount_tomans, description, callback_url):
-    merchant_id = os.getenv('ZARINPAL_MERCHANT_ID', 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+    merchant_id = os.getenv('ZARINPAL_MERCHANT_ID')
+    if not merchant_id:
+        return {'success': False, 'error': 'مرچنت‌کد زرین‌پال تنظیم نشده است.'}
     try:
         res = requests.post(REQUEST_URL, json={
             'merchant_id': merchant_id,
@@ -33,7 +35,9 @@ def create_payment(amount_tomans, description, callback_url):
 
 
 def verify_payment(authority, amount_tomans):
-    merchant_id = os.getenv('ZARINPAL_MERCHANT_ID', 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
+    merchant_id = os.getenv('ZARINPAL_MERCHANT_ID')
+    if not merchant_id:
+        return {'success': False, 'error': 'مرچنت‌کد زرین‌پال تنظیم نشده است.'}
     try:
         res = requests.post(VERIFY_URL, json={
             'merchant_id': merchant_id,

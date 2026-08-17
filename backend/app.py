@@ -501,6 +501,18 @@ def create_app():
         except Exception:
             db.session.rollback()
 
+        # Migration: add customer info columns to orders
+        for col in ('customer_name', 'customer_phone', 'customer_address'):
+            try:
+                from sqlalchemy import text
+                db.session.execute(text(
+                    f'ALTER TABLE orders ADD COLUMN {col} TEXT'
+                ))
+                db.session.commit()
+                print(f'[DB] Migration: added {col} column to orders')
+            except Exception:
+                db.session.rollback()
+
         # Migration: add lead_id column to assessments if it doesn't exist yet
         try:
             from sqlalchemy import text
