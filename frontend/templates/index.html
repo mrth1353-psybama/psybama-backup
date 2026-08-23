@@ -441,12 +441,14 @@
             <a href="/chat" class="btn btn-primary">شروع گفتگو</a>
         </div>
 
+        {% if mbi_assessment_enabled %}
         <!-- Service 2: Assessment -->
         <div class="service-card teal">
             <h3>پرسشنامه استاندارد فرسودگی شغلی</h3>
             <p>پرسشنامه ماسلاچ (MBI) — ابزار علمی استاندارد برای سنجش فرسودگی شغلی. نتایج فوری با تفسیر اختصاصی.</p>
             <a href="/assessment" class="btn btn-teal">شروع پرسشنامه</a>
         </div>
+        {% endif %}
 
         <!-- Service 3: Online Consultation -->
         <div class="service-card coral">
@@ -479,7 +481,9 @@
             </ul>
             <div style="display:flex; gap:1rem; flex-wrap:wrap;">
                 <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با <strong>سای‌باما</strong></a>
+                {% if mbi_assessment_enabled %}
                 <a href="/assessment" class="btn btn-white-outline btn-lg">ابتدا پرسشنامه بدهم</a>
+                {% endif %}
             </div>
         </div>
 
@@ -527,6 +531,7 @@
     </div>
 </section>
 
+{% if mbi_assessment_enabled %}
 <!-- Assessment Section -->
 <section class="assessment-section">
     <div class="inner">
@@ -552,5 +557,6 @@
         <a href="/assessment" class="btn btn-white btn-lg">پرسشنامه فرسودگی شغلی</a>
     </div>
 </section>
+{% endif %}
 
 {% endblock %}

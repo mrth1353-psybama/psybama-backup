@@ -29,8 +29,10 @@
     <ul class="navbar-links">
         <li><a href="/">خانه</a></li>
         <li><a href="/about">درباره من</a></li>
+        {% if mbi_assessment_enabled %}
         <li><a href="/assessment">پرسشنامه فرسودگی شغلی</a></li>
-        <li><a href="/waaq"><span style="font-size:0.75rem; font-weight:normal;">پرسشنامه پذیرش و عمل در محیط کار(WAAQ)</span></a></li>
+        {% endif %}
+        <li><a href="/knot"><span style="font-size:0.75rem; font-weight:normal;">پرسشنامه ریشه‌یابی گره کور شغلی</span></a></li>
         <li><a href="/shop">فروشگاه</a></li>
         <li><a href="/chat" class="btn btn-sm" style="margin-right:0.5rem; background:var(--ocean-blue); color:white; font-size:0.85rem;">گفتگو با سای‌باما<span style="font-size:0.7rem;">(دستیار هوشمند سلامت روان در محیط کار)</span></a></li>
     </ul>
@@ -62,7 +64,7 @@
 
 {% block faq_widget %}
 <link rel="stylesheet" href="/static/css/faq-widget.css">
-<script src="/static/js/faq-widget.js" defer></script>
+    <script src="/static/js/faq-widget.js?v={{ ASSET_VERSION }}" defer></script>
 {% endblock %}
 
 {% block extra_js %}{% endblock %}

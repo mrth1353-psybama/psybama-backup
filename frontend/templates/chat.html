@@ -84,9 +84,11 @@
             </div>
         </div>
         <div class="chat-header-actions">
+            {% if mbi_assessment_enabled %}
             <a href="/assessment" target="_blank" class="btn-assessment" title="پرسشنامه فرسودگی ماسلاچ">
                 📋 <span>پرسشنامه فرسودگی</span>
             </a>
+            {% endif %}
             <button class="btn-new-chat" id="btnNewChat" title="شروع گفتگوی جدید">
                 ✦ گفتگوی جدید
             </button>
@@ -130,6 +132,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/auth.js"></script>
-<script src="/static/js/chat.js"></script>
+<script src="/static/js/auth.js?v={{ ASSET_VERSION }}"></script>
+<script src="/static/js/chat.js?v={{ ASSET_VERSION }}"></script>
 {% endblock %}

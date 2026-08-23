@@ -73,6 +73,10 @@
                 <div class="stat-number" id="statWaaq">—</div>
                 <div class="stat-label">پرسشنامه WAAQ</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statKnot">—</div>
+                <div class="stat-label">پرسشنامه گره کور شغلی</div>
+            </div>
         </div>
 
         <!-- Export button -->
@@ -177,13 +181,21 @@
                             <th>تلفن</th>
                             <th>تاریخ</th>
                             <th>تکمیل پرسشنامه</th>
+                            <th>پاسخ‌ها</th>
                             <th>حذف</th>
                         </tr>
                     </thead>
                     <tbody id="leadsTableBody">
-                        <tr><td colspan="7" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                        <tr><td colspan="8" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="leadDetailsPanel" class="conv-viewer hidden" style="margin-top:1rem">
+                <div class="conv-viewer-header">
+                    <span id="leadDetailsTitle"></span>
+                    <button class="btn btn-ghost btn-sm" id="btnCloseLeadDetails">✕ بستن</button>
+                </div>
+                <div id="leadDetailsContent" style="padding:1rem"></div>
             </div>
         </div>
 
@@ -242,5 +254,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/admin.js"></script>
+    <script src="/static/js/admin.js?v={{ ASSET_VERSION }}"></script>
 {% endblock %}

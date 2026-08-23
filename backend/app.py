@@ -23,6 +23,14 @@ EBOOK_PRODUCT_LEGACY_NAME = 'ایبوک — عنوان جایگزین (به‌ز
 EBOOK_PRODUCT_DESCRIPTION = 'کتاب مدیر هوشمند — راهنمای کاربردی برای مدیرانی که می‌خواهند هوشمندانه‌تر تصمیم بگیرند و تیمشان را مؤثرتر هدایت کنند.'
 EBOOK_PRODUCT_PRICE = 220000
 
+# ── Feature flags ─────────────────────────────────────────────────────────────
+# پرسشنامه فرسودگی شغلی ماسلاچ (MBI): برای فعال‌سازی مجدد فقط True کنید.
+# در این حالت منوی سایت و دکمه‌ها به‌صورت خودکار برمی‌گردند.
+MBI_ASSESSMENT_ENABLED = False
+
+# لینک ثبت‌نام وبینار رایگان ریشه‌یابی گره کور شغلی (در نتایج پرسشنامه گره کور)
+KNOT_WEBINAR_URL = '#'  # TODO: لینک ثبت‌نام وبینار اینجا قرار بگیرد
+
 MBI_ITEMS = {
     'EE': [1, 2, 3, 6, 8, 13, 14, 16, 22],
     'DP': [5, 10, 11, 15, 21],
@@ -94,6 +102,150 @@ def score_waaq(responses):
     }
 
 
+# ── Career Knot (پرسشنامه ریشه‌یابی گره کور شغلی) ────────────────────────────
+#
+# 8 questions; each answer is one of الف/ب/ج/د (stored as 1/2/3/4).
+# Scoring (per the official guide):
+#   a, b, c, d = number of times each option was chosen; T = max(a, b, c, d)
+#   - 5 <= T <= 8                          → Section 1 (single dominant profile)
+#   - exactly one of {a,b,c,d} equals 4    → Section 1
+#   - two of {a,b,c,d} equal 4             → Section 2 (combined profile)
+#   - one equals 3 AND two equal 2         → Section 1
+#   - two of {a,b,c,d} equal 3             → Section 2
+#   - three of {a,b,c,d} equal 2           → Section 3 (mixed profile)
+
+KNOT_SECTION1_TITLES = {
+    'a': 'بن‌بست کنترل',
+    'b': 'بن‌بست مرز',
+    'c': 'بن‌بست معنا',
+    'd': 'بن‌بست مسیر'
+}
+
+KNOT_SECTION2_TITLES = {
+    'ab': 'بن‌بست کنترل + بن‌بست مرز',
+    'ac': 'بن‌بست کنترل + بن‌بست معنا',
+    'ad': 'بن‌بست کنترل + بن‌بست مسیر',
+    'bc': 'بن‌بست مرز + بن‌بست معنا',
+    'bd': 'بن‌بست مرز + بن‌بست مسیر',
+    'cd': 'بن‌بست معنا + بن‌بست مسیر'
+}
+
+KNOT_FEEDBACK = {
+    # ── Section 1: single dominant profile ──────────────────────────────────
+    'a': {
+        'title': KNOT_SECTION1_TITLES['a'],
+        'criterion': 'معیار فعلی شما: اثبات توانمندی و حفظ جایگاه.',
+        'body': ('شما در «بن‌بست کنترل» قرار دارید. این وضعیت یعنی بخش زیادی از انرژی شما صرف این می‌شود که مدام ثابت کنید چقدر توانمند، باارزش و مسلط هستید. منشأ فرسایش شما حجم کار نیست؛ بلکه این است که روی تصمیم‌های اثرگذار و نحوه انجام کارهایتان اختیار کافی ندارید. این یک الگوی ساختاری در محیط کار شماست، نه نشانه ضعف یا کم‌کاری شما.')
+    },
+    'b': {
+        'title': KNOT_SECTION1_TITLES['b'],
+        'criterion': 'معیار فعلی شما: پاسخگویی به انتظارات همه.',
+        'body': ('شما در «بن‌بست مرز» قرار دارید. در این حالت، بخش اصلی تمرکز شما صرف مسئولیت‌پذیری بیش‌ازحد و عقب نماندن از خواسته‌های دیگران می‌شود. منشأ اصلی خستگی شما، نداشتن مرزهای روشن بین وظایف واقعی‌تان و انتظارات اطرافیان (مدیر، همکار یا مشتری) است. این برای شما یک الگوی رفتاری تکرارشونده شده است، نه یک ضعف شخصیتی.')
+    },
+    'c': {
+        'title': KNOT_SECTION1_TITLES['c'],
+        'criterion': 'معیار فعلی شما: بی‌تفاوتی و رد کردن روزها',
+        'body': ('شما در «بن‌بست معنا» قرار دارید. این وضعیت نشان می‌دهد کاری که انجام می‌دهید، دیگر با ارزش‌ها، اولویت‌ها و آنچه واقعاً برایتان مهم است هم‌راستا نیست. بی‌حسی یا بی‌تفاوتی فعلی شما، نشانه تنبلی یا بی‌انگیزگی ذاتی نیست؛ بلکه یک واکنش طبیعی به فعالیت در محیطی است که مغزتان دیگر دلیلی برای اشتیاق نشان دادن به آن پیدا نمی‌کند.')
+    },
+    'd': {
+        'title': KNOT_SECTION1_TITLES['d'],
+        'criterion': 'معیار فعلی شما: ابهام در قدم بعدی',
+        'body': ('شما در «بن‌بست مسیر» قرار دارید. مسئله اصلی شما این است که تصویر شفافی از آینده و «گام بعدی» شغلی‌تان ندارید. شما توانایی و انگیزه کار کردن را دارید، اما نمی‌دانید این انرژی را دقیقاً در چه جهتی صرف کنید. منشأ سردرگمی شما سردرگم بودن اهداف است، نه بی‌استعدادی یا عدم تلاش.')
+    },
+
+    # ── Section 2: combined profiles ────────────────────────────────────────
+    'ab': {
+        'title': KNOT_SECTION2_TITLES['ab'],
+        'criterion': 'معیار فعلی شما: تلاش برای جبران بی‌کنترلی با پذیرش بار اضافه',
+        'body': ('شما در یک چرخه تکرارشونده گیر افتاده‌اید: چون روی تصمیم‌گیری‌ها و روند اصلی کار کنترل کافی ندارید، سعی می‌کنید با پذیرش مسئولیت‌های بیشتر و نداشتن مرز، ارزش و توانمندی خود را ثابت کنید. این کار به قیمت خستگی مفرط و سوزاندن انرژی‌تان تمام می‌شود.')
+    },
+    'ac': {
+        'title': KNOT_SECTION2_TITLES['ac'],
+        'criterion': 'معیار فعلی شما: بی‌اختیاری در کاری که دیگر مهم نیست',
+        'body': ('شما در نقطه‌ای قرار گرفته‌اید که نه اختیار و کنترلی بر روی تصمیم‌گیری‌های شغلی‌تان دارید و نه آن کار معنا و ارزشی برایتان ایجاد می‌کند. وقتی احساس کنید بر مسائلی که حتی برایتان مهم نیستند هم کنترلی ندارید، بی‌تفاوتی عمیق و حس درجا زدن به سراغتان می‌آید.')
+    },
+    'ad': {
+        'title': KNOT_SECTION2_TITLES['ad'],
+        'criterion': 'معیار فعلی شما: نداشتن اختیار برای تغییر مسیر',
+        'body': ('شما می‌دانید که شرایط فعلی مطلوب نیست، اما چون اختیار عمل و کنترل بر شرایط موجود را ندارید، نمی‌توانید مسیر و قدم بعدی را به روشنی ترسیم کنید. این حالت باعث می‌شود احساس کنید در نقطه‌ای گیر کرده‌اید و آینده شغلی‌تان به تصمیم دیگران گره خورده است.')
+    },
+    'bc': {
+        'title': KNOT_SECTION2_TITLES['bc'],
+        'criterion': 'معیار فعلی شما: قربانی کردن انگیزه در برابر خواسته‌های دیگران',
+        'body': ('پاسخگویی مداوم به انتظارات اطرافیان و نداشتن مرزهای مشخص در کار، تمام انرژی روحی و جسمی شما را خالی کرده است. این فرسایش شدید باعث شده کاری که شاید روزی برایتان ارزشمند بوده، حالا کاملاً معنا و جذابیتش را از دست بدهد.')
+    },
+    'bd': {
+        'title': KNOT_SECTION2_TITLES['bd'],
+        'criterion': 'معیار فعلی شما: سرگرم بودن بدون جهت‌گیری مشخص',
+        'body': ('شما آن‌قدر درگیر پاسخ دادن به درخواست‌های روزمره و کارهای بدون مرز دیگران شده‌اید که فرصت و تمرکز کافی برای فکر کردن به مسیر و قدم بعدی خود را ندارید. شلوغیِ بیش از حد، دید شما را نسبت به آینده شغلی‌تان تار کرده است.')
+    },
+    'cd': {
+        'title': KNOT_SECTION2_TITLES['cd'],
+        'criterion': 'معیار فعلی شما: قطع ارتباط با آینده شغلی',
+        'body': ('شما در نقطه‌ای قرار دارید که نه نقشه روشنی برای آینده شغلی‌تان می‌بینید و نه کاری که الان انجام می‌دهید حس مهم بودن یا معنایی به شما می‌دهد. این حالت معمولاً در زمان‌های گذار شغلی یا وقتی سیستم فعلی کاملاً به انتهای کارایی خود رسیده، رخ می‌دهد.')
+    },
+
+    # ── Section 3: mixed profile ────────────────────────────────────────────
+    'mixed': {
+        'title': 'الگوی «پیچیدگی و فرسایش کامل شغلی»',
+        'criterion': '',
+        'body': ('امتیازات شما نشان می‌دهد که پاسخ‌هایتان به‌طور کاملاً متوازن بین ۴ الگوی شغلی پخش شده است. این یعنی گره شغلی شما یک‌بعدی نیست و شما هم‌زمان درگیر چند مسئله هستید:\n'
+                 '• حس می‌کنید اختیار کافی روی کارهایتان ندارید.\n'
+                 '• مرزهای مشخصی برای پاسخ به انتظارات دیگران ندارید.\n'
+                 '• کار فعلی معنا و جذابیتش را برایتان از دست داده است.\n'
+                 '• تصویر و جهت روشنی هم از قدم بعدی‌تان ندارید.\n'
+                 'به عبارت دیگر سیستم شغلی فعلی شما به حد اشباع و بن‌بست کامل رسیده است. ادامه دادن با همین رویه فقط انرژی شما را خالی می‌کند و وقت آن رسیده که از بالا به مسئله نگاه کنید.\n'
+                 'چرا گیر کرده‌اید؟\n'
+                 'این بن‌بست، حاصل یک «الگوی تکرارشونده» است. وقتی معیار ذهنی شما برای موفقیت با واقعیت امروزتان همخوان نباشد، هرچقدر هم بیشتر تلاش کنید، فقط فرسوده‌تر می‌شوید. تغییر این وضعیت از «تغییر شغل» شروع نمی‌شود؛ از «شناخت و تغییر الگوی ذهنی» شروع می‌شود.')
+    }
+}
+
+
+def score_knot(responses):
+    """Score the Career Knot questionnaire (8 items, options الف/ب/ج/د = 1..4)."""
+    assert len(responses) == 8, "Career Knot requires exactly 8 responses"
+    assert all(1 <= r <= 4 for r in responses), "Career Knot answers must be 1-4"
+
+    letters = 'abcd'
+    counts = [responses.count(i) for i in range(1, 5)]  # [a, b, c, d]
+    t = max(counts)
+
+    if 5 <= t <= 8:
+        section = 1
+    elif counts.count(4) == 2:
+        section = 2
+    elif counts.count(4) == 1:
+        section = 1
+    elif counts.count(3) == 2:
+        section = 2
+    elif counts.count(3) == 1 and counts.count(2) == 2:
+        section = 1
+    elif counts.count(2) >= 3:
+        section = 3
+    else:
+        section = 1
+
+    if section == 1:
+        # Unique maximum is guaranteed in every Section 1 combination.
+        code = letters[counts.index(t)]
+    elif section == 2:
+        code = ''.join(sorted(l for l, c in zip(letters, counts) if c == t))
+    else:
+        code = 'mixed'
+
+    info = KNOT_FEEDBACK[code]
+
+    return {
+        'counts': {l: c for l, c in zip(letters, counts)},
+        'total_score': t,
+        'section': section,
+        'profile_code': code,
+        'profile_title': info['title'],
+        'criterion': info['criterion'],
+        'body': info['body']
+    }
+
+
 def classify(score, subscale):
     for level, lo, hi in THRESHOLDS[subscale]:
         if lo <= score <= hi:
@@ -142,6 +294,17 @@ def create_app():
     app.config['JSON_AS_ASCII'] = False
 
     CORS(app, resources={r'/api/*': {'origins': '*'}}, supports_credentials=True)
+
+    # Cache-busting for static assets: changes on every server start
+    import time
+    asset_version = str(int(time.time()))
+
+    @app.context_processor
+    def inject_asset_version():
+        return {
+            'ASSET_VERSION': asset_version,
+            'mbi_assessment_enabled': MBI_ASSESSMENT_ENABLED
+        }
 
     db.init_app(app)
     app.register_blueprint(admin_bp, url_prefix='/admin')
@@ -201,15 +364,21 @@ def create_app():
 
     @app.route('/assessment')
     def assessment():
+        # پرسشنامه فرسودگی شغلی فعلاً غیرفعال است — کاربر به پرسشنامه گره کور هدایت می‌شود
+        if not MBI_ASSESSMENT_ENABLED:
+            return redirect('/knot')
         from models import Product
         ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
         return render_template('assessment.html', ebook_product=ebook_product)
 
+    # WAAQ questionnaire is disabled — kept for historical data only
     @app.route('/waaq')
     def waaq():
-        from models import Product
-        ebook_product = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
-        return render_template('waaq.html', ebook_product=ebook_product)
+        return redirect('/assessment')
+
+    @app.route('/knot')
+    def knot():
+        return render_template('knot.html', webinar_url=KNOT_WEBINAR_URL)
 
     # ── Auth API ──────────────────────────────────────────────────────────────
 
@@ -469,6 +638,68 @@ def create_app():
             item7=items[6],
             total_score=scores['total_score'],
             level=scores['level']
+        )
+        db.session.add(assessment)
+        db.session.commit()
+
+        return jsonify({'success': True, 'scores': scores})
+
+    # ── Career Knot API ───────────────────────────────────────────────────────
+
+    @app.route('/api/knot/submit', methods=['POST'])
+    def submit_knot():
+        import json as json_lib
+        data = request.get_json()
+        responses = (data or {}).get('responses', [])
+        comments = (data or {}).get('comments') or []
+
+        if len(responses) != 8:
+            return jsonify({'error': 'invalid_responses', 'message': 'باید ۸ پاسخ ارسال شود'}), 400
+
+        try:
+            responses = [int(r) for r in responses]
+            assert all(1 <= r <= 4 for r in responses)
+        except (ValueError, AssertionError):
+            return jsonify({'error': 'invalid_values', 'message': 'مقادیر باید بین ۱ تا ۴ باشند'}), 400
+
+        # Optional per-question comments (max 8, each max 500 chars)
+        clean_comments = []
+        if isinstance(comments, list):
+            for c in comments[:8]:
+                if isinstance(c, str) and c.strip():
+                    clean_comments.append(c.strip()[:500])
+                else:
+                    clean_comments.append(None)
+
+        try:
+            scores = score_knot(responses)
+        except AssertionError:
+            return jsonify({'error': 'invalid_values', 'message': 'مقادیر ارسالی معتبر نیست'}), 400
+
+        from models import CareerKnotAssessment
+        user_id = session.get('user_id')
+        lead_id = session.get('assessment_lead_id')
+        counts = scores['counts']
+        assessment = CareerKnotAssessment(
+            user_id=user_id,
+            lead_id=lead_id,
+            item1=responses[0],
+            item2=responses[1],
+            item3=responses[2],
+            item4=responses[3],
+            item5=responses[4],
+            item6=responses[5],
+            item7=responses[6],
+            item8=responses[7],
+            comments=json_lib.dumps(clean_comments, ensure_ascii=False) if any(clean_comments) else None,
+            count_a=counts['a'],
+            count_b=counts['b'],
+            count_c=counts['c'],
+            count_d=counts['d'],
+            total_score=scores['total_score'],
+            section=scores['section'],
+            profile_code=scores['profile_code'],
+            profile_title=scores['profile_title']
         )
         db.session.add(assessment)
         db.session.commit()

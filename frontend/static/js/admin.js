@@ -85,6 +85,7 @@ const Admin = (() => {
             document.getElementById('statMsgs').textContent = data.total_messages;
             document.getElementById('statAssess').textContent = data.total_assessments;
             document.getElementById('statWaaq').textContent = data.total_waaq_assessments;
+            document.getElementById('statKnot').textContent = data.total_knot_assessments;
 
             const badge = document.getElementById('unreadBadge');
             if (data.unread_contact_requests > 0) {
@@ -409,7 +410,7 @@ const Admin = (() => {
             const data = await res.json();
 
             if (!data.leads.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="padding:2rem">هنوز لیدی ثبت نشده است</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted" style="padding:2rem">هنوز لیدی ثبت نشده است</td></tr>';
                 return;
             }
 
@@ -422,8 +423,13 @@ const Admin = (() => {
                     <td style="white-space:nowrap">${formatDateTime(l.created_at)}</td>
                     <td>
                         ${l.has_assessment
-                            ? '<span class="badge badge-success">تکمیل شد ✓</span>'
+                            ? `<span class="badge badge-success">${(l.assessment_types || []).join(' + ')} تکمیل شد ✓</span>`
                             : '<span class="badge">—</span>'}
+                    </td>
+                    <td>
+                        ${l.has_assessment
+                            ? `<button class="btn btn-ghost btn-sm" onclick="Admin.viewLeadDetails(${l.id})">📋 مشاهده</button>`
+                            : '<span class="text-muted">—</span>'}
                     </td>
                     <td>
                         <button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteLead(${l.id})">🗑 حذف</button>
@@ -431,8 +437,66 @@ const Admin = (() => {
                 </tr>`).join('');
 
         } catch (e) {
-            tbody.innerHTML = '<tr><td colspan="7" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
         }
+    }
+
+    async function viewLeadDetails(id) {
+        const panel = document.getElementById('leadDetailsPanel');
+        const titleEl = document.getElementById('leadDetailsTitle');
+        const contentEl = document.getElementById('leadDetailsContent');
+        const tabLeads = document.getElementById('tab-leads');
+
+        try {
+            const res = await fetch(`/admin/assessment-leads/${id}/details`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+
+            titleEl.textContent = `پاسخ‌های «${data.lead.name}» — ${data.lead.phone}`;
+
+            if (!data.assessments.length) {
+                contentEl.innerHTML = '<p class="text-muted text-center" style="padding:1rem">این لید هنوز هیچ پرسشنامه‌ای را تکمیل نکرده است.</p>';
+            } else {
+                contentEl.innerHTML = data.assessments.map(a => {
+                    let answersHtml = '';
+                    if (a.answers.length) {
+                        answersHtml = `
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead><tr><th>سؤال</th><th>پاسخ</th><th>توضیح کاربر</th></tr></thead>
+                                <tbody>
+                                    ${a.answers.map(ans => `
+                                        <tr>
+                                            <td>سؤال ${ans.question}</td>
+                                            <td><strong>${escapeHtml(String(ans.answer))}</strong></td>
+                                            <td>${ans.comment ? escapeHtml(ans.comment) : '<span class="text-muted">—</span>'}</td>
+                                        </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>`;
+                    }
+                    return `
+                        <div style="background:var(--warm-sand);border:1px solid var(--warm-sand-border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+                            <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem">
+                                <strong style="color:var(--slate-blue)">📝 ${escapeHtml(a.type)}</strong>
+                                <span class="text-muted" style="font-size:0.8rem">${formatDateTime(a.completed_at)}</span>
+                            </div>
+                            <div style="margin-bottom:${a.answers.length ? '0.75rem' : '0'}">${escapeHtml(a.summary)}</div>
+                            ${answersHtml}
+                        </div>`;
+                }).join('');
+            }
+
+            panel.classList.remove('hidden');
+            tabLeads.scrollIntoView({behavior: 'smooth'});
+
+        } catch (e) {
+            alert('خطا در بارگذاری پاسخ‌ها');
+        }
+    }
+
+    function closeLeadDetails() {
+        document.getElementById('leadDetailsPanel').classList.add('hidden');
     }
 
     async function deleteLead(id) {
@@ -551,6 +615,8 @@ const Admin = (() => {
             document.getElementById('convViewer').classList.add('hidden');
         });
 
+        document.getElementById('btnCloseLeadDetails').addEventListener('click', closeLeadDetails);
+
         initTabs();
         checkAdminStatus();
     }
@@ -559,5 +625,5 @@ const Admin = (() => {
 
     return {viewConversation, markContactRead, deleteContact,
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
-            saveProduct, toggleProduct, deleteLead};
+            saveProduct, toggleProduct, deleteLead, viewLeadDetails};
 })();

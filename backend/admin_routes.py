@@ -5,6 +5,7 @@ from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from auth import admin_required
 from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product, WaaqAssessment
+from models import CareerKnotAssessment
 from models import iran_now
 
 admin_bp = Blueprint('admin', __name__)
@@ -154,7 +155,15 @@ def list_assessment_leads():
     result = []
     for lead in leads:
         d = lead.to_dict()
-        d['has_assessment'] = Assessment.query.filter_by(lead_id=lead.id).first() is not None
+        types = []
+        if Assessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('فرسودگی شغلی')
+        if WaaqAssessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('انعطاف پذیری')
+        if CareerKnotAssessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('گره کور شغلی')
+        d['assessment_types'] = types
+        d['has_assessment'] = len(types) > 0
         result.append(d)
     return jsonify({'leads': result})
 
@@ -166,6 +175,66 @@ def delete_assessment_lead(lead_id):
     db.session.delete(lead)
     db.session.commit()
     return jsonify({'success': True})
+
+
+@admin_bp.route('/assessment-leads/<int:lead_id>/details')
+@admin_required
+def assessment_lead_details(lead_id):
+    lead = AssessmentLead.query.get_or_404(lead_id)
+
+    knot_option_fa = {1: 'الف', 2: 'ب', 3: 'ج', 4: 'د'}
+    assessments_out = []
+
+    # Career Knot
+    for ka in (CareerKnotAssessment.query.filter_by(lead_id=lead.id)
+               .order_by(CareerKnotAssessment.completed_at.desc()).all()):
+        import json as json_lib
+        comments = []
+        if ka.comments:
+            try:
+                comments = json_lib.loads(ka.comments)
+            except (ValueError, TypeError):
+                comments = []
+        assessments_out.append({
+            'type': 'گره کور شغلی',
+            'completed_at': ka.completed_at.isoformat() if ka.completed_at else None,
+            'answers': [
+                {
+                    'question': i + 1,
+                    'answer': knot_option_fa.get(v, ''),
+                    'comment': (comments[i] if isinstance(comments, list) and i < len(comments) else None)
+                }
+                for i, v in enumerate([ka.item1, ka.item2, ka.item3, ka.item4,
+                                       ka.item5, ka.item6, ka.item7, ka.item8])
+            ],
+            'summary': f"{ka.profile_title} — الف:{ka.count_a} ب:{ka.count_b} ج:{ka.count_c} د:{ka.count_d}"
+        })
+
+    # MBI (فرسودگی شغلی)
+    level_map = {'low': 'پایین', 'moderate': 'متوسط', 'high': 'بالا'}
+    for a in Assessment.query.filter_by(lead_id=lead.id).order_by(Assessment.completed_at.desc()).all():
+        assessments_out.append({
+            'type': 'فرسودگی شغلی',
+            'completed_at': a.completed_at.isoformat() if a.completed_at else None,
+            'answers': [],
+            'summary': (f"خستگی عاطفی: {a.emotional_exhaustion} ({level_map.get(a.ee_level, '')}) | "
+                        f"مسخ شخصیت: {a.depersonalization} ({level_map.get(a.dp_level, '')}) | "
+                        f"کفایت فردی: {a.personal_accomplishment} ({level_map.get(a.pa_level, '')})")
+        })
+
+    # WAAQ (انعطاف پذیری)
+    for wa in WaaqAssessment.query.filter_by(lead_id=lead.id).order_by(WaaqAssessment.completed_at.desc()).all():
+        assessments_out.append({
+            'type': 'انعطاف پذیری',
+            'completed_at': wa.completed_at.isoformat() if wa.completed_at else None,
+            'answers': [
+                {'question': i + 1, 'answer': v, 'comment': None}
+                for i, v in enumerate([wa.item1, wa.item2, wa.item3, wa.item4, wa.item5, wa.item6, wa.item7])
+            ],
+            'summary': f"نمره کل: {wa.total_score} — سطح: {level_map.get(wa.level, '')}"
+        })
+
+    return jsonify({'lead': lead.to_dict(), 'assessments': assessments_out})
 
 
 @admin_bp.route('/orders')
@@ -246,6 +315,7 @@ def get_stats():
         'total_messages': Message.query.count(),
         'total_assessments': Assessment.query.count(),
         'total_waaq_assessments': WaaqAssessment.query.count(),
+        'total_knot_assessments': CareerKnotAssessment.query.count(),
         'total_contact_requests': ContactRequest.query.count(),
         'unread_contact_requests': ContactRequest.query.filter_by(is_read=False).count(),
         'pending_orders': pending,
@@ -367,14 +437,20 @@ def export_excel():
         cell.alignment = center_align
 
     for lead in AssessmentLead.query.order_by(AssessmentLead.created_at.desc()).all():
-        has_assessment = Assessment.query.filter_by(lead_id=lead.id).first() is not None
+        types = []
+        if Assessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('فرسودگی شغلی')
+        if WaaqAssessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('انعطاف پذیری')
+        if CareerKnotAssessment.query.filter_by(lead_id=lead.id).first() is not None:
+            types.append('گره کور شغلی')
         ws_leads.append([
             lead.id,
             lead.name,
             lead.email,
             lead.phone,
             str(lead.created_at)[:19] if lead.created_at else '',
-            'بله' if has_assessment else 'خیر'
+            ' + '.join(types) if types else 'خیر'
         ])
 
     ws_leads.column_dimensions['B'].width = 20
@@ -428,6 +504,56 @@ def export_excel():
 
     ws_waaq.column_dimensions['B'].width = 18
     ws_waaq.column_dimensions['K'].width = 22
+
+    # Sheet 8: Career Knot Assessments (پرسشنامه ریشه‌یابی گره کور شغلی)
+    ws_knot = wb.create_sheet('پرسشنامه گره کور شغلی')
+    headers_k = ['شناسه', 'نام', 'ایمیل', 'شماره تماس',
+                 'سوال ۱', 'سوال ۲', 'سوال ۳', 'سوال ۴', 'سوال ۵', 'سوال ۶', 'سوال ۷', 'سوال ۸',
+                 'تعداد الف', 'تعداد ب', 'تعداد ج', 'تعداد د', 'نمره کل (T)', 'بخش تفسیر', 'پروفایل', 'توضیحات', 'تاریخ']
+    ws_knot.append(headers_k)
+    for cell in ws_knot[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    knot_option_fa = {1: 'الف', 2: 'ب', 3: 'ج', 4: 'د'}
+    for ka in CareerKnotAssessment.query.order_by(CareerKnotAssessment.completed_at.desc()).all():
+        if ka.user:
+            name, email, phone = '', '', ka.user.phone_number
+        elif ka.lead:
+            name, email, phone = ka.lead.name, ka.lead.email, ka.lead.phone
+        else:
+            name, email, phone = '', '', ''
+
+        comments_text = ''
+        if ka.comments:
+            try:
+                import json as _json
+                items = _json.loads(ka.comments)
+                parts = [f'س{i + 1}: {c}' for i, c in enumerate(items) if c]
+                comments_text = ' | '.join(parts)
+            except (ValueError, TypeError):
+                comments_text = str(ka.comments)
+
+        ws_knot.append([
+            ka.id, name, email, phone,
+            knot_option_fa.get(ka.item1, ''), knot_option_fa.get(ka.item2, ''),
+            knot_option_fa.get(ka.item3, ''), knot_option_fa.get(ka.item4, ''),
+            knot_option_fa.get(ka.item5, ''), knot_option_fa.get(ka.item6, ''),
+            knot_option_fa.get(ka.item7, ''), knot_option_fa.get(ka.item8, ''),
+            ka.count_a, ka.count_b, ka.count_c, ka.count_d,
+            ka.total_score,
+            f'بخش {ka.section}',
+            ka.profile_title,
+            comments_text,
+            str(ka.completed_at)[:19] if ka.completed_at else ''
+        ])
+
+    ws_knot.column_dimensions['B'].width = 18
+    ws_knot.column_dimensions['C'].width = 24
+    ws_knot.column_dimensions['D'].width = 16
+    ws_knot.column_dimensions['T'].width = 40
+    ws_knot.column_dimensions['U'].width = 22
 
     buf = io.BytesIO()
     wb.save(buf)

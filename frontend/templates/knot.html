@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}پرسشنامه فرسودگی شغلی ماسلاچ | سای‌باما{% endblock %}
+{% block title %}پرسشنامه ریشه‌یابی گره کور شغلی | سای‌باما{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -30,8 +30,12 @@
     color: var(--text-muted);
     font-size: 0.92rem;
     line-height: 1.8;
-    max-width: 520px;
-    margin: 0 auto;
+    max-width: 560px;
+    margin: 0 auto 0.75rem;
+}
+
+.assessment-intro p:last-child {
+    margin-bottom: 0;
 }
 
 .progress-bar-wrap {
@@ -82,113 +86,95 @@
     margin-bottom: 1.25rem;
 }
 
-/* Scale legend box — shown once below intro */
-.scale-legend-box {
-    background: var(--pure-white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 2rem;
-}
-
-/* Scale legend above each question */
-.scale-legend {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 1rem;
-    margin-bottom: 1.25rem;
-}
-
-.scale-legend-title {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 0.5rem;
-    font-family: var(--font-title);
-}
-
-.scale-legend-row {
+.option-list {
     display: flex;
-    gap: 0.35rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.scale-legend-item {
+.option-btn {
     display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 20px;
-    padding: 0.2rem 0.6rem;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.7);
-}
-
-.scale-legend-num {
-    font-family: var(--font-title);
-    font-size: 0.8rem;
-    color: #7BC8F5;
-    font-weight: bold;
-    min-width: 12px;
-    text-align: center;
-}
-
-.scale-legend-text {
-    color: rgba(255,255,255,0.8);
-}
-
-/* Likert buttons with label */
-.likert-scale {
-    display: flex;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-}
-
-.likert-btn {
-    flex: 1;
-    min-width: 70px;
-    min-height: 60px;
+    align-items: flex-start;
+    gap: 0.65rem;
+    width: 100%;
+    text-align: right;
     border: 1.5px solid rgba(255,255,255,0.15);
     border-radius: var(--radius-sm);
-    background: rgba(255,255,255,0.08);
-    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.8);
     cursor: pointer;
     transition: all 0.15s;
     font-family: var(--font-body);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
-    padding: 0.4rem 0.25rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    padding: 0.65rem 0.85rem;
 }
 
-.likert-num {
-    font-family: var(--font-title);
-    font-size: 1.05rem;
-    font-weight: bold;
-    line-height: 1;
-}
-
-.likert-label {
-    font-size: 0.65rem;
-    line-height: 1.3;
-    text-align: center;
-    white-space: normal;
-    word-break: keep-all;
-}
-
-.likert-btn:hover {
-    border-color: var(--ocean-blue);
-    color: var(--ocean-blue);
-    background: var(--cloud-blue);
-}
-
-.likert-btn.selected {
-    background: var(--ocean-blue);
+.option-btn:hover {
     border-color: var(--ocean-blue);
     color: white;
+    background: rgba(125,200,245,0.08);
+}
+
+.option-btn.selected {
+    background: rgba(125,200,245,0.14);
+    border-color: var(--sage-teal);
+    color: white;
+}
+
+.option-letter {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-family: var(--font-title);
+    font-weight: bold;
+    font-size: 0.82rem;
+    color: #7BC8F5;
+    padding-top: 2px;
+}
+
+.option-btn.selected .option-letter {
+    background: var(--sage-teal);
+    border-color: var(--sage-teal);
+    color: white;
+}
+
+.comment-area {
+    margin-top: 1rem;
+}
+
+.comment-label {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 0.4rem;
+}
+
+.comment-input {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    color: rgba(255,255,255,0.9);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 0.6rem 0.85rem;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: var(--ocean-blue);
+}
+
+.comment-input::placeholder {
+    color: rgba(255,255,255,0.35);
 }
 
 .submit-area {
@@ -201,7 +187,6 @@
     padding: 0.85rem 3rem;
 }
 
-/* Results */
 .results-card {
     background: var(--pure-white);
     border: 1px solid var(--border);
@@ -218,60 +203,67 @@
     margin-bottom: 0.5rem;
 }
 
-.subscale-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.25rem;
-    margin: 2rem 0;
-    text-align: right;
-}
-
-.subscale-item {
-    background: var(--arctic-white);
+.profile-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    color: white;
+    font-family: var(--font-title);
+    font-size: 1.25rem;
+    font-weight: bold;
     border-radius: var(--radius-md);
-    padding: 1.25rem;
+    padding: 0.9rem 1.75rem;
+    margin: 1.5rem 0 0.5rem;
 }
 
-.subscale-label {
-    font-size: 0.82rem;
+.criterion-line {
+    font-size: 0.95rem;
+    color: var(--slate-blue);
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.distribution-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    max-width: 520px;
+    margin: 1.5rem auto;
+}
+
+.dist-item {
+    background: var(--warm-sand);
+    border: 1px solid var(--warm-sand-border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.5rem;
+}
+
+.dist-label {
+    font-size: 0.78rem;
     color: var(--text-muted);
     margin-bottom: 0.35rem;
 }
 
-.subscale-score {
+.dist-value {
     font-family: var(--font-title);
-    font-size: 1.6rem;
+    font-size: 1.3rem;
+    font-weight: bold;
     color: var(--slate-blue);
-    margin-bottom: 0.4rem;
 }
 
-.subscale-level {
-    display: inline-block;
-    padding: 0.2rem 0.65rem;
-    border-radius: 20px;
-    font-size: 0.78rem;
-}
-
-.level-low      { background: #D1FAE5; color: #065F46; }
-.level-moderate { background: #FEF3C7; color: #92400E; }
-.level-high     { background: #FEE2E2; color: #991B1B; }
-
-.subscale-bar-wrap {
+.dist-bar-wrap {
     background: var(--border);
     border-radius: 6px;
-    height: 8px;
-    margin-top: 0.6rem;
+    height: 6px;
+    margin-top: 0.5rem;
     overflow: hidden;
 }
 
-.subscale-bar-fill {
+.dist-bar-fill {
     height: 100%;
     border-radius: 6px;
+    background: linear-gradient(90deg, var(--ocean-blue), var(--sage-teal));
+    transition: width 0.5s ease;
 }
-
-.bar-ee { background: var(--soft-coral); }
-.bar-dp { background: var(--ocean-blue); }
-.bar-pa { background: var(--sage-teal); }
 
 .feedback-box {
     background: var(--warm-sand);
@@ -285,6 +277,18 @@
     border: 1px solid var(--warm-sand-border);
 }
 
+.feedback-box p {
+    margin-bottom: 0.75rem;
+}
+
+.feedback-box p:last-child {
+    margin-bottom: 0;
+}
+
+.feedback-box strong {
+    font-family: var(--font-title);
+}
+
 .results-actions {
     display: flex;
     gap: 1rem;
@@ -293,7 +297,30 @@
     margin-top: 1.75rem;
 }
 
-/* Footer override for this page */
+.next-step-box {
+    background: var(--warm-sand);
+    border: 1px solid var(--warm-sand-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.next-step-box h3 {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+}
+
+.next-step-box p {
+    font-size: 0.92rem;
+    line-height: 1.9;
+    color: var(--slate-blue);
+    max-width: 520px;
+    margin: 0 auto 1.25rem;
+}
+
 .footer {
     background: #3D5166;
     border-top-color: rgba(255,255,255,0.1);
@@ -301,11 +328,8 @@
 }
 
 @media (max-width: 640px) {
-    .likert-scale { gap: 0.25rem; }
-    .likert-btn { min-width: 40px; min-height: 54px; }
-    .likert-label { font-size: 0.58rem; }
-    .scale-legend-row { gap: 0.25rem; }
-    .scale-legend-item { font-size: 0.7rem; padding: 0.15rem 0.45rem; }
+    .option-btn { font-size: 0.83rem; }
+    .distribution-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 {% endblock %}
@@ -343,10 +367,18 @@
 
     <!-- Intro (hidden until lead form is submitted) -->
     <div class="assessment-intro" id="mainIntro" style="display:none">
-        <h1>پرسشنامه فرسودگی شغلی ماسلاچ</h1>
+        <h1>پرسشنامه ریشه‌یابی گره کور شغلی</h1>
         <p>
-            این پرسشنامه ۲۲ سؤال دارد و حدود ۵ دقیقه طول می‌کشد.
-            پاسخ‌های صادقانه شما دقیق‌ترین نتیجه را می‌دهد.
+            همه ما در شغل خود، ته دلمان یک شرط یا ملاک مهم داریم که موفقیتمان را بر اساس آن متر می‌کنیم؛ مثلاً «آیا حالم خوب است؟»، «درآمدم چقدر است؟» یا «چقدر پیشرفت کرده‌ام؟». خیلی وقت‌ها سردرگمی شغلی دقیقاً از همین‌جا شروع می‌شود که ملاک‌های قدیمی دیگر به درد زندگی امروزمان نمی‌خورند.
+        </p>
+        <p>
+            لطفا در هر سوال گزینه‌ای را انتخاب کنید که شباهت بیشتری به تجربه‌ی شما دارد.
+        </p>
+        <p>
+            <strong>نکته بسیار مهم: با توجه به آنچه اکنون هستید پاسخ بدهید نه با آنچه که دوست دارید باشید</strong>
+        </p>
+        <p>
+            تکمیل این پرسشنامه حدوداً ۲ دقیقه زمان می‌برد. پاسخ‌های شما کاملاً محرمانه خواهد بود.
         </p>
         <div class="progress-bar-wrap" id="progressWrap" style="display:none">
             <div class="progress-bar-fill" id="progressFill"></div>
@@ -354,13 +386,12 @@
         <div class="progress-label" id="progressLabel"></div>
     </div>
 
-
     <!-- Questions (shown progressively) -->
     <div id="questionsSection" style="display:none">
         <div id="questionsList"></div>
 
         <div class="submit-area" id="submitArea" style="display:none">
-            <p class="text-muted mb-2">لطفاً به تمام ۲۲ سؤال پاسخ دهید</p>
+            <p class="text-muted mb-2">لطفاً به تمام ۸ سؤال پاسخ دهید</p>
             <button class="btn btn-primary" id="btnSubmit" disabled>
                 مشاهده نتایج
             </button>
@@ -370,10 +401,12 @@
     <!-- Results (hidden until submitted) -->
     <div id="resultsSection" style="display:none">
         <div class="results-card">
-            <h2>نتایج ارزیابی فرسودگی شغلی شما</h2>
-            <p class="text-muted" style="font-size:0.85rem;margin-bottom:0.5rem">بر اساس پرسشنامه استاندارد ماسلاچ (MBI)</p>
+            <h2>نتیجه ریشه‌یابی گره کور شغلی شما</h2>
 
-            <div class="subscale-grid" id="subscaleGrid"></div>
+            <div id="profileBadgeContainer"></div>
+            <div class="criterion-line" id="criterionLine" style="display:none"></div>
+
+            <div class="distribution-grid" id="distributionGrid"></div>
 
             <div class="feedback-box" id="feedbackBox"></div>
 
@@ -389,12 +422,22 @@
                     پاسخ‌دهی مجدد
                 </button>
             </div>
+
+            <!-- قدم بعدی: ثبت‌نام وبینار رایگان -->
+            <div class="next-step-box">
+                <h3>قدم بعدی:</h3>
+                <p>
+                    اگر می‌خواهید یاد بگیرید چطور ریشه این الگوها را پیدا کنید و معیار شغلی تازه‌ای برای خودتان بسازید، در وبینار رایگان «ریشه‌یابی گره کور شغلی» ثبت‌نام کنید.
+                </p>
+                <a href="{{ webinar_url }}" class="btn btn-primary" id="webinarCta">
+                    ثبت نام در وبینار رایگان ریشه‌یابی گره کور شغلی
+                </a>
+            </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
-<script src="/static/js/assessment.js?v={{ ASSET_VERSION }}"></script>
+<script src="/static/js/knot.js?v={{ ASSET_VERSION }}"></script>
 {% endblock %}

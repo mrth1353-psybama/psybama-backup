@@ -216,6 +216,9 @@ class WaaqAssessment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
 
+    user = db.relationship('User', lazy=True)
+    lead = db.relationship('AssessmentLead', lazy=True)
+
     # Individual item scores (1-7 each, after reverse-scoring)
     item1 = db.Column(db.Integer, nullable=False)
     item2 = db.Column(db.Integer, nullable=False)
@@ -247,5 +250,72 @@ class WaaqAssessment(db.Model):
             'item7': self.item7,
             'total_score': self.total_score,
             'level': self.level,
+            'completed_at': self.completed_at.isoformat() if self.completed_at else None
+        }
+
+
+class CareerKnotAssessment(db.Model):
+    __tablename__ = 'career_knot_assessments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
+
+    user = db.relationship('User', lazy=True)
+    lead = db.relationship('AssessmentLead', lazy=True)
+
+    # Individual item answers (1=الف/a, 2=ب/b, 3=ج/c, 4=د/d)
+    item1 = db.Column(db.Integer, nullable=False)
+    item2 = db.Column(db.Integer, nullable=False)
+    item3 = db.Column(db.Integer, nullable=False)
+    item4 = db.Column(db.Integer, nullable=False)
+    item5 = db.Column(db.Integer, nullable=False)
+    item6 = db.Column(db.Integer, nullable=False)
+    item7 = db.Column(db.Integer, nullable=False)
+    item8 = db.Column(db.Integer, nullable=False)
+
+    # Optional per-item free-text comments stored as JSON array
+    comments = db.Column(db.Text, nullable=True)
+
+    # Counts of each chosen letter across all items
+    count_a = db.Column(db.Integer, nullable=False)
+    count_b = db.Column(db.Integer, nullable=False)
+    count_c = db.Column(db.Integer, nullable=False)
+    count_d = db.Column(db.Integer, nullable=False)
+
+    # Total score T = max(count_a, count_b, count_c, count_d)
+    total_score = db.Column(db.Integer, nullable=False)
+
+    # Interpretation section: 1, 2 or 3
+    section = db.Column(db.Integer, nullable=False)
+
+    # Profile code: a|b|c|d (section 1), ab|ac|ad|bc|bd|cd (section 2), mixed (section 3)
+    profile_code = db.Column(db.String(10), nullable=False)
+    profile_title = db.Column(db.String(100), nullable=False)
+
+    completed_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'lead_id': self.lead_id,
+            'item1': self.item1,
+            'item2': self.item2,
+            'item3': self.item3,
+            'item4': self.item4,
+            'item5': self.item5,
+            'item6': self.item6,
+            'item7': self.item7,
+            'item8': self.item8,
+            'comments': self.comments,
+            'count_a': self.count_a,
+            'count_b': self.count_b,
+            'count_c': self.count_c,
+            'count_d': self.count_d,
+            'total_score': self.total_score,
+            'section': self.section,
+            'profile_code': self.profile_code,
+            'profile_title': self.profile_title,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
         }
