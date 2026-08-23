@@ -28,7 +28,12 @@ fi
 git pull origin "$BRANCH"
 
 echo "── [2/4] نصب وابستگی‌ها ──"
-pip3 install -q -r backend/requirements.txt
+if [ -x "$APP_DIR/venv/bin/pip" ]; then
+    echo "استفاده از venv پروژه..."
+    "$APP_DIR/venv/bin/pip" install -q -r backend/requirements.txt
+else
+    pip3 install -q -r backend/requirements.txt
+fi
 
 echo "── [3/4] ری‌استارت سرویس $SERVICE ──"
 systemctl restart "$SERVICE"
