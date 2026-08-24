@@ -46,10 +46,11 @@
 
 .knot-success-title {
     font-family: var(--font-title);
-    font-size: 1.85rem;
+    font-size: clamp(0.8rem, 4.5vw, 1.85rem);
     line-height: 1.6;
     color: var(--slate-blue);
     margin-bottom: 0.5rem;
+    white-space: nowrap;
 }
 
 .knot-success-title .rest {
@@ -99,7 +100,6 @@
 
 @media (max-width: 480px) {
     .knot-success-card { padding: 2.25rem 1.25rem 2rem; }
-    .knot-success-title { font-size: 1.5rem; }
     .knot-success-subtitle { font-size: 1.1rem; }
 }
 </style>
