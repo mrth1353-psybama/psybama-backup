@@ -69,6 +69,48 @@ def send_sms(phone_number: str, message: str) -> dict:
         return {'success': False, 'error': str(e)}
 
 
+def send_webinar_registration_sms(phone_number: str, name: str = '', date: str = '') -> dict:
+    """ارسال پیامک پترن ثبت‌نام وبینار رایگان گره کور (فراز اس‌ام‌اس)."""
+    mode = os.getenv('SMS_MODE', SMS_MODE)
+    if mode != 'production':
+        print(f"[LOCAL SMS] Webinar registration -> Phone: {phone_number}, Name: {name}, Date: {date}")
+        return {'success': True, 'mode': 'local'}
+
+    api_key = os.getenv('SMS_API_KEY', '').strip()
+    if not api_key:
+        return {'success': False, 'error': 'SMS_API_KEY تنظیم نشده است'}
+
+    pattern_code = os.getenv('FARAZSMS_WEBINAR_PATTERN', '').strip()
+    if not pattern_code:
+        return {'success': False, 'error': 'FARAZSMS_WEBINAR_PATTERN تنظیم نشده است'}
+
+    # متغیرهای پترن از طریق env قابل تنظیم هستند؛ خالی بودن یعنی پترن آن متغیر را ندارد
+    attributes = {}
+    name_var = os.getenv('FARAZSMS_WEBINAR_NAME_VAR', '').strip()
+    date_var = os.getenv('FARAZSMS_WEBINAR_DATE_VAR', '').strip()
+    if name_var and name:
+        attributes[name_var] = name
+    if date_var and date:
+        attributes[date_var] = date
+
+    url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/pattern'
+    payload = {
+        'code': pattern_code,
+        'attributes': attributes,
+        'recipient': phone_number,
+        'line_number': _sender(),
+        'number_format': 'english',
+    }
+    try:
+        response = requests.post(url, json=payload, headers=_headers(api_key), timeout=10)
+        data = _safe_json(response)
+        if data.get('status') == 'success':
+            return {'success': True, 'mode': 'production'}
+        return {'success': False, 'error': str(data.get('messages') or data)}
+    except Exception as e:
+        return {'success': False, 'error': str(e)}
+
+
 def _send_farazsms(phone_number: str, otp_code: str) -> dict:
     api_key = os.getenv('SMS_API_KEY', '').strip()
     if not api_key:

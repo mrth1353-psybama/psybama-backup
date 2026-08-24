@@ -319,3 +319,30 @@ class CareerKnotAssessment(db.Model):
             'profile_title': self.profile_title,
             'completed_at': self.completed_at.isoformat() if self.completed_at else None
         }
+
+
+class WebinarRegistration(db.Model):
+    __tablename__ = 'webinar_registrations'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
+    phone = db.Column(db.String(20), nullable=False, index=True)
+    webinar_title = db.Column(db.String(200), nullable=False)
+    webinar_date = db.Column(db.String(100), nullable=True)
+    lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
+    sms_sent = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'phone': self.phone,
+            'webinar_title': self.webinar_title,
+            'webinar_date': self.webinar_date,
+            'lead_id': self.lead_id,
+            'sms_sent': self.sms_sent,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }

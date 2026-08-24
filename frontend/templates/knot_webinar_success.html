@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}ثبت‌نام در وبینار انجام شد | سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.knot-success-page {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1.25rem;
+    background:
+        radial-gradient(circle at 12% 18%, rgba(46,139,122,0.16), transparent 42%),
+        radial-gradient(circle at 88% 82%, rgba(29,95,166,0.14), transparent 46%),
+        linear-gradient(135deg, var(--cloud-blue) 0%, var(--mint-mist) 55%, var(--coral-mist) 130%);
+}
+
+.knot-success-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    max-width: 640px;
+    width: 100%;
+    text-align: center;
+    padding: 3rem 2rem 2.5rem;
+}
+
+.knot-success-icon {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    box-shadow: 0 10px 30px rgba(46,139,122,0.35);
+}
+
+.knot-success-icon svg {
+    width: 44px;
+    height: 44px;
+}
+
+.knot-success-title {
+    font-family: var(--font-title);
+    font-size: 1.85rem;
+    line-height: 1.6;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+}
+
+.knot-success-title .rest {
+    font-size: 0.5em;
+}
+
+.knot-success-title .highlight {
+    color: var(--sage-teal);
+}
+
+.knot-success-subtitle {
+    font-family: var(--font-title);
+    font-size: 1.25rem;
+    color: var(--ocean-blue);
+    margin-bottom: 1.5rem;
+}
+
+.knot-success-date {
+    background: var(--mint-mist);
+    border: 1px solid rgba(46,139,122,0.25);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: var(--slate-blue);
+    margin-bottom: 1.5rem;
+}
+
+.knot-success-date strong {
+    font-family: var(--font-title);
+    color: var(--ocean-blue);
+}
+
+.knot-success-thanks {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--slate-blue);
+    margin-bottom: 2rem;
+}
+
+.knot-tagline {
+    margin-top: 1.75rem;
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 480px) {
+    .knot-success-card { padding: 2.25rem 1.25rem 2rem; }
+    .knot-success-title { font-size: 1.5rem; }
+    .knot-success-subtitle { font-size: 1.1rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="knot-success-page">
+    <div class="knot-success-card">
+        <div class="knot-success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+
+        <h1 class="knot-success-title"><span class="rest">ثبت‌نام شما در وبینار رایگان</span> «{{ webinar_title }}» <span class="highlight rest">انجام شد</span></h1>
+
+        {% if webinar_has_date %}
+        <div class="knot-success-date">
+            تاریخ برگزاری وبینار: <strong>{{ webinar_date }}</strong> می‌باشد.
+        </div>
+        {% else %}
+        <div class="knot-success-date">
+            تاریخ برگزاری وبینار متعاقباً اعلام می‌شود.
+        </div>
+        {% endif %}
+
+        <p class="knot-success-thanks">سپاس از همراهی شما</p>
+
+        <a href="/" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+
+        <p class="knot-tagline">همیشه جاری باشید</p>
+    </div>
+</div>
+{% endblock %}

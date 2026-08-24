@@ -162,6 +162,9 @@ function buildQuestions() {
 }
 
 function renderResults(scores) {
+    const page = document.querySelector('.assessment-page');
+    if (page) page.classList.add('results-mode');
+
     document.getElementById('questionsSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'block';
     document.getElementById('mainIntro').style.display = 'none';
@@ -169,31 +172,6 @@ function renderResults(scores) {
     // Profile badge
     document.getElementById('profileBadgeContainer').innerHTML =
         `<div class="profile-badge">پروفایل شما: ${scores.profile_title}</div>`;
-
-    // Criterion line (معیار فعلی شما)
-    const criterionEl = document.getElementById('criterionLine');
-    if (scores.criterion) {
-        criterionEl.textContent = scores.criterion;
-        criterionEl.style.display = 'block';
-    } else {
-        criterionEl.style.display = 'none';
-    }
-
-    // Distribution of answers across الف/ب/ج/د
-    const labels = {a: 'الف — کنترل', b: 'ب — مرز', c: 'ج — معنا', d: 'د — مسیر'};
-    const grid = document.getElementById('distributionGrid');
-    grid.innerHTML = Object.keys(labels).map(k => {
-        const v = scores.counts[k];
-        const pct = Math.round((v / KNOT_QUESTIONS_COUNT) * 100);
-        return `
-        <div class="dist-item">
-            <div class="dist-label">${labels[k]}</div>
-            <div class="dist-value">${v}</div>
-            <div class="dist-bar-wrap">
-                <div class="dist-bar-fill" style="width:${pct}%"></div>
-            </div>
-        </div>`;
-    }).join('');
 
     // Feedback paragraphs (lines starting with • are rendered as-is)
     const feedbackBox = document.getElementById('feedbackBox');
@@ -203,7 +181,13 @@ function renderResults(scores) {
         .map(line => `<p>${line}</p>`)
         .join('');
 
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    window.scrollTo({top: 0, behavior: 'auto'});
+
+    // اطمینان از دیده‌شدن دکمه «ثبت نام در وبینار رایگان»
+    setTimeout(() => {
+        const cta = document.getElementById('webinarCta');
+        if (cta) cta.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    }, 300);
 }
 
 async function submitAssessment() {
@@ -302,17 +286,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('leadGateForm').addEventListener('submit', submitLead);
 
     document.getElementById('btnSubmit').addEventListener('click', submitAssessment);
-
-    document.getElementById('btnRetake').addEventListener('click', () => {
-        responses = new Array(KNOT_QUESTIONS_COUNT).fill(null);
-        comments = new Array(KNOT_QUESTIONS_COUNT).fill('');
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('questionsSection').style.display = 'block';
-        document.getElementById('mainIntro').style.display = 'block';
-        buildQuestions();
-        document.getElementById('progressFill').style.width = '0%';
-        document.getElementById('progressLabel').textContent = '';
-        document.getElementById('submitArea').style.display = 'none';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    });
 });

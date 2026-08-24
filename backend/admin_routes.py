@@ -6,6 +6,7 @@ from openpyxl.styles import Font, PatternFill, Alignment
 from auth import admin_required
 from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product, WaaqAssessment
 from models import CareerKnotAssessment
+from models import WebinarRegistration
 from models import iran_now
 
 admin_bp = Blueprint('admin', __name__)
@@ -177,6 +178,24 @@ def delete_assessment_lead(lead_id):
     return jsonify({'success': True})
 
 
+@admin_bp.route('/webinar-registrations')
+@admin_required
+def list_webinar_registrations():
+    regs = (WebinarRegistration.query
+            .order_by(WebinarRegistration.created_at.desc())
+            .all())
+    return jsonify({'registrations': [r.to_dict() for r in regs]})
+
+
+@admin_bp.route('/webinar-registrations/<int:reg_id>/delete', methods=['POST'])
+@admin_required
+def delete_webinar_registration(reg_id):
+    reg = WebinarRegistration.query.get_or_404(reg_id)
+    db.session.delete(reg)
+    db.session.commit()
+    return jsonify({'success': True})
+
+
 @admin_bp.route('/assessment-leads/<int:lead_id>/details')
 @admin_required
 def assessment_lead_details(lead_id):
@@ -316,6 +335,7 @@ def get_stats():
         'total_assessments': Assessment.query.count(),
         'total_waaq_assessments': WaaqAssessment.query.count(),
         'total_knot_assessments': CareerKnotAssessment.query.count(),
+        'total_webinar_registrations': WebinarRegistration.query.count(),
         'total_contact_requests': ContactRequest.query.count(),
         'unread_contact_requests': ContactRequest.query.filter_by(is_read=False).count(),
         'pending_orders': pending,
@@ -554,6 +574,35 @@ def export_excel():
     ws_knot.column_dimensions['D'].width = 16
     ws_knot.column_dimensions['T'].width = 40
     ws_knot.column_dimensions['U'].width = 22
+
+    # Sheet 9: Webinar Registrations (ثبت‌نام وبینارها)
+    ws_web = wb.create_sheet('ثبت‌نام وبینار')
+    headers_web = ['شناسه', 'نام و نام خانوادگی', 'ایمیل', 'شماره تماس',
+                   'وبینار', 'تاریخ برگزاری', 'تاریخ ثبت‌نام', 'پیامک ارسال شد']
+    ws_web.append(headers_web)
+    for cell in ws_web[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for r in WebinarRegistration.query.order_by(WebinarRegistration.created_at.desc()).all():
+        ws_web.append([
+            r.id,
+            r.name or '',
+            r.email or '',
+            r.phone,
+            r.webinar_title,
+            r.webinar_date or '',
+            str(r.created_at)[:19] if r.created_at else '',
+            'بله' if r.sms_sent else 'خیر'
+        ])
+
+    ws_web.column_dimensions['B'].width = 20
+    ws_web.column_dimensions['C'].width = 26
+    ws_web.column_dimensions['D'].width = 16
+    ws_web.column_dimensions['E'].width = 32
+    ws_web.column_dimensions['F'].width = 18
+    ws_web.column_dimensions['G'].width = 22
 
     buf = io.BytesIO()
     wb.save(buf)

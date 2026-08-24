@@ -14,24 +14,24 @@
     background: linear-gradient(135deg, var(--pure-white) 0%, var(--warm-sand) 100%);
     border: 1px solid var(--warm-sand-border);
     border-radius: var(--radius-lg);
-    padding: 2rem;
-    margin-bottom: 2rem;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
     text-align: center;
 }
 
 .assessment-intro h1 {
     font-family: var(--font-title);
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: var(--slate-blue);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.4rem;
 }
 
 .assessment-intro p {
     color: var(--text-muted);
-    font-size: 0.92rem;
-    line-height: 1.8;
+    font-size: 0.9rem;
+    line-height: 1.7;
     max-width: 560px;
-    margin: 0 auto 0.75rem;
+    margin: 0 auto 0.4rem;
 }
 
 .assessment-intro p:last-child {
@@ -42,7 +42,7 @@
     background: var(--border);
     border-radius: 10px;
     height: 6px;
-    margin: 1.5rem 0 0.5rem;
+    margin: 1rem 0 0.4rem;
     overflow: hidden;
 }
 
@@ -178,8 +178,13 @@
 }
 
 .submit-area {
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
     text-align: center;
-    padding: 2rem 0;
+    padding: 1rem 0 1.25rem;
+    margin-top: 0.25rem;
+    background: linear-gradient(to top, var(--arctic-white) 75%, rgba(244,247,251,0));
 }
 
 .submit-area .btn {
@@ -191,16 +196,26 @@
     background: var(--pure-white);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 2.5rem 2rem;
-    margin-top: 2rem;
+    padding: 1.6rem 1.4rem;
+    margin-top: 0.75rem;
     text-align: center;
+}
+
+/* حالت فشرده: وقتی نتایج نمایش داده می‌شود همه‌چیز کمی به بالای صفحه منتقل می‌شود */
+.assessment-page.results-mode {
+    padding-top: 0.75rem;
+    padding-bottom: 2rem;
+}
+
+.assessment-page.results-mode .results-card {
+    margin-top: 0.5rem;
 }
 
 .results-card h2 {
     font-family: var(--font-title);
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     color: var(--slate-blue);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .profile-badge {
@@ -212,68 +227,18 @@
     font-weight: bold;
     border-radius: var(--radius-md);
     padding: 0.9rem 1.75rem;
-    margin: 1.5rem 0 0.5rem;
-}
-
-.criterion-line {
-    font-size: 0.95rem;
-    color: var(--slate-blue);
-    font-weight: bold;
-    margin-bottom: 1rem;
-}
-
-.distribution-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    max-width: 520px;
-    margin: 1.5rem auto;
-}
-
-.dist-item {
-    background: var(--warm-sand);
-    border: 1px solid var(--warm-sand-border);
-    border-radius: var(--radius-md);
-    padding: 0.75rem 0.5rem;
-}
-
-.dist-label {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-bottom: 0.35rem;
-}
-
-.dist-value {
-    font-family: var(--font-title);
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--slate-blue);
-}
-
-.dist-bar-wrap {
-    background: var(--border);
-    border-radius: 6px;
-    height: 6px;
-    margin-top: 0.5rem;
-    overflow: hidden;
-}
-
-.dist-bar-fill {
-    height: 100%;
-    border-radius: 6px;
-    background: linear-gradient(90deg, var(--ocean-blue), var(--sage-teal));
-    transition: width 0.5s ease;
+    margin: 0.9rem 0 0.35rem;
 }
 
 .feedback-box {
     background: var(--warm-sand);
     border-radius: var(--radius-md);
-    padding: 1.25rem 1.5rem;
+    padding: 1.1rem 1.25rem;
     text-align: right;
     color: var(--slate-blue);
     font-size: 0.92rem;
     line-height: 1.8;
-    margin: 1.5rem 0;
+    margin: 1rem 0;
     border: 1px solid var(--warm-sand-border);
 }
 
@@ -289,20 +254,36 @@
     font-family: var(--font-title);
 }
 
-.results-actions {
-    display: flex;
-    gap: 1rem;
+.btn-webinar {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 1.75rem;
+    background: #E56910;
+    color: white;
+    font-family: var(--font-title);
+    font-size: 1.45rem;
+    font-weight: bold;
+    line-height: 1.6;
+    border-radius: var(--radius-md);
+    padding: 1.5rem 3.5rem;
+    margin-top: 0.5rem;
+    box-shadow: 0 8px 24px rgba(229, 105, 16, 0.35);
+    transition: all 0.2s ease;
+}
+
+.btn-webinar:hover {
+    background: #CC5C0C;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(229, 105, 16, 0.45);
 }
 
 .next-step-box {
     background: var(--warm-sand);
     border: 1px solid var(--warm-sand-border);
     border-radius: var(--radius-lg);
-    padding: 1.5rem 2rem;
-    margin-top: 2rem;
+    padding: 1.2rem 1.4rem;
+    margin-top: 1.1rem;
     text-align: center;
 }
 
@@ -310,15 +291,16 @@
     font-family: var(--font-title);
     font-size: 1.05rem;
     color: var(--slate-blue);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
 }
 
 .next-step-box p {
-    font-size: 0.92rem;
+    font-size: 1.18rem;
+    font-weight: bold;
     line-height: 1.9;
     color: var(--slate-blue);
-    max-width: 520px;
-    margin: 0 auto 1.25rem;
+    max-width: 560px;
+    margin: 0 auto 1.1rem;
 }
 
 .footer {
@@ -329,7 +311,8 @@
 
 @media (max-width: 640px) {
     .option-btn { font-size: 0.83rem; }
-    .distribution-grid { grid-template-columns: repeat(2, 1fr); }
+    .next-step-box p { font-size: 1.05rem; }
+    .btn-webinar { font-size: 1.2rem; padding: 1.15rem 2rem; }
 }
 </style>
 {% endblock %}
@@ -369,16 +352,10 @@
     <div class="assessment-intro" id="mainIntro" style="display:none">
         <h1>پرسشنامه ریشه‌یابی گره کور شغلی</h1>
         <p>
-            همه ما در شغل خود، ته دلمان یک شرط یا ملاک مهم داریم که موفقیتمان را بر اساس آن متر می‌کنیم؛ مثلاً «آیا حالم خوب است؟»، «درآمدم چقدر است؟» یا «چقدر پیشرفت کرده‌ام؟». خیلی وقت‌ها سردرگمی شغلی دقیقاً از همین‌جا شروع می‌شود که ملاک‌های قدیمی دیگر به درد زندگی امروزمان نمی‌خورند.
+            خیلی وقت‌ها سردرگمی و فرسودگی شغلی از جایی شروع می‌شود که روش‌ها و انتظارات قبلی ما از کار، دیگر با واقعیت امروزمان جور درنمی‌آیند.
         </p>
         <p>
-            لطفا در هر سوال گزینه‌ای را انتخاب کنید که شباهت بیشتری به تجربه‌ی شما دارد.
-        </p>
-        <p>
-            <strong>نکته بسیار مهم: با توجه به آنچه اکنون هستید پاسخ بدهید نه با آنچه که دوست دارید باشید</strong>
-        </p>
-        <p>
-            تکمیل این پرسشنامه حدوداً ۲ دقیقه زمان می‌برد. پاسخ‌های شما کاملاً محرمانه خواهد بود.
+            این پرسشنامه ۲ دقیقه‌ای به شما کمک می‌کند بفهمید گیر اصلی کارتان دقیقاً کجاست.
         </p>
         <div class="progress-bar-wrap" id="progressWrap" style="display:none">
             <div class="progress-bar-fill" id="progressFill"></div>
@@ -404,33 +381,17 @@
             <h2>نتیجه ریشه‌یابی گره کور شغلی شما</h2>
 
             <div id="profileBadgeContainer"></div>
-            <div class="criterion-line" id="criterionLine" style="display:none"></div>
-
-            <div class="distribution-grid" id="distributionGrid"></div>
 
             <div class="feedback-box" id="feedbackBox"></div>
-
-            <p class="text-muted" style="font-size:0.8rem;line-height:1.7">
-                این نتایج جنبه آموزشی دارد و جایگزین مشاوره تخصصی نمی‌شود.
-            </p>
-
-            <div class="results-actions">
-                <a href="/chat" class="btn btn-coral">
-                    گفتگو با سای‌باما درباره نتایج
-                </a>
-                <button class="btn btn-outline" id="btnRetake">
-                    پاسخ‌دهی مجدد
-                </button>
-            </div>
 
             <!-- قدم بعدی: ثبت‌نام وبینار رایگان -->
             <div class="next-step-box">
                 <h3>قدم بعدی:</h3>
                 <p>
-                    اگر می‌خواهید یاد بگیرید چطور ریشه این الگوها را پیدا کنید و معیار شغلی تازه‌ای برای خودتان بسازید، در وبینار رایگان «ریشه‌یابی گره کور شغلی» ثبت‌نام کنید.
+                    برای ریشه‌یابی این الگو و رسیدن به شفافیت در مسیر شغلی، در وبینار رایگان <strong style="white-space:nowrap">ریشه‌یابی گره کور شغلی</strong> شرکت کنید:
                 </p>
-                <a href="{{ webinar_url }}" class="btn btn-primary" id="webinarCta">
-                    ثبت نام در وبینار رایگان ریشه‌یابی گره کور شغلی
+                <a href="/knot/webinar/success" class="btn-webinar" id="webinarCta">
+                    ثبت نام در وبینار رایگان
                 </a>
             </div>
         </div>

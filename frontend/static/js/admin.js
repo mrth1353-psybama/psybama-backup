@@ -69,6 +69,7 @@ const Admin = (() => {
         loadConversations();
         loadContacts();
         loadLeads();
+        loadWebinars();
         loadOrders();
         loadProducts();
     }
@@ -86,6 +87,7 @@ const Admin = (() => {
             document.getElementById('statAssess').textContent = data.total_assessments;
             document.getElementById('statWaaq').textContent = data.total_waaq_assessments;
             document.getElementById('statKnot').textContent = data.total_knot_assessments;
+            document.getElementById('statWebinar').textContent = data.total_webinar_registrations;
 
             const badge = document.getElementById('unreadBadge');
             if (data.unread_contact_requests > 0) {
@@ -507,6 +509,50 @@ const Admin = (() => {
         } catch (e) {}
     }
 
+    // ── Webinar Registrations ────────────────────────────
+
+    async function loadWebinars() {
+        const tbody = document.getElementById('webinarsTableBody');
+        try {
+            const res = await fetch('/admin/webinar-registrations');
+            const data = await res.json();
+
+            if (!data.registrations.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی برای وبینار وجود ندارد</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.registrations.map(r => `
+                <tr>
+                    <td>${r.id}</td>
+                    <td>${escapeHtml(r.name || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.email || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.phone)}</td>
+                    <td><span class="badge badge-info">${escapeHtml(r.webinar_title)}</span></td>
+                    <td style="white-space:nowrap">${escapeHtml(r.webinar_date || '—')}</td>
+                    <td style="white-space:nowrap">${formatDateTime(r.created_at)}</td>
+                    <td>
+                        <span class="badge ${r.sms_sent ? 'badge-success' : 'badge-warning'}">${r.sms_sent ? 'ارسال شد' : 'ارسال نشده'}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteWebinar(${r.id})">🗑 حذف</button>
+                    </td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    async function deleteWebinar(id) {
+        if (!confirm('این ثبت‌نام حذف شود؟')) return;
+        try {
+            await fetch(`/admin/webinar-registrations/${id}/delete`, {method: 'POST'});
+            await loadWebinars();
+            await loadStats();
+        } catch (e) {}
+    }
+
     // ── Search ────────────────────────────────────────
 
     async function doSearch() {
@@ -625,5 +671,6 @@ const Admin = (() => {
 
     return {viewConversation, markContactRead, deleteContact,
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
-            saveProduct, toggleProduct, deleteLead, viewLeadDetails};
+            saveProduct, toggleProduct, deleteLead, viewLeadDetails,
+            deleteWebinar};
 })();
