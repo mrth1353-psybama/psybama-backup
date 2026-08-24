@@ -26,7 +26,12 @@
             <span>همیشه جاری باشید</span>
         </div>
     </a>
-    <ul class="navbar-links">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="منو">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <ul class="navbar-links" id="navbarLinks">
         <li><a href="/">خانه</a></li>
         <li><a href="/about">درباره من</a></li>
         {% if mbi_assessment_enabled %}
@@ -68,5 +73,24 @@
 {% endblock %}
 
 {% block extra_js %}{% endblock %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var hamburgerBtn = document.getElementById('hamburgerBtn');
+    var navbarLinks = document.getElementById('navbarLinks');
+    if (hamburgerBtn && navbarLinks) {
+        hamburgerBtn.addEventListener('click', function() {
+            hamburgerBtn.classList.toggle('active');
+            navbarLinks.classList.toggle('active');
+        });
+        navbarLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                hamburgerBtn.classList.remove('active');
+                navbarLinks.classList.remove('active');
+            });
+        });
+    }
+});
+</script>
 </body>
 </html>

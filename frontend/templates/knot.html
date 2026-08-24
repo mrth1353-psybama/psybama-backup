@@ -230,16 +230,23 @@
     margin: 0.9rem 0 0.35rem;
 }
 
-.feedback-box {
+.combined-result-box {
     background: var(--warm-sand);
-    border-radius: var(--radius-md);
-    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--warm-sand-border);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem 1.4rem;
+    margin: 1rem 0;
+    text-align: center;
+}
+
+.feedback-box {
     text-align: right;
     color: var(--slate-blue);
     font-size: 0.92rem;
     line-height: 1.8;
-    margin: 1rem 0;
-    border: 1px solid var(--warm-sand-border);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--warm-sand-border);
 }
 
 .feedback-box p {
@@ -279,11 +286,7 @@
 }
 
 .next-step-box {
-    background: var(--warm-sand);
-    border: 1px solid var(--warm-sand-border);
-    border-radius: var(--radius-lg);
-    padding: 1.2rem 1.4rem;
-    margin-top: 1.1rem;
+    padding-top: 0.2rem;
     text-align: center;
 }
 
@@ -382,17 +385,17 @@
 
             <div id="profileBadgeContainer"></div>
 
-            <div class="feedback-box" id="feedbackBox"></div>
-
-            <!-- قدم بعدی: ثبت‌نام وبینار رایگان -->
-            <div class="next-step-box">
-                <h3>قدم بعدی:</h3>
-                <p>
-                    برای ریشه‌یابی این الگو و رسیدن به شفافیت در مسیر شغلی، در وبینار رایگان <strong style="white-space:nowrap">ریشه‌یابی گره کور شغلی</strong> شرکت کنید:
-                </p>
-                <a href="/knot/webinar/success" class="btn-webinar" id="webinarCta">
-                    ثبت نام در وبینار رایگان
-                </a>
+            <div class="combined-result-box">
+                <div class="feedback-box" id="feedbackBox"></div>
+                <div class="next-step-box">
+                    <h3>قدم بعدی:</h3>
+                    <p>
+                        برای ریشه‌یابی این الگو و رسیدن به شفافیت در مسیر شغلی، در وبینار رایگان <strong style="white-space:nowrap">ریشه‌یابی گره کور شغلی</strong> ثبت نام کنید:
+                    </p>
+                    <a href="/knot/webinar/success" class="btn-webinar" id="webinarCta">
+                        ثبت نام در وبینار رایگان
+                    </a>
+                </div>
             </div>
         </div>
     </div>
