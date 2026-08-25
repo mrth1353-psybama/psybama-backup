@@ -104,7 +104,7 @@ def send_webinar_registration_sms(phone_number: str, name: str = '', date: str =
         'line_number': _sender(),
         'number_format': 'english',
     }
-    print(f"[WEBINAR SMS] Sending pattern {pattern_code} -> recipient={phone_number!r} (name={name!r})")
+
     try:
         response = requests.post(url, json=payload, headers=_headers(api_key), timeout=10)
         data = _safe_json(response)

@@ -433,11 +433,6 @@ def create_app():
         email = lead.email if lead else ''
         phone = lead.phone if lead else ''
 
-        if not phone:
-            print(f"[WEBINAR] No phone in session (assessment_lead_id={lead_id!r}); skipping SMS/email")
-        else:
-            print(f"[WEBINAR] Lead found: phone={phone}, name={name!r}; dispatching notifications")
-
         # ذخیره ثبت‌نام در دیتابیس (بدون رکورد تکراری برای همان وبینار)
         reg = None
         if phone:
