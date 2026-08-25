@@ -62,3 +62,18 @@ def send_contact_notification(name: str, phone: str, message: str) -> dict:
         '\nبرای پاسخ، شماره تماس را از همین پیام بگیرید.'
     )
     return _send(subject, body)
+
+
+def send_webinar_registration_notification(name: str, email: str, phone: str,
+                                           webinar_title: str, webinar_date: str) -> dict:
+    subject = f'ثبت‌نام جدید در وبینار «{webinar_title}» — {name or phone}'
+    body = (
+        'یک ثبت‌نام جدید در وبینار رایگان سایت سای‌باما انجام شد:\n\n'
+        f'وبینار: {webinar_title}\n'
+        f'تاریخ برگزاری: {webinar_date or "(تعیین نشده)"}\n\n'
+        f'نام: {name or "(وارد نشده)"}\n'
+        f'شماره تماس: {phone}\n'
+        f'ایمیل: {email or "(وارد نشده)"}\n'
+        '\nجزئیات کامل در پنل مدیریت بخش «ثبت‌نامی‌های وبینار» موجود است.'
+    )
+    return _send(subject, body)

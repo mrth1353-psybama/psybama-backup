@@ -252,8 +252,8 @@ def classify(score, subscale):
     return 'high'
 
 
-def _send_webinar_sms_bg(app, reg_id: int, phone: str, name: str, date: str):
-    """ارسال پیامک ثبت‌نام وبینار در پس‌زمینه و بروزرسانی وضعیت ارسال."""
+def _send_webinar_notifications_bg(app, reg_id: int, phone: str, name: str, date: str):
+    """ارسال پیامک و ایمیل اطلاع‌رسانی ثبت‌نام وبینار در پس‌زمینه و بروزرسانی وضعیت ارسال."""
     from models import WebinarRegistration
 
     try:
@@ -268,9 +268,25 @@ def _send_webinar_sms_bg(app, reg_id: int, phone: str, name: str, date: str):
     try:
         with app.app_context():
             reg = db.session.get(WebinarRegistration, reg_id)
-            if reg:
-                reg.sms_sent = ok
-                db.session.commit()
+            if not reg:
+                return
+            reg.sms_sent = ok
+            try:
+                from email_service import send_webinar_registration_notification
+                email_result = send_webinar_registration_notification(
+                    name=reg.name,
+                    email=reg.email,
+                    phone=reg.phone,
+                    webinar_title=reg.webinar_title,
+                    webinar_date=reg.webinar_date or ''
+                )
+                if not email_result.get('success'):
+                    print(f"[WEBINAR EMAIL] Failed: {email_result.get('error')}")
+                else:
+                    print(f"[WEBINAR EMAIL] Sent ({email_result.get('mode')}) for {reg.phone}")
+            except Exception as e:
+                print(f"[WEBINAR EMAIL] Error: {e}")
+            db.session.commit()
     except Exception as e:
         print(f"[WEBINAR SMS] DB update error: {e}")
 
@@ -404,7 +420,7 @@ def create_app():
 
     @app.route('/knot/webinar/success')
     def knot_webinar_success():
-        """صفحه ثبت‌نام موفق وبینار + ذخیره ثبت‌نام + ارسال پیامک پترن فراز اس‌ام‌اس"""
+        """صفحه ثبت‌نام موفق وبینار + ذخیره ثبت‌نام + ارسال پیامک و ایمیل اطلاع‌رسانی"""
         import threading
 
         from models import AssessmentLead, WebinarRegistration
@@ -435,12 +451,12 @@ def create_app():
                 db.session.add(reg)
                 db.session.commit()
 
-            # ارسال پیامک فقط یک‌بار برای هر ثبت‌نام؛ در پس‌زمینه تا صفحه سریع بالا بیاید
+            # ارسال پیامک و ایمیل فقط یک‌بار برای هر ثبت‌نام؛ در پس‌زمینه تا صفحه سریع بالا بیاید
             already_sent = session.get('webinar_sms_sent_for') == f'webinar:{reg.id}'
             if not already_sent and not reg.sms_sent:
                 session['webinar_sms_sent_for'] = f'webinar:{reg.id}'
                 threading.Thread(
-                    target=_send_webinar_sms_bg,
+                    target=_send_webinar_notifications_bg,
                     args=(app, reg.id, phone, name, _knot_webinar_date_env),
                     daemon=True
                 ).start()
