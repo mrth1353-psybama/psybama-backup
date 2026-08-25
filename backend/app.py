@@ -426,12 +426,18 @@ def create_app():
         from models import AssessmentLead, WebinarRegistration
         lead = None
         lead_id = session.get('assessment_lead_id')
-        if lead_id:
-            lead = AssessmentLead.query.get(lead_id)
 
-        name = lead.name if lead else ''
-        email = lead.email if lead else ''
-        phone = lead.phone if lead else ''
+        # اولویت: شماره‌ای که مستقیماً در سشن ذخیره شده (ثبت‌نام جاری)؛
+        # در غیر این صورت از lead واکشی شود
+        phone = (session.get('webinar_contact_phone') or '').strip()
+        name = (session.get('webinar_contact_name') or '').strip()
+        email = (session.get('webinar_contact_email') or '').strip()
+        if not phone and lead_id:
+            lead = AssessmentLead.query.get(lead_id)
+            if lead:
+                phone = lead.phone or ''
+                name = name or (lead.name or '')
+                email = email or (lead.email or '')
 
         # ذخیره ثبت‌نام در دیتابیس (بدون رکورد تکراری برای همان وبینار)
         reg = None
@@ -451,9 +457,10 @@ def create_app():
                 db.session.add(reg)
                 db.session.commit()
 
-            # ارسال پیامک و ایمیل فقط یک‌بار برای هر ثبت‌نام؛ در پس‌زمینه تا صفحه سریع بالا بیاید
+            # ارسال پیامک و ایمیل برای کاربر جاری؛ فقط یک‌بار در هر سشن
+            # (برای جلوگیری از تکرار هنگام رفرش صفحه، نه مانع ثبت‌نام مجدد)
             already_sent = session.get('webinar_sms_sent_for') == f'webinar:{reg.id}'
-            if not already_sent and not reg.sms_sent:
+            if not already_sent:
                 session['webinar_sms_sent_for'] = f'webinar:{reg.id}'
                 threading.Thread(
                     target=_send_webinar_notifications_bg,
@@ -655,6 +662,11 @@ def create_app():
         db.session.commit()
 
         session['assessment_lead_id'] = lead.id
+        # شماره و نام تماس را مستقیماً در سشن نگه می‌داریم تا در صفحهٔ موفقیت وبینار
+        # مستقلاً از ثبت lead قابل بازیابی باشد (ارسال پیامک به همان کاربر جاری)
+        session['webinar_contact_phone'] = phone
+        session['webinar_contact_name'] = name
+        session['webinar_contact_email'] = email
 
         return jsonify({'success': True})
 
