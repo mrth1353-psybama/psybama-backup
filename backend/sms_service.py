@@ -5,6 +5,9 @@ SMS_MODE = os.getenv('SMS_MODE', 'local')
 FARAZSMS_BASE_URL = 'https://api.iranpayamak.com'
 DEFAULT_SENDER = '90008361'
 
+# کد پترن پیش‌فرض پیامک ثبت‌نام وبینار رایگان (فراز اس‌ام‌اس) — در صورت ست نبودن متغیر محیطی استفاده می‌شود
+DEFAULT_WEBINAR_PATTERN = 'BF1Ad2lbE7'
+
 
 def _headers(api_key: str) -> dict:
     return {
@@ -80,7 +83,7 @@ def send_webinar_registration_sms(phone_number: str, name: str = '', date: str =
     if not api_key:
         return {'success': False, 'error': 'SMS_API_KEY تنظیم نشده است'}
 
-    pattern_code = os.getenv('FARAZSMS_WEBINAR_PATTERN', '').strip()
+    pattern_code = os.getenv('FARAZSMS_WEBINAR_PATTERN', '').strip() or DEFAULT_WEBINAR_PATTERN
     if not pattern_code:
         return {'success': False, 'error': 'FARAZSMS_WEBINAR_PATTERN تنظیم نشده است'}
 
