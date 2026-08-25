@@ -166,6 +166,7 @@ function renderResults(scores) {
     if (page) page.classList.add('results-mode');
 
     document.getElementById('questionsSection').style.display = 'none';
+    document.getElementById('leadGateSection').style.display = 'none';
     document.getElementById('resultsSection').style.display = 'block';
     document.getElementById('mainIntro').style.display = 'none';
 
@@ -190,8 +191,9 @@ function renderResults(scores) {
     }, 300);
 }
 
-async function submitAssessment() {
-    const btn = document.getElementById('btnSubmit');
+async function submitAssessment(btn) {
+    btn = btn || document.getElementById('btnSubmit');
+    const originalText = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'در حال پردازش...';
 
@@ -209,7 +211,7 @@ async function submitAssessment() {
         if (!res.ok) {
             alert(data.message || 'خطا در ارسال. لطفاً دوباره امتحان کنید.');
             btn.disabled = false;
-            btn.textContent = 'مشاهده نتایج';
+            btn.textContent = originalText;
             return;
         }
 
@@ -218,8 +220,14 @@ async function submitAssessment() {
     } catch (e) {
         alert('خطا در اتصال به سرور');
         btn.disabled = false;
-        btn.textContent = 'مشاهده نتایج';
+        btn.textContent = originalText;
     }
+}
+
+function showLeadGate() {
+    document.getElementById('submitArea').style.display = 'none';
+    document.getElementById('leadGateSection').style.display = 'block';
+    document.getElementById('leadGateSection').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 
 async function submitLead(e) {
@@ -264,26 +272,25 @@ async function submitLead(e) {
             errorBox.textContent = data.message || 'خطا در ثبت اطلاعات. لطفاً دوباره امتحان کنید.';
             errorBox.classList.remove('hidden');
             btn.disabled = false;
-            btn.textContent = 'شروع پرسشنامه';
+            btn.textContent = 'دریافت نتیجه';
             return;
         }
 
-        document.getElementById('leadGateSection').style.display = 'none';
-        document.getElementById('mainIntro').style.display = 'block';
-        document.getElementById('questionsSection').style.display = 'block';
-        buildQuestions();
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        // اطلاعات تماس ثبت شد؛ حالا نتیجه را محاسبه و نمایش می‌دهیم
+        await submitAssessment(btn);
 
     } catch (e) {
         errorBox.textContent = 'خطا در اتصال به سرور';
         errorBox.classList.remove('hidden');
         btn.disabled = false;
-        btn.textContent = 'شروع پرسشنامه';
+        btn.textContent = 'دریافت نتیجه';
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    buildQuestions();
+
     document.getElementById('leadGateForm').addEventListener('submit', submitLead);
 
-    document.getElementById('btnSubmit').addEventListener('click', submitAssessment);
+    document.getElementById('btnSubmit').addEventListener('click', showLeadGate);
 });
