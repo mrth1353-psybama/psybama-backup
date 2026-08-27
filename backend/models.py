@@ -145,7 +145,9 @@ class Order(db.Model):
     payment_method = db.Column(db.String(20), nullable=False)  # 'online' or 'card'
     status = db.Column(db.String(20), default='pending_payment')
     # pending_payment | pending_key | completed | cancelled
-    amount = db.Column(db.Integer, nullable=False)  # Tomans
+    amount = db.Column(db.Integer, nullable=False)  # Tomans (پس از تخفیف)
+    discount_code = db.Column(db.String(50), nullable=True)
+    discount_amount = db.Column(db.Integer, nullable=True)  # Tomans
     zarinpal_authority = db.Column(db.String(100), nullable=True)
     customer_name = db.Column(db.String(200), nullable=True)
     customer_phone = db.Column(db.String(20), nullable=True)
@@ -168,6 +170,8 @@ class Order(db.Model):
             'payment_method': self.payment_method,
             'status': self.status,
             'amount': self.amount,
+            'discount_code': self.discount_code,
+            'discount_amount': self.discount_amount,
             'spotplayer_key': self.spotplayer_key,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'paid_at': self.paid_at.isoformat() if self.paid_at else None,

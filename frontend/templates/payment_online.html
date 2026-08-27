@@ -61,6 +61,57 @@
     min-height: 80px;
 }
 .required { color: #E53935; }
+
+.discount-box {
+    border: 1px dashed var(--sage-teal);
+    background: var(--mint-mist);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+.discount-box label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+.discount-box .row {
+    display: flex;
+    gap: 0.5rem;
+}
+.discount-box input {
+    flex: 1;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    text-align: center;
+    direction: ltr;
+}
+.discount-box .apply-btn {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--ocean-blue);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.discount-msg {
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+    min-height: 1.1rem;
+}
+.discount-msg.ok { color: #1a7f4b; }
+.discount-msg.err { color: #c0392b; }
+.amount-badge .orig {
+    font-size: 0.95rem;
+    text-decoration: line-through;
+    color: rgba(255,255,255,0.7);
+    margin-top: 0.3rem;
+}
 </style>
 {% endblock %}
 
@@ -74,8 +125,23 @@
 
         <div class="amount-badge">
             <div class="lbl">مبلغ قابل پرداخت</div>
-            <div class="amt">{{ '{:,}'.format(product.price) }} تومان</div>
+            {% if discount %}
+            <div class="amt" id="amtBadge">{{ '{:,}'.format(discount.final_amount) }} تومان</div>
+            <div class="orig" id="origBadge">{{ '{:,}'.format(product.price) }} تومان</div>
+            {% else %}
+            <div class="amt" id="amtBadge">{{ '{:,}'.format(product.price) }} تومان</div>
+            {% endif %}
             <div style="font-size:0.8rem;margin-top:0.3rem;color:rgba(255,255,255,0.7)">{{ product.name }}</div>
+        </div>
+
+        <div class="discount-box">
+            <label for="discountCode">کد تخفیف (در صورت داشتن)</label>
+            <div class="row">
+                <input type="text" id="discountCode" name="discount_code" placeholder="کد را وارد کنید" autocomplete="off"
+                       value="{{ discount.code if discount else '' }}">
+                <button type="button" class="apply-btn" id="applyBtn">اعمال</button>
+            </div>
+            <div class="discount-msg" id="discountMsg"></div>
         </div>
 
         {% if error %}
@@ -116,4 +182,76 @@
 
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+(function () {
+    var basePrice = {{ product.price }};
+    var productId = {{ product.id }};
+    var codeInput = document.getElementById('discountCode');
+    var msg = document.getElementById('discountMsg');
+    var amtBadge = document.getElementById('amtBadge');
+    var origBadge = document.getElementById('origBadge');
+    var applyBtn = document.getElementById('applyBtn');
+
+    function group(n) { return Number(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+    function updateBadge(discountAmount, finalAmount, saving) {
+        if (discountAmount && discountAmount > 0 && saving) {
+            amtBadge.textContent = group(finalAmount) + ' تومان';
+            if (!origBadge) {
+                origBadge = document.createElement('div');
+                origBadge.className = 'orig';
+                origBadge.id = 'origBadge';
+                amtBadge.insertAdjacentElement('afterend', origBadge);
+            }
+            origBadge.textContent = group(basePrice) + ' تومان';
+        } else {
+            amtBadge.textContent = group(basePrice) + ' تومان';
+            if (origBadge) { origBadge.remove(); origBadge = null; }
+        }
+    }
+
+    var timer = null;
+    function validate() {
+        var code = codeInput.value.trim();
+        if (!code) {
+            msg.className = 'discount-msg';
+            msg.textContent = '';
+            updateBadge(0, basePrice, false);
+            return;
+        }
+        msg.className = 'discount-msg';
+        msg.textContent = 'در حال بررسی…';
+        fetch('/shop/api/validate-discount', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ product_id: productId, code: code })
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data.valid) {
+                msg.className = 'discount-msg ok';
+                msg.textContent = data.message;
+                updateBadge(data.discount_amount, data.final_amount, true);
+            } else {
+                msg.className = 'discount-msg err';
+                msg.textContent = data.message;
+                updateBadge(0, basePrice, false);
+            }
+        })
+        .catch(function () {
+            msg.className = 'discount-msg err';
+            msg.textContent = 'خطا در بررسی کد. دوباره تلاش کنید.';
+            updateBadge(0, basePrice, false);
+        });
+    }
+
+    codeInput.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(validate, 500);
+    });
+    applyBtn.addEventListener('click', validate);
+})();
+</script>
 {% endblock %}

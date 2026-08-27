@@ -844,6 +844,18 @@ def create_app():
             except Exception:
                 db.session.rollback()
 
+        # Migration: add discount columns to orders
+        for col, ctype in (('discount_code', 'TEXT'), ('discount_amount', 'INTEGER')):
+            try:
+                from sqlalchemy import text
+                db.session.execute(text(
+                    f'ALTER TABLE orders ADD COLUMN {col} {ctype}'
+                ))
+                db.session.commit()
+                print(f'[DB] Migration: added {col} column to orders')
+            except Exception:
+                db.session.rollback()
+
         # Migration: add lead_id column to assessments if it doesn't exist yet
         try:
             from sqlalchemy import text

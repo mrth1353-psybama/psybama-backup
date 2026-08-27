@@ -4,6 +4,7 @@ from models import db, Product, Order, User
 from models import iran_now
 from payment import create_payment, verify_payment
 from sms_service import send_sms
+from discounts import evaluate_discount
 
 shop_bp = Blueprint('shop', __name__)
 
@@ -34,6 +35,30 @@ def checkout(product_id):
     return render_template('checkout.html', product=product)
 
 
+@shop_bp.route('/api/validate-discount', methods=['POST'])
+def validate_discount():
+    data = request.get_json() or {}
+    try:
+        product_id = int(data.get('product_id'))
+    except (TypeError, ValueError):
+        return jsonify({'valid': False, 'message': 'درخواست نامعتبر است'}), 400
+    code = (data.get('code') or '').strip()
+    product = Product.query.get_or_404(product_id)
+    result = evaluate_discount(code, product)
+    if not result:
+        return jsonify({
+            'valid': False,
+            'message': 'کد تخفیف نامعتبر است یا برای این محصول قابل استفاده نیست.'
+        })
+    return jsonify({
+        'valid': True,
+        'discount_amount': result['discount_amount'],
+        'final_amount': result['final_amount'],
+        'original_amount': result['original_amount'],
+        'message': f"کد تخفیف اعمال شد. مبلغ تخفیف: {result['discount_amount']:,} تومان"
+    })
+
+
 @shop_bp.route('/checkout/<int:product_id>/pay', methods=['POST'])
 def pay(product_id):
     product = Product.query.get_or_404(product_id)
@@ -42,14 +67,29 @@ def pay(product_id):
     if method not in ('online', 'card'):
         return render_template('checkout.html', product=product, error='روش پرداخت نامعتبر است')
 
+    discount_code = (request.form.get('discount_code') or '').strip()
+    discount = evaluate_discount(discount_code, product)
+
     if method == 'online':
+        if discount:
+            session['shop_discount'] = {
+                'product_id': product_id,
+                'code': discount_code,
+                'final_amount': discount['final_amount'],
+                'discount_amount': discount['discount_amount'],
+            }
+        else:
+            session.pop('shop_discount', None)
         return redirect(f'/shop/checkout/{product_id}/online')
 
+    amount = discount['final_amount'] if discount else product.price
     order = Order(
         user_id=session.get('user_id'),
         product_id=product_id,
         payment_method='card',
-        amount=product.price,
+        amount=amount,
+        discount_code=discount_code if discount else None,
+        discount_amount=discount['discount_amount'] if discount else None,
         status='pending_payment'
     )
     db.session.add(order)
@@ -60,7 +100,19 @@ def pay(product_id):
 @shop_bp.route('/checkout/<int:product_id>/online', methods=['GET'])
 def online_form(product_id):
     product = Product.query.get_or_404(product_id)
-    return render_template('payment_online.html', product=product)
+    disc = session.get('shop_discount')
+    discount = disc if disc and disc.get('product_id') == product_id else None
+    return render_template('payment_online.html', product=product, discount=discount)
+
+
+def _resolve_discount(product, product_id, form_code):
+    """کد تخفیف را از فرم یا سشن اعتبارسنجی می‌کند و نتیجه را برمی‌گرداند."""
+    discount = evaluate_discount(form_code, product)
+    if not discount:
+        disc = session.get('shop_discount')
+        if disc and disc.get('product_id') == product_id:
+            discount = evaluate_discount(disc.get('code', ''), product)
+    return discount
 
 
 @shop_bp.route('/checkout/<int:product_id>/online', methods=['POST'])
@@ -76,11 +128,17 @@ def online_pay(product_id):
         return render_template('payment_online.html', product=product,
                                error='لطفاً تمام فیلدها را پر کنید.')
 
+    discount_code = (request.form.get('discount_code') or '').strip()
+    discount = _resolve_discount(product, product_id, discount_code)
+    amount = discount['final_amount'] if discount else product.price
+
     order = Order(
         user_id=session.get('user_id'),
         product_id=product_id,
         payment_method='online',
-        amount=product.price,
+        amount=amount,
+        discount_code=discount_code if discount else None,
+        discount_amount=discount['discount_amount'] if discount else None,
         customer_name=full_name,
         customer_phone=phone,
         customer_address=address,
@@ -90,11 +148,13 @@ def online_pay(product_id):
     db.session.add(order)
     db.session.commit()
 
+    session.pop('shop_discount', None)
+
     site_url = os.getenv('SITE_URL', request.host_url.rstrip('/'))
     callback_url = f'{site_url}/shop/verify/{order.id}'
 
     result = create_payment(
-        amount_tomans=product.price,
+        amount_tomans=amount,
         description=f'خرید {product.name} - {full_name}',
         callback_url=callback_url
     )
