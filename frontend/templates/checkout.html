@@ -167,20 +167,20 @@
             </div>
         </div>
 
-        <div class="discount-box">
-            <label for="discountCode">کد تخفیف (در صورت داشتن)</label>
-            <div class="row">
-                <input type="text" id="discountCode" name="discount_code" placeholder="کد را وارد کنید" autocomplete="off">
-                <button type="button" class="apply-btn" id="applyBtn">اعمال</button>
-            </div>
-            <div class="discount-msg" id="discountMsg"></div>
-        </div>
-
-        <div class="price-summary">
-            <span class="final" id="finalPrice">{{ '{:,}'.format(product.price) }} تومان</span>
-        </div>
-
         <form method="POST" action="/shop/checkout/{{ product.id }}/pay">
+            <div class="discount-box">
+                <label for="discountCode">کد تخفیف (در صورت داشتن)</label>
+                <div class="row">
+                    <input type="text" id="discountCode" name="discount_code" placeholder="کد را وارد کنید" autocomplete="off">
+                    <button type="button" class="apply-btn" id="applyBtn">اعمال</button>
+                </div>
+                <div class="discount-msg" id="discountMsg"></div>
+            </div>
+
+            <div class="price-summary">
+                <span class="final" id="finalPrice">{{ '{:,}'.format(product.price) }} تومان</span>
+            </div>
+
             <div class="payment-methods">
                 <label class="payment-option">
                     <input type="radio" name="payment_method" value="online" checked>
