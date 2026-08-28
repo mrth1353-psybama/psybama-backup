@@ -39,7 +39,7 @@
         {% endif %}
         <li><a href="/knot"><span style="font-size:0.75rem; font-weight:normal;">پرسشنامه ریشه‌یابی گره کور شغلی</span></a></li>
         <li><a href="/shop">فروشگاه</a></li>
-        <li id="navUserPanel" style="display:none"><a href="/panel">پنل کاربری</a></li>
+        <li id="navUserPanel"><a id="navUserPanelLink" href="/shop/login?next=/panel">ورود</a></li>
         <li><a href="/chat" class="btn btn-sm" style="margin-right:0.5rem; background:var(--ocean-blue); color:white; font-size:0.85rem;">گفتگو با سای‌باما<span style="font-size:0.7rem;">(دستیار هوشمند سلامت روان در محیط کار)</span></a></li>
     </ul>
 </nav>
@@ -92,11 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Show user-panel link only for authenticated users
+    // Show user-panel link (toggles between "ورود" and "پنل کاربری" by auth state)
     var panelLink = document.getElementById('navUserPanel');
-    if (panelLink) {
+    var panelAnchor = document.getElementById('navUserPanelLink');
+    if (panelLink && panelAnchor) {
         fetch('/api/auth/status').then(function(r) { return r.json(); }).then(function(d) {
-            if (d.logged_in) panelLink.style.display = '';
+            if (d.logged_in) {
+                panelAnchor.textContent = 'پنل کاربری';
+                panelAnchor.setAttribute('href', '/panel');
+            } else {
+                panelAnchor.textContent = 'ورود';
+                panelAnchor.setAttribute('href', '/shop/login?next=/panel');
+            }
         }).catch(function() {});
     }
 });
