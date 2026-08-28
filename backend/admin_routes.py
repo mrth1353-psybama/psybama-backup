@@ -25,7 +25,9 @@ def admin_login():
         return jsonify({'error': 'password_required'}), 400
 
     if data['password'] == os.getenv('ADMIN_PASSWORD', 'admin1234'):
+        import time
         session['admin_logged_in'] = True
+        session['admin_auth_issued_at'] = time.time()
         return jsonify({'success': True})
 
     return jsonify({'error': 'invalid_password', 'message': 'پسورد اشتباه است'}), 401

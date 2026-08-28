@@ -323,6 +323,18 @@ def create_app():
 
     app.secret_key = os.getenv('SECRET_KEY', 'dev-insecure-change-in-production')
 
+    # ── Session cookie hardening ───────────────────────────────────────────────
+    # کوکی سشن فقط روی HTTPS (در صورت تنظیم SITE_URL با https) و غیرقابل دسترسی از
+    # طریق جاوااسکریپت ارسال می‌شود؛ با SameSite=Lax از حملات CSRF کاسته می‌شود.
+    # روی محیط لوکال (http) پرچم Secure غیرفعال می‌ماند تا لاگین خراب نشود.
+    site_url = os.getenv('SITE_URL', '')
+    app.config['SESSION_COOKIE_SECURE'] = site_url.startswith('https://')
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    # سشن دائمی نیست → با بستن مرورگر کاربر خودکار خارج می‌شود.
+    # محدودیت عمر یک‌روزه در before_request اعمال می‌گردد.
+    SESSION_MAX_AGE_SECONDS = 86400  # ۱ روز
+
     # Resolve database path relative to project root (parent of backend/)
     project_root = Path(__file__).parent.parent
     data_dir = project_root / 'data'
@@ -350,6 +362,22 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(shop_bp, url_prefix='/shop')
     app.register_blueprint(panel_bp, url_prefix='/panel')
+
+    # ── Session lifetime enforcement (۱ روز) ───────────────────────────────────
+    # سشن‌های کاربر و ادمین پس از گذشت SESSION_MAX_AGE_SECONDS منقضی می‌شوند؛
+    # در غیر این صورت (بستن مرورگر) به‌دلیل non-permanent بودن سشن، خودکار خارج می‌شوند.
+    @app.before_request
+    def enforce_session_lifetime():
+        now = time.time()
+        if session.get('user_id') and session.get('auth_issued_at'):
+            if now - session['auth_issued_at'] > SESSION_MAX_AGE_SECONDS:
+                session.pop('user_id', None)
+                session.pop('phone_number', None)
+                session.pop('auth_issued_at', None)
+        if session.get('admin_logged_in') and session.get('admin_auth_issued_at'):
+            if now - session['admin_auth_issued_at'] > SESSION_MAX_AGE_SECONDS:
+                session.pop('admin_logged_in', None)
+                session.pop('admin_auth_issued_at', None)
 
     # ── Page routes ──────────────────────────────────────────────────────────
 
@@ -529,6 +557,7 @@ def create_app():
         db.session.commit()
         session['user_id'] = user.id
         session['phone_number'] = phone
+        session['auth_issued_at'] = time.time()
 
         return jsonify({'success': True, 'message': 'ورود موفق', 'user_id': user.id})
 
