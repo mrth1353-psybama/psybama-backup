@@ -195,7 +195,7 @@
 
     async function loadProfile() {
         try {
-            const res = await fetch('/api/panel/profile');
+            const res = await fetch('/panel/api/profile');
             const data = await res.json();
             if (!data.success) return;
             const u = data.user;
@@ -212,7 +212,7 @@
         const email = document.getElementById('emailField').value.trim();
         btn.disabled = true;
         try {
-            const res = await fetch('/api/panel/profile', {
+            const res = await fetch('/panel/api/profile', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({full_name: name, email: email})
@@ -240,7 +240,7 @@
     async function loadOrders() {
         const container = document.getElementById('ordersContainer');
         try {
-            const res = await fetch('/api/panel/orders');
+            const res = await fetch('/panel/api/orders');
             const data = await res.json();
             if (!data.success || !data.orders.length) {
                 container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>هنوز سفارش پرداخت‌شده‌ای ندارید.<br><span style="font-size:0.85rem">پس از ثبت سفارش و تایید پرداخت، سفارشات اینجا نمایش داده می‌شوند.</span></div>';
