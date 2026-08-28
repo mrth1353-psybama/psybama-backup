@@ -312,6 +312,27 @@ def cancel_order(order_id):
     return jsonify({'success': True})
 
 
+@admin_bp.route('/orders/<int:order_id>/mark-shipped', methods=['POST'])
+@admin_required
+def mark_shipped(order_id):
+    """برای محصولات فیزیکی (مثل کتاب): علامت ارسال شد + اطلاع‌رسانی پیامکی (بدون کلید)."""
+    order = Order.query.get_or_404(order_id)
+    order.status = 'completed'
+    order.completed_at = iran_now()
+    db.session.commit()
+
+    try:
+        from sms_service import send_sms
+        phone = order.user.phone_number if order.user else order.customer_phone
+        product_name = order.product.name if order.product else 'سفارش'
+        msg = f'سای‌باما: سفارش «{product_name}» شما با موفقیت ثبت و ارسال شد. با تشکر از خرید شما.'
+        send_sms(phone, msg)
+    except Exception:
+        pass
+
+    return jsonify({'success': True})
+
+
 @admin_bp.route('/products')
 @admin_required
 def list_products():

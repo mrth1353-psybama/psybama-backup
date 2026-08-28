@@ -272,10 +272,19 @@ const Admin = (() => {
             }
 
             tbody.innerHTML = data.orders.map(o => {
-                const needsKey = o.status === 'pending_key';
-                const isPending = o.status === 'pending_payment';
+                const isPhysical = o.delivery_type === 'physical';
+                const needsAction = (o.status === 'pending_key' || o.status === 'pending_payment');
+                let actionBtn = '';
+                if (needsAction) {
+                    if (isPhysical) {
+                        actionBtn = `<button class="btn btn-outline btn-sm" onclick="Admin.markShipped(${o.id})">علامت ارسال شد</button>`;
+                    } else {
+                        const label = o.status === 'pending_payment' ? 'تأیید + کلید' : 'ثبت کلید';
+                        actionBtn = `<button class="btn btn-outline btn-sm" onclick="Admin.openKeyPanel(${o.id}, '${escapeHtml(o.product_name)}')">${label}</button>`;
+                    }
+                }
                 return `
-                <tr style="${(needsKey || isPending) ? 'background:#FFF8E1;font-weight:bold' : ''}">
+                <tr style="${(needsAction) ? 'background:#FFF8E1;font-weight:bold' : ''}">
                     <td>${o.id}</td>
                     <td style="direction:ltr;text-align:left">${o.phone_number}</td>
                     <td>${escapeHtml(o.product_name)}</td>
@@ -284,10 +293,9 @@ const Admin = (() => {
                     <td>${STATUS_LABEL[o.status] || o.status}</td>
                     <td style="white-space:nowrap">${formatDateTime(o.created_at)}</td>
                     <td style="white-space:nowrap;display:flex;gap:0.4rem">
-                        ${needsKey ? `<button class="btn btn-outline btn-sm" onclick="Admin.openKeyPanel(${o.id}, '${escapeHtml(o.product_name)}')">ثبت کلید</button>` : ''}
-                        ${isPending ? `<button class="btn btn-outline btn-sm" style="color:var(--sage-teal)" onclick="Admin.openKeyPanel(${o.id}, '${escapeHtml(o.product_name)}')">تأیید + کلید</button>` : ''}
-                        ${o.status !== 'cancelled' && o.status !== 'completed' ? `<button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.cancelOrder(${o.id})">لغو</button>` : ''}
-                        ${o.spotplayer_key ? `<span style="font-size:0.75rem;color:var(--text-muted)">🔑 ${escapeHtml(o.spotplayer_key)}</span>` : ''}
+                        ${actionBtn}
+                        ${(!isPhysical && o.spotplayer_key) ? `<span style="font-size:0.75rem;color:var(--text-muted)">🔑 ${escapeHtml(o.spotplayer_key)}</span>` : ''}
+                        ${(o.status !== 'cancelled' && o.status !== 'completed') ? `<button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.cancelOrder(${o.id})">لغو</button>` : ''}
                     </td>
                 </tr>`;
             }).join('');
@@ -336,6 +344,16 @@ const Admin = (() => {
             await loadOrders();
             await loadStats();
         } catch (e) {}
+    }
+
+    async function markShipped(id) {
+        if (!confirm('وضعیت این سفارش «ارسال شد» علامت بخورد و پیامک اطلاع‌رسانی فرستاده شود؟')) return;
+        try {
+            await fetch(`/admin/orders/${id}/mark-shipped`, {method: 'POST'});
+            await loadOrders();
+            await loadStats();
+            alert('سفارش با موفقیت «ارسال شد» علامت خورد و پیامک ارسال شد.');
+        } catch (e) { alert('خطا در ثبت ارسال'); }
     }
 
     // ── Products ──────────────────────────────────────
@@ -721,6 +739,7 @@ const Admin = (() => {
 
     return {viewConversation, markContactRead, deleteContact,
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
+            markShipped,
             saveProduct, toggleProduct, deleteLead, viewLeadDetails,
             deleteWebinar, viewUserOrders, closeUserOrders};
 })();

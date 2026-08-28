@@ -913,6 +913,23 @@ def create_app():
             except Exception:
                 db.session.rollback()
 
+        # Migration: add delivery_type to products (physical/digital)
+        try:
+            from sqlalchemy import text
+            db.session.execute(text('ALTER TABLE products ADD COLUMN delivery_type TEXT'))
+            db.session.commit()
+            print('[DB] Migration: added delivery_type column to products')
+        except Exception:
+            db.session.rollback()
+        try:
+            from sqlalchemy import text
+            db.session.execute(text(
+                "UPDATE products SET delivery_type='digital' WHERE delivery_type IS NULL OR delivery_type=''"
+            ))
+            db.session.commit()
+        except Exception:
+            db.session.rollback()
+
         # Seed placeholder products if none exist
         from models import Product
         if Product.query.count() == 0:
@@ -967,6 +984,9 @@ def create_app():
                 changed = True
             if ebook_product.price != EBOOK_PRODUCT_PRICE:
                 ebook_product.price = EBOOK_PRODUCT_PRICE
+                changed = True
+            if ebook_product.delivery_type != 'physical':
+                ebook_product.delivery_type = 'physical'
                 changed = True
             if changed:
                 db.session.commit()

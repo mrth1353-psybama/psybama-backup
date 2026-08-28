@@ -130,6 +130,8 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=True)
     price = db.Column(db.Integer, nullable=False)  # Tomans
     is_active = db.Column(db.Boolean, default=True)
+    delivery_type = db.Column(db.String(20), default='digital',
+                              nullable=False, server_default='digital')
     orders = db.relationship('Order', backref='product', lazy=True)
 
     def to_dict(self):
@@ -138,7 +140,8 @@ class Product(db.Model):
             'name': self.name,
             'description': self.description,
             'price': self.price,
-            'is_active': self.is_active
+            'is_active': self.is_active,
+            'delivery_type': self.delivery_type
         }
 
 
@@ -173,6 +176,7 @@ class Order(db.Model):
             'phone_number': self.user.phone_number if self.user else '—',
             'product_id': self.product_id,
             'product_name': self.product.name if self.product else '—',
+            'delivery_type': self.product.delivery_type if self.product else 'digital',
             'payment_method': self.payment_method,
             'status': self.status,
             'amount': self.amount,
