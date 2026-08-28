@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}پنل کاربری — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.panel-page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+}
+.panel-page h1 {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    color: var(--slate-blue);
+    margin-bottom: 1.5rem;
+}
+.panel-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+.panel-card h2 {
+    font-family: var(--font-title);
+    font-size: 1.05rem;
+    color: var(--slate-blue);
+    margin-bottom: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.profile-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+.profile-field {
+    flex: 1;
+    min-width: 200px;
+}
+.profile-field label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+}
+.profile-field input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+.profile-phone {
+    direction: ltr;
+    text-align: left;
+    font-weight: bold;
+    color: var(--ocean-blue);
+}
+.order-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+.order-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+.order-item-header h3 {
+    font-family: var(--font-title);
+    font-size: 1rem;
+    color: var(--slate-blue);
+}
+.order-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.key-box {
+    background: #E8F5E9;
+    border: 1px solid #B7E0CE;
+    border-radius: var(--radius-md);
+    padding: 0.7rem 1rem;
+    font-size: 0.88rem;
+    color: #2E7D54;
+    margin-top: 0.5rem;
+    word-break: break-all;
+    direction: ltr;
+    text-align: center;
+}
+.panel-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+.empty-state {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-muted);
+}
+.empty-state .emoji { font-size: 2.5rem; display: block; margin-bottom: 1rem; }
+.alert-success {
+    background: #E8F5E9;
+    color: #2E7D54;
+    border: 1px solid #B7E0CE;
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="panel-page">
+    <h1>پنل کاربری من</h1>
+
+    <div id="profileAlert" class="alert-success hidden"></div>
+
+    <!-- Profile -->
+    <div class="panel-card">
+        <h2>👤 اطلاعات حساب</h2>
+        <div class="profile-row">
+            <div class="profile-field">
+                <label>شماره موبایل</label>
+                <input type="text" id="phoneField" class="profile-phone" readonly value="—">
+            </div>
+            <div class="profile-field">
+                <label>نام و نام خانوادگی</label>
+                <input type="text" id="nameField" placeholder="نام خود را وارد کنید">
+            </div>
+            <div class="profile-field">
+                <label>ایمیل</label>
+                <input type="email" id="emailField" placeholder="example@domain.com" style="direction:ltr;text-align:left">
+            </div>
+            <div>
+                <button class="btn btn-primary" id="btnSaveProfile" style="white-space:nowrap">ذخیره اطلاعات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed orders -->
+    <div class="panel-card">
+        <h2>📦 محصولات و دوره‌های خریداری‌شده</h2>
+        <div id="ordersContainer">
+            <div class="empty-state"><span class="emoji">⏳</span>در حال بارگذاری...</div>
+        </div>
+    </div>
+
+    <div class="panel-actions">
+        <a href="/shop" class="btn btn-ghost">رفتن به فروشگاه</a>
+        <button class="btn btn-ghost" id="btnLogout" style="color:#B91C1C">خروج از حساب</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+'use strict';
+(function() {
+    async function ensureAuth() {
+        try {
+            const res = await fetch('/api/auth/status');
+            const data = await res.json();
+            if (!data.logged_in) {
+                window.location.href = '/shop/login?next=/panel';
+                return false;
+            }
+        } catch (e) {
+            window.location.href = '/shop/login?next=/panel';
+            return false;
+        }
+        return true;
+    }
+
+    function formatDate(iso) {
+        if (!iso) return '—';
+        const d = new Date(iso);
+        return d.toLocaleDateString('fa-IR') + ' — ' + d.toLocaleTimeString('fa-IR', {hour: '2-digit', minute: '2-digit'});
+    }
+
+    async function loadProfile() {
+        try {
+            const res = await fetch('/api/panel/profile');
+            const data = await res.json();
+            if (!data.success) return;
+            const u = data.user;
+            document.getElementById('phoneField').value = u.phone_number;
+            document.getElementById('nameField').value = u.full_name || '';
+            document.getElementById('emailField').value = u.email || '';
+        } catch (e) {}
+    }
+
+    async function saveProfile() {
+        const btn = document.getElementById('btnSaveProfile');
+        const alert = document.getElementById('profileAlert');
+        const name = document.getElementById('nameField').value.trim();
+        const email = document.getElementById('emailField').value.trim();
+        btn.disabled = true;
+        try {
+            const res = await fetch('/api/panel/profile', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({full_name: name, email: email})
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert.textContent = '✓ اطلاعات حساب شما ذخیره شد.';
+                alert.classList.remove('hidden');
+                setTimeout(() => alert.classList.add('hidden'), 3000);
+            } else {
+                alert.textContent = data.message || 'خطا در ذخیره اطلاعات';
+                alert.classList.remove('hidden');
+                alert.style.background = '#FEE2E2';
+                alert.style.color = '#B91C1C';
+                alert.style.borderColor = '#FCA5A5';
+            }
+        } catch (e) {
+            alert.textContent = 'خطا در اتصال به سرور';
+            alert.classList.remove('hidden');
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function loadOrders() {
+        const container = document.getElementById('ordersContainer');
+        try {
+            const res = await fetch('/api/panel/orders');
+            const data = await res.json();
+            if (!data.success || !data.orders.length) {
+                container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>هنوز محصول تکمیل‌شده‌ای ندارید.<br><span style="font-size:0.85rem">پس از تکمیل خرید و دریافت کلید، محصولات اینجا نمایش داده می‌شوند.</span></div>';
+                return;
+            }
+            container.innerHTML = data.orders.map(o => `
+                <div class="order-item">
+                    <div class="order-item-header">
+                        <h3>🎓 ${escapeHtml(o.product_name)}</h3>
+                        <span style="font-size:0.78rem;padding:0.25rem 0.75rem;border-radius:20px;background:#E8F5E9;color:#2E7D54;font-weight:bold">${o.status_label}</span>
+                    </div>
+                    <div class="order-meta">
+                        <span>مبلغ: <strong>${Number(o.amount).toLocaleString()} تومان</strong></span>
+                        <span>روش پرداخت: ${o.method_label}</span>
+                        <span>تاریخ تکمیل: ${formatDate(o.completed_at)}</span>
+                    </div>
+                    ${o.spotplayer_key ? `<div class="key-box">🔑 کلید دسترسی شما:<br><strong>${escapeHtml(o.spotplayer_key)}</strong></div>` : ''}
+                </div>`).join('');
+        } catch (e) {
+            container.innerHTML = '<div class="empty-state" style="color:var(--error)">خطا در بارگذاری سفارش‌ها</div>';
+        }
+    }
+
+    function escapeHtml(text) {
+        const d = document.createElement('div');
+        d.appendChild(document.createTextNode(String(text)));
+        return d.innerHTML;
+    }
+
+    async function init() {
+        if (!(await ensureAuth())) return;
+        await loadProfile();
+        await loadOrders();
+
+        document.getElementById('btnSaveProfile').addEventListener('click', saveProfile);
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            await fetch('/api/auth/logout', {method: 'POST'});
+            window.location.href = '/';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+{% endblock %}

@@ -39,6 +39,7 @@
         {% endif %}
         <li><a href="/knot"><span style="font-size:0.75rem; font-weight:normal;">پرسشنامه ریشه‌یابی گره کور شغلی</span></a></li>
         <li><a href="/shop">فروشگاه</a></li>
+        <li id="navUserPanel" style="display:none"><a href="/panel">پنل کاربری</a></li>
         <li><a href="/chat" class="btn btn-sm" style="margin-right:0.5rem; background:var(--ocean-blue); color:white; font-size:0.85rem;">گفتگو با سای‌باما<span style="font-size:0.7rem;">(دستیار هوشمند سلامت روان در محیط کار)</span></a></li>
     </ul>
 </nav>
@@ -89,6 +90,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 navbarLinks.classList.remove('active');
             });
         });
+    }
+
+    // Show user-panel link only for authenticated users
+    var panelLink = document.getElementById('navUserPanel');
+    if (panelLink) {
+        fetch('/api/auth/status').then(function(r) { return r.json(); }).then(function(d) {
+            if (d.logged_in) panelLink.style.display = '';
+        }).catch(function() {});
     }
 });
 </script>

@@ -113,14 +113,24 @@
                             <th>وضعیت</th>
                             <th>تاریخ ثبت</th>
                             <th>گفتگوها</th>
+                            <th>سفارش‌ها</th>
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
-                        <tr><td colspan="5" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
                     </tbody>
                 </table>
             </div>
             <div id="usersPagination" style="display:flex;gap:0.5rem;justify-content:center;padding:1rem"></div>
+
+            <!-- User orders viewer (admin access to user panel) -->
+            <div id="userOrdersPanel" class="conv-viewer hidden" style="margin-top:1rem">
+                <div class="conv-viewer-header">
+                    <span id="userOrdersTitle">سفارش‌های کاربر</span>
+                    <button class="btn btn-ghost btn-sm" id="btnCloseUserOrders">✕ بستن</button>
+                </div>
+                <div id="userOrdersContent" style="padding:1rem"></div>
+            </div>
         </div>
 
         <!-- Conversations Tab -->

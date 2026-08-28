@@ -129,6 +129,7 @@ const Admin = (() => {
                     <td><span class="badge ${u.verified ? 'badge-success' : 'badge-warning'}">${u.verified ? 'تأیید شده' : 'در انتظار'}</span></td>
                     <td>${formatDateTime(u.created_at)}</td>
                     <td>${u.conversation_count}</td>
+                    <td><button class="btn btn-outline btn-sm" onclick="Admin.viewUserOrders(${u.id})">مشاهده سفارش‌ها</button></td>
                 </tr>`).join('');
 
             renderPagination('usersPagination', data.pages, page, loadUsers);
@@ -136,6 +137,53 @@ const Admin = (() => {
         } catch (e) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
         }
+    }
+
+    // ── User Orders (admin view of a user's panel) ──
+
+    async function viewUserOrders(userId) {
+        const panel = document.getElementById('userOrdersPanel');
+        const titleEl = document.getElementById('userOrdersTitle');
+        const contentEl = document.getElementById('userOrdersContent');
+
+        panel.classList.remove('hidden');
+        contentEl.innerHTML = '<div class="text-center text-muted" style="padding:1rem">در حال بارگذاری...</div>';
+
+        try {
+            const res = await fetch(`/admin/users/${userId}/orders`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+
+            titleEl.textContent = `سفارش‌های تکمیل‌شده کاربر #${userId}`;
+
+            if (!data.orders.length) {
+                contentEl.innerHTML = '<p class="text-muted text-center" style="padding:1rem">این کاربر هنوز سفارش تکمیل‌شده‌ای ندارد.</p>';
+                return;
+            }
+
+            contentEl.innerHTML = data.orders.map(o => `
+                <div style="background:var(--warm-sand);border:1px solid var(--warm-sand-border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+                    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem">
+                        <strong style="color:var(--slate-blue)">🎓 ${escapeHtml(o.product_name)}</strong>
+                        <span class="badge badge-success">✓ تکمیل شده</span>
+                    </div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem">
+                        مبلغ: ${Number(o.amount).toLocaleString()} تومان &nbsp;|&nbsp;
+                        روش: ${o.payment_method === 'online' ? 'آنلاین' : 'کارت به کارت'} &nbsp;|&nbsp;
+                        تاریخ: ${formatDateTime(o.completed_at)}
+                    </div>
+                    ${o.spotplayer_key
+                        ? `<div class="key-box" style="background:#E8F5E9;border:1px solid #B7E0CE;border-radius:8px;padding:0.6rem 1rem;color:#2E7D54;direction:ltr;text-align:center;word-break:break-all">🔑 ${escapeHtml(o.spotplayer_key)}</div>`
+                        : ''}
+                </div>`).join('');
+
+        } catch (e) {
+            contentEl.innerHTML = '<p style="color:var(--error);text-align:center;padding:1rem">خطا در بارگذاری سفارش‌ها</p>';
+        }
+    }
+
+    function closeUserOrders() {
+        document.getElementById('userOrdersPanel').classList.add('hidden');
     }
 
     // ── Conversations ─────────────────────────────────
@@ -663,6 +711,8 @@ const Admin = (() => {
 
         document.getElementById('btnCloseLeadDetails').addEventListener('click', closeLeadDetails);
 
+        document.getElementById('btnCloseUserOrders').addEventListener('click', closeUserOrders);
+
         initTabs();
         checkAdminStatus();
     }
@@ -672,5 +722,5 @@ const Admin = (() => {
     return {viewConversation, markContactRead, deleteContact,
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
             saveProduct, toggleProduct, deleteLead, viewLeadDetails,
-            deleteWebinar};
+            deleteWebinar, viewUserOrders, closeUserOrders};
 })();

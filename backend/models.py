@@ -15,6 +15,9 @@ class User(db.Model):
     otp_code = db.Column(db.String(6), nullable=True)
     otp_expires_at = db.Column(db.DateTime, nullable=True)
     is_verified = db.Column(db.Boolean, default=False)
+    full_name = db.Column(db.String(100), nullable=True)
+    email = db.Column(db.String(120), nullable=True)
+    last_login_at = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=iran_now)
 
     conversations = db.relationship('Conversation', backref='user', lazy=True, cascade='all, delete-orphan')
@@ -25,6 +28,9 @@ class User(db.Model):
             'id': self.id,
             'phone_number': self.phone_number,
             'is_verified': self.is_verified,
+            'full_name': self.full_name,
+            'email': self.email,
+            'last_login_at': self.last_login_at.isoformat() if self.last_login_at else None,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'conversation_count': len(self.conversations)
         }

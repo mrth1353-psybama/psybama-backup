@@ -10,11 +10,13 @@ from flask import Flask, render_template, request, jsonify, session, redirect, u
 from flask_cors import CORS
 
 from models import db
+from models import iran_now
 from auth import login_required, create_or_update_otp, verify_otp
 from sms_service import send_otp
 from chat_handler import send_message, get_history
 from admin_routes import admin_bp
 from shop_routes import shop_bp
+from panel_routes import panel_bp
 from rag_handler import load_knowledge_base
 
 
@@ -347,6 +349,7 @@ def create_app():
     db.init_app(app)
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(shop_bp, url_prefix='/shop')
+    app.register_blueprint(panel_bp, url_prefix='/panel')
 
     # ── Page routes ──────────────────────────────────────────────────────────
 
@@ -522,6 +525,8 @@ def create_app():
 
         from models import User
         user = User.query.filter_by(phone_number=phone).first()
+        user.last_login_at = iran_now()
+        db.session.commit()
         session['user_id'] = user.id
         session['phone_number'] = phone
 
@@ -866,6 +871,18 @@ def create_app():
             print('[DB] Migration: added lead_id column to assessments')
         except Exception:
             db.session.rollback()
+
+        # Migration: add panel fields to users (full_name, email, last_login_at)
+        for col, ctype in (('full_name', 'TEXT'), ('email', 'TEXT'), ('last_login_at', 'TEXT')):
+            try:
+                from sqlalchemy import text
+                db.session.execute(text(
+                    f'ALTER TABLE users ADD COLUMN {col} {ctype}'
+                ))
+                db.session.commit()
+                print(f'[DB] Migration: added {col} column to users')
+            except Exception:
+                db.session.rollback()
 
         # Seed placeholder products if none exist
         from models import Product

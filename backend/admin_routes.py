@@ -263,6 +263,17 @@ def list_orders():
     return jsonify({'orders': [o.to_dict() for o in orders]})
 
 
+@admin_bp.route('/users/<int:user_id>/orders')
+@admin_required
+def list_user_orders(user_id):
+    """سفارشات تکمیل‌شده یک کاربر خاص — دسترسی ادمین به پنل کاربر."""
+    orders = (Order.query
+              .filter_by(user_id=user_id, status='completed')
+              .order_by(Order.completed_at.desc())
+              .all())
+    return jsonify({'user_id': user_id, 'orders': [o.to_dict() for o in orders]})
+
+
 @admin_bp.route('/orders/<int:order_id>/set-key', methods=['POST'])
 @admin_required
 def set_order_key(order_id):
