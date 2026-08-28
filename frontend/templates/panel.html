@@ -243,7 +243,7 @@
             const res = await fetch('/api/panel/orders');
             const data = await res.json();
             if (!data.success || !data.orders.length) {
-                container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>هنوز محصول تکمیل‌شده‌ای ندارید.<br><span style="font-size:0.85rem">پس از تکمیل خرید و دریافت کلید، محصولات اینجا نمایش داده می‌شوند.</span></div>';
+                container.innerHTML = '<div class="empty-state"><span class="emoji">📭</span>هنوز سفارش پرداخت‌شده‌ای ندارید.<br><span style="font-size:0.85rem">پس از ثبت سفارش و تایید پرداخت، سفارشات اینجا نمایش داده می‌شوند.</span></div>';
                 return;
             }
             container.innerHTML = data.orders.map(o => `
@@ -255,9 +255,8 @@
                     <div class="order-meta">
                         <span>مبلغ: <strong>${Number(o.amount).toLocaleString()} تومان</strong></span>
                         <span>روش پرداخت: ${o.method_label}</span>
-                        <span>تاریخ تکمیل: ${formatDate(o.completed_at)}</span>
+                        <span>تاریخ ثبت: ${formatDate(o.created_at)}</span>
                     </div>
-                    ${o.spotplayer_key ? `<div class="key-box">🔑 کلید دسترسی شما:<br><strong>${escapeHtml(o.spotplayer_key)}</strong></div>` : ''}
                 </div>`).join('');
         } catch (e) {
             container.innerHTML = '<div class="empty-state" style="color:var(--error)">خطا در بارگذاری سفارش‌ها</div>';

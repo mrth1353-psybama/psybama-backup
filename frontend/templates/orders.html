@@ -92,11 +92,6 @@
                 <span>روش: {{ 'آنلاین' if order.payment_method == 'online' else 'کارت به کارت' }}</span>
                 <span>تاریخ: {{ order.created_at.strftime('%Y/%m/%d — %H:%M') if order.created_at else '—' }}</span>
             </div>
-            {% if order.spotplayer_key %}
-            <div class="order-key-box">
-                🔑 کلید دسترسی: <strong>{{ order.spotplayer_key }}</strong>
-            </div>
-            {% endif %}
         </div>
         {% endfor %}
     {% else %}

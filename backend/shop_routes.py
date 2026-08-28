@@ -32,6 +32,8 @@ def shop_login():
 @shop_bp.route('/checkout/<int:product_id>')
 def checkout(product_id):
     product = Product.query.get_or_404(product_id)
+    if not session.get('user_id'):
+        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     return render_template('checkout.html', product=product)
 
 
@@ -62,6 +64,8 @@ def validate_discount():
 @shop_bp.route('/checkout/<int:product_id>/pay', methods=['POST'])
 def pay(product_id):
     product = Product.query.get_or_404(product_id)
+    if not session.get('user_id'):
+        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     method = request.form.get('payment_method')
 
     if method not in ('online', 'card'):
@@ -118,6 +122,8 @@ def _resolve_discount(product, product_id, form_code):
 @shop_bp.route('/checkout/<int:product_id>/online', methods=['POST'])
 def online_pay(product_id):
     product = Product.query.get_or_404(product_id)
+    if not session.get('user_id'):
+        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
 
     full_name = (request.form.get('full_name') or '').strip()
     phone = (request.form.get('phone') or '').strip()
@@ -218,8 +224,8 @@ def orders():
                    .all())
     status_label = {
         'pending_payment': 'در انتظار تأیید پرداخت',
-        'pending_key':     'پرداخت تأیید شد — در انتظار کلید',
-        'completed':       'کلید ارسال شد ✓',
+        'pending_key':     'پرداخت تایید شد — در انتظار ارسال',
+        'completed':       'تکمیل شد ✓',
         'cancelled':       'لغو شده',
     }
     return render_template('orders.html', orders=user_orders, status_label=status_label)

@@ -6,9 +6,9 @@ from models import iran_now
 panel_bp = Blueprint('panel', __name__)
 
 STATUS_LABEL = {
-    'pending_payment': 'در انتظار تأیید پرداخت',
-    'pending_key':     'پرداخت تأیید شد — در انتظار کلید',
-    'completed':       'کلید ارسال شد ✓',
+    'pending_payment': 'در انتظار پرداخت',
+    'pending_key':     'پرداخت تایید شد — در انتظار ارسال',
+    'completed':       'تکمیل شد ✓',
     'cancelled':       'لغو شده',
 }
 METHOD_LABEL = {'online': 'آنلاین', 'card': 'کارت به کارت'}
@@ -60,10 +60,12 @@ def update_profile():
 @panel_bp.route('/api/orders', methods=['GET'])
 @login_required
 def get_completed_orders():
-    """سفارشات تکمیل‌شده کاربر (وضعیت completed) — فقط متعلق به همین کاربر."""
+    """سفارشات پرداخت‌شده کاربر (pending_key و completed) — فقط متعلق به همین کاربر.
+    وضعیت pending_key یعنی پرداخت تایید شده و در انتظار ارسال (محصول فیزیکی)."""
     orders = (Order.query
-              .filter_by(user_id=session['user_id'], status='completed')
-              .order_by(Order.completed_at.desc())
+              .filter(Order.user_id == session['user_id'],
+                      Order.status.in_(['pending_key', 'completed']))
+              .order_by(Order.created_at.desc())
               .all())
 
     result = []
@@ -77,7 +79,6 @@ def get_completed_orders():
             'method_label': METHOD_LABEL.get(o.payment_method, o.payment_method),
             'status': o.status,
             'status_label': STATUS_LABEL.get(o.status, o.status),
-            'spotplayer_key': o.spotplayer_key,
             'created_at': o.created_at.isoformat() if o.created_at else None,
             'completed_at': o.completed_at.isoformat() if o.completed_at else None,
         })
