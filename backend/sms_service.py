@@ -54,21 +54,33 @@ def send_sms(phone_number: str, message: str) -> dict:
     if not api_key:
         return {'success': False, 'error': 'SMS_API_KEY تنظیم نشده است'}
 
-    url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/simple'
-    payload = {
-        'text': message,
-        'line_number': _sender(),
-        'recipients': [phone_number],
-        'number_format': 'english',
-        'schedule': None,
-    }
+    pattern_code = os.getenv('FARAZSMS_PATTERN', '').strip()
+    if pattern_code:
+        url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/pattern'
+        payload = {
+            'code': pattern_code,
+            'attributes': {'code': message},
+            'recipient': phone_number,
+            'line_number': _sender(),
+            'number_format': 'english',
+        }
+    else:
+        url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/simple'
+        payload = {
+            'text': message,
+            'line_number': _sender(),
+            'recipients': [phone_number],
+            'number_format': 'english',
+            'schedule': None,
+        }
+
     try:
         response = requests.post(url, json=payload, headers=_headers(api_key), timeout=10)
         data = _safe_json(response)
         if data.get('status') == 'success':
             return {'success': True, 'mode': 'production'}
         return {'success': False, 'error': str(data.get('messages') or data)}
-    except Exception as e:
+    except Exception:
         return {'success': False, 'error': str(e)}
 
 
