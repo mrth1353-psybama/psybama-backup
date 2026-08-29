@@ -186,23 +186,32 @@ def online_pay(product_id):
         return render_template('payment_online.html', product=product,
                                error='لطفاً تمام فیلدها را پر کنید.')
 
-    discount_code = (request.form.get('discount_code') or '').strip()
-    discount = evaluate_discount(discount_code, product)
-    session_shipping = session.pop('checkout_shipping', 0)
     was_popup = session.get('was_popup_path', False)
+    session_shipping = session.pop('checkout_shipping', 0)
     
-    if discount:
-        amount, shipping = compute_order_amount(product, discount)
-    elif was_popup and product.delivery_type == 'physical':
-        # Apply implicit KNOT50 popup discount when coming from popup path
+    # Prioritize implicit KNOT50 popup discount when coming from popup path
+    if was_popup and product.delivery_type == 'physical':
         base = product.price
         discount_amount = int(round(base * 50 / 100))  # 50% KNOT50 discount
         final_amount = base - discount_amount
         shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
         amount = final_amount + shipping
+        discount_code = POPUP_PROMO_CODE
+        discount = {
+            'code': discount_code,
+            'final_amount': final_amount,
+            'discount_amount': discount_amount,
+            'type': 'percent',
+        }
     else:
-        amount = product.price
-        shipping = session_shipping
+        discount_code = (request.form.get('discount_code') or '').strip()
+        discount = evaluate_discount(discount_code, product)
+        session_shipping = session.pop('checkout_shipping', 0)
+        if discount:
+            amount, shipping = compute_order_amount(product, discount)
+        else:
+            amount = product.price
+            shipping = session_shipping
     
     order = Order(
         user_id=session.get('user_id'),
