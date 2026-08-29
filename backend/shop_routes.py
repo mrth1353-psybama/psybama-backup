@@ -97,8 +97,17 @@ def pay(product_id):
     discount_code = (request.form.get('discount_code') or '').strip()
     discount = evaluate_discount(discount_code, product)
     session_shipping = session.pop('checkout_shipping', 0)
+    was_popup = session.get('was_popup_path', False)
+    
     if discount:
         amount, shipping = compute_order_amount(product, discount)
+    elif was_popup and product.delivery_type == 'physical':
+        # Apply implicit KNOT50 popup discount when coming from popup path
+        base = product.price
+        discount_amount = int(round(base * 50 / 100))  # 50% KNOT50 discount
+        final_amount = base - discount_amount
+        shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
+        amount = final_amount + shipping
     else:
         amount = product.price
         shipping = session_shipping
@@ -113,7 +122,7 @@ def pay(product_id):
                 'shipping': shipping,
             }
         else:
-            session['was_popup_path'] = bool(session_shipping)
+            session['was_popup_path'] = was_popup
             session.pop('shop_discount', None)
         return redirect(f'/shop/checkout/{product_id}/online')
 
