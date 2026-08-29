@@ -54,6 +54,8 @@ def checkout(product_id):
         return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     promo = (request.args.get('promo') or '').strip()
     shipping = SHIPPING_COST if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else 0
+    session['checkout_shipping'] = shipping
+    session['was_popup_path'] = (promo == POPUP_PROMO_CODE)
     return render_template('checkout.html', product=product, promo=promo, shipping=shipping)
 
 
@@ -94,8 +96,13 @@ def pay(product_id):
 
     discount_code = (request.form.get('discount_code') or '').strip()
     discount = evaluate_discount(discount_code, product)
-    amount, shipping = compute_order_amount(product, discount)
-
+    session_shipping = session.pop('checkout_shipping', 0)
+    if discount:
+        amount, shipping = compute_order_amount(product, discount)
+    else:
+        amount = product.price
+        shipping = session_shipping
+    
     if method == 'online':
         if discount:
             session['shop_discount'] = {
@@ -106,6 +113,7 @@ def pay(product_id):
                 'shipping': shipping,
             }
         else:
+            session['was_popup_path'] = bool(session_shipping)
             session.pop('shop_discount', None)
         return redirect(f'/shop/checkout/{product_id}/online')
 
