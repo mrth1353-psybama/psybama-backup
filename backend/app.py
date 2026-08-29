@@ -23,7 +23,7 @@ from rag_handler import load_knowledge_base
 EBOOK_PRODUCT_NAME = 'کتاب مدیر هوشمند'
 EBOOK_PRODUCT_LEGACY_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
 EBOOK_PRODUCT_DESCRIPTION = 'کتاب مدیر هوشمند — راهنمای کاربردی برای مدیرانی که می‌خواهند هوشمندانه‌تر تصمیم بگیرند و تیمشان را مؤثرتر هدایت کنند.'
-EBOOK_PRODUCT_PRICE = 300000
+EBOOK_PRODUCT_PRICE = 400000
 
 # ── Feature flags ─────────────────────────────────────────────────────────────
 # پرسشنامه فرسودگی شغلی ماسلاچ (MBI): برای فعال‌سازی مجدد فقط True کنید.
