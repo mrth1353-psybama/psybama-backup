@@ -221,6 +221,10 @@
     var basePrice = {{ product.price }};
     var maxShipping = {{ shipping }};
     var popupPromo = 'KNOT50';
+    // Set initial final price: 350,000 tomans for popup path, 400,000 for normal path
+    var isPopupPath = {{ promo == 'KNOT50' }};
+    var initialFinalPrice = isPopupPath ? 350000 : 400000;
+    finalEl.textContent = group(initialFinalPrice) + ' تومان';
     var productId = {{ product.id }};
     var codeInput = document.getElementById('discountCode');
     var msg = document.getElementById('discountMsg');
