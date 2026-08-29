@@ -175,9 +175,23 @@ def online_pay(product_id):
                                error='لطفاً تمام فیلدها را پر کنید.')
 
     discount_code = (request.form.get('discount_code') or '').strip()
-    discount = _resolve_discount(product, product_id, discount_code)
-    amount, shipping = compute_order_amount(product, discount)
-
+    discount = evaluate_discount(discount_code, product)
+    session_shipping = session.pop('checkout_shipping', 0)
+    was_popup = session.get('was_popup_path', False)
+    
+    if discount:
+        amount, shipping = compute_order_amount(product, discount)
+    elif was_popup and product.delivery_type == 'physical':
+        # Apply implicit KNOT50 popup discount when coming from popup path
+        base = product.price
+        discount_amount = int(round(base * 50 / 100))  # 50% KNOT50 discount
+        final_amount = base - discount_amount
+        shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
+        amount = final_amount + shipping
+    else:
+        amount = product.price
+        shipping = session_shipping
+    
     order = Order(
         user_id=session.get('user_id'),
         product_id=product_id,
