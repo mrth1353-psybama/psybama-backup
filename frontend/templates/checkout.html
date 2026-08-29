@@ -179,6 +179,11 @@
 
             <div class="price-summary">
                 <span class="final" id="finalPrice">{{ '{:,}'.format(product.price) }} تومان</span>
+                {% if shipping %}
+                <div class="ship-line" id="shipLine" style="display:none">
+                    + هزینه ارسال: <span id="shipAmount">{{ '{:,}'.format(shipping) }}</span> تومان
+                </div>
+                {% endif %}
             </div>
 
             <div class="payment-methods">
@@ -214,22 +219,28 @@
 <script>
 (function () {
     var basePrice = {{ product.price }};
+    var maxShipping = {{ shipping }};
+    var popupPromo = 'KNOT50';
     var productId = {{ product.id }};
     var codeInput = document.getElementById('discountCode');
     var msg = document.getElementById('discountMsg');
     var finalEl = document.getElementById('finalPrice');
+    var shipLine = document.getElementById('shipLine');
     var applyBtn = document.getElementById('applyBtn');
 
     function group(n) { return Number(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
-    function updatePrice(discountAmount, finalAmount, saving) {
+    function updatePrice(discountAmount, finalAmount, saving, ship) {
+        var total = finalAmount + ship;
         if (discountAmount && discountAmount > 0 && saving) {
             finalEl.className = 'final saving';
-            finalEl.innerHTML = group(finalAmount) + ' تومان'
-                + ' <span class="orig">' + group(basePrice) + ' تومان</span>';
+            finalEl.innerHTML = group(total) + ' تومان'
+                + ' <span class="orig">' + group(basePrice + ship) + ' تومان</span>';
+            if (shipLine) shipLine.style.display = ship ? 'block' : 'none';
         } else {
             finalEl.className = 'final';
             finalEl.textContent = group(basePrice) + ' تومان';
+            if (shipLine) shipLine.style.display = 'none';
         }
     }
 
@@ -239,7 +250,7 @@
         if (!code) {
             msg.className = 'discount-msg';
             msg.textContent = '';
-            updatePrice(0, basePrice, false);
+            updatePrice(0, basePrice, false, 0);
             return;
         }
         msg.className = 'discount-msg';
@@ -254,17 +265,18 @@
             if (data.valid) {
                 msg.className = 'discount-msg ok';
                 msg.textContent = data.message;
-                updatePrice(data.discount_amount, data.final_amount, true);
+                var ship = (data.code === popupPromo) ? maxShipping : 0;
+                updatePrice(data.discount_amount, data.final_amount, true, ship);
             } else {
                 msg.className = 'discount-msg err';
                 msg.textContent = data.message;
-                updatePrice(0, basePrice, false);
+                updatePrice(0, basePrice, false, 0);
             }
         })
         .catch(function () {
             msg.className = 'discount-msg err';
             msg.textContent = 'خطا در بررسی کد. دوباره تلاش کنید.';
-            updatePrice(0, basePrice, false);
+            updatePrice(0, basePrice, false, 0);
         });
     }
 
@@ -275,6 +287,13 @@
 
     codeInput.addEventListener('input', onInput);
     applyBtn.addEventListener('click', validate);
+
+    // پیش‌بارگذاری کد تخفیف پیشنهادی (مثلاً از پاپ‌آپ کتاب مدیر هوشمند)
+    var prefill = {{ ('"' + promo + '"') if promo else 'null' }};
+    if (prefill) {
+        codeInput.value = prefill;
+        validate();
+    }
 })();
 </script>
 {% endblock %}

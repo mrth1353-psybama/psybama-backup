@@ -126,12 +126,15 @@
         <div class="amount-badge">
             <div class="lbl">مبلغ قابل پرداخت</div>
             {% if discount %}
-            <div class="amt" id="amtBadge">{{ '{:,}'.format(discount.final_amount) }} تومان</div>
-            <div class="orig" id="origBadge">{{ '{:,}'.format(product.price) }} تومان</div>
+            <div class="amt" id="amtBadge">{{ '{:,}'.format(discount.final_amount + shipping) }} تومان</div>
+            <div class="orig" id="origBadge">{{ '{:,}'.format(product.price + shipping) }} تومان</div>
             {% else %}
-            <div class="amt" id="amtBadge">{{ '{:,}'.format(product.price) }} تومان</div>
+            <div class="amt" id="amtBadge">{{ '{:,}'.format(product.price + shipping) }} تومان</div>
             {% endif %}
             <div style="font-size:0.8rem;margin-top:0.3rem;color:rgba(255,255,255,0.7)">{{ product.name }}</div>
+            {% if shipping %}
+            <div style="font-size:0.78rem;margin-top:0.3rem;color:rgba(255,255,255,0.7)">شامل هزینه ارسال</div>
+            {% endif %}
         </div>
 
         {% if error %}

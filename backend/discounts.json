@@ -5,6 +5,12 @@
       "type": "percent",
       "value": 99,
       "product": "کتاب مدیر هوشمند"
+    },
+    "KNOT50": {
+      "active": true,
+      "type": "percent",
+      "value": 50,
+      "product": "کتاب مدیر هوشمند"
     }
   }
 }

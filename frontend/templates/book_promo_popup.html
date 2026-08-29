@@ -1,0 +1,188 @@
+{# پاپ‌آپ پیشنهاد کتاب مدیر هوشمند — در صفحه نتیجه و صفحه ثبت‌نام وبینار نمایش داده می‌شود #}
+{% if book %}
+<div class="book-promo-popup" id="bookPromoPopup" aria-hidden="true">
+    <button class="book-promo-close" id="bookPromoClose" aria-label="بستن">&times;</button>
+    <div class="book-promo-inner">
+        <div class="book-promo-media">
+            <img src="/static/images/ebook-modir-hooshmand.jpg" alt="کتاب مدیر هوشمند">
+        </div>
+        <div class="book-promo-body">
+            <div class="book-promo-tag">پیشنهاد ویژه ریشه‌یابی</div>
+            <h3 class="book-promo-title">همین الان با ۵۰ درصد تخفیف، کتاب را تهیه کنید</h3>
+            <p class="book-promo-sub">۵۰ درصد تخفیف + هزینه ارسال</p>
+            <div class="book-promo-price">
+                <span class="book-promo-price-label">قیمت نهایی (کتاب + ارسال):</span>
+                <span class="book-promo-price-value">۳۵۰,۰۰۰ تومان</span>
+            </div>
+            <a href="{{ book_promo_link }}" class="book-promo-btn">خرید کتاب مدیر هوشمند</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.book-promo-popup {
+    position: fixed;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    z-index: 60;
+    width: 340px;
+    max-width: calc(100vw - 2rem);
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 16px 44px rgba(29, 95, 166, 0.28);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(28px) scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.book-promo-popup.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+.book-promo-close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.55rem;
+    z-index: 2;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.book-promo-close:hover { background: rgba(255, 255, 255, 0.35); }
+.book-promo-inner {
+    display: flex;
+    flex-direction: column;
+}
+.book-promo-media {
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    padding: 1rem 1rem 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+.book-promo-media img {
+    width: 120px;
+    max-height: 160px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+}
+.book-promo-body {
+    padding: 0.9rem 1.1rem 1.1rem;
+    text-align: center;
+}
+.book-promo-tag {
+    display: inline-block;
+    background: var(--coral-mist);
+    color: #C0532B;
+    font-family: var(--font-title);
+    font-size: 0.72rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    margin-bottom: 0.5rem;
+}
+.book-promo-title {
+    font-family: var(--font-title);
+    font-size: 1.02rem;
+    line-height: 1.6;
+    color: var(--slate-blue);
+    margin-bottom: 0.35rem;
+}
+.book-promo-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 0.7rem;
+}
+.book-promo-price {
+    background: var(--mint-mist);
+    border: 1px solid rgba(46, 139, 122, 0.25);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+}
+.book-promo-price-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--sage-teal);
+}
+.book-promo-price-value {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--ocean-blue);
+}
+.book-promo-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    color: #fff;
+    font-family: var(--font-title);
+    font-size: 0.98rem;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    padding: 0.7rem 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 6px 18px rgba(29, 95, 166, 0.28);
+}
+.book-promo-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(29, 95, 166, 0.38);
+    color: #fff;
+}
+@media (max-width: 480px) {
+    .book-promo-popup {
+        left: 50%;
+        transform: translate(-50%, 28px) scale(0.96);
+        bottom: 0.75rem;
+    }
+    .book-promo-popup.show {
+        transform: translate(-50%, 0) scale(1);
+    }
+}
+</style>
+
+<script>
+(function () {
+    var popup = document.getElementById('bookPromoPopup');
+    var closeBtn = document.getElementById('bookPromoClose');
+    if (!popup) return;
+
+    var closed = false;
+    var timer = null;
+    function showPopup() {
+        if (closed) return;
+        popup.classList.add('show');
+        popup.setAttribute('aria-hidden', 'false');
+    }
+    function hidePopup() {
+        popup.classList.remove('show');
+        popup.setAttribute('aria-hidden', 'true');
+    }
+
+    // زمان‌بندی نمایش پاپ‌آپ با تأخیر (مثلاً ۵ ثانیه پس از ورود به صفحه نتیجه)
+    window.scheduleBookPromo = function (delay) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(showPopup, delay || 5000);
+    };
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+            closed = true;
+            hidePopup();
+        });
+    }
+})();
+</script>
+{% endif %}

@@ -131,4 +131,13 @@
         <p class="knot-tagline">همیشه جاری باشید</p>
     </div>
 </div>
+
+{% include 'book_promo_popup.html' %}
+
+<script>
+    // نمایش پاپ‌آپ پیشنهاد کتاب مدیر هوشمند، ۵ ثانیه پس از ورود به صفحه
+    if (typeof window.scheduleBookPromo === 'function') {
+        window.scheduleBookPromo(5000);
+    }
+</script>
 {% endblock %}

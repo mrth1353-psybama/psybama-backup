@@ -13,6 +13,24 @@ CARD_SHEBA  = 'IR8701200000001524891721'
 CARD_OWNER  = 'مرضیه فیضی'
 CONTACT_PHONE = '09910216842'
 
+# هزینه ارسال کتاب فیزیکی (تومان) — فقط در جریان پاپ‌آپ اعمال می‌شود
+SHIPPING_COST = 200000
+
+# کد تخفیف اختصاصی پاپ‌آپ کتاب مدیر هوشمند (۵۰٪ + ارسال)
+POPUP_PROMO_CODE = 'KNOT50'
+
+
+def compute_order_amount(product, discount):
+    """مبلغ نهایی سفارش = قیمت پس از تخفیف + هزینه ارسال.
+
+    هزینه ارسال فقط زمانی اعمال می‌شود که کد تخفیفِ پاپ‌آپ (KNOT50) استفاده شده باشد،
+    نه در سایر خریدهای محصول فیزیکی.
+    """
+    base = discount['final_amount'] if discount else product.price
+    is_popup = bool(discount) and discount.get('code') == POPUP_PROMO_CODE
+    shipping = SHIPPING_COST if (is_popup and getattr(product, 'delivery_type', None) == 'physical') else 0
+    return base + shipping, shipping
+
 
 @shop_bp.route('/')
 def shop():
@@ -34,7 +52,9 @@ def checkout(product_id):
     product = Product.query.get_or_404(product_id)
     if not session.get('user_id'):
         return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
-    return render_template('checkout.html', product=product)
+    promo = (request.args.get('promo') or '').strip()
+    shipping = SHIPPING_COST if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else 0
+    return render_template('checkout.html', product=product, promo=promo, shipping=shipping)
 
 
 @shop_bp.route('/api/validate-discount', methods=['POST'])
@@ -54,6 +74,7 @@ def validate_discount():
         })
     return jsonify({
         'valid': True,
+        'code': result['code'],
         'discount_amount': result['discount_amount'],
         'final_amount': result['final_amount'],
         'original_amount': result['original_amount'],
@@ -73,6 +94,7 @@ def pay(product_id):
 
     discount_code = (request.form.get('discount_code') or '').strip()
     discount = evaluate_discount(discount_code, product)
+    amount, shipping = compute_order_amount(product, discount)
 
     if method == 'online':
         if discount:
@@ -81,12 +103,12 @@ def pay(product_id):
                 'code': discount_code,
                 'final_amount': discount['final_amount'],
                 'discount_amount': discount['discount_amount'],
+                'shipping': shipping,
             }
         else:
             session.pop('shop_discount', None)
         return redirect(f'/shop/checkout/{product_id}/online')
 
-    amount = discount['final_amount'] if discount else product.price
     order = Order(
         user_id=session.get('user_id'),
         product_id=product_id,
@@ -106,7 +128,8 @@ def online_form(product_id):
     product = Product.query.get_or_404(product_id)
     disc = session.get('shop_discount')
     discount = disc if disc and disc.get('product_id') == product_id else None
-    return render_template('payment_online.html', product=product, discount=discount)
+    shipping = disc.get('shipping', 0) if disc else 0
+    return render_template('payment_online.html', product=product, discount=discount, shipping=shipping)
 
 
 def _resolve_discount(product, product_id, form_code):
@@ -136,7 +159,7 @@ def online_pay(product_id):
 
     discount_code = (request.form.get('discount_code') or '').strip()
     discount = _resolve_discount(product, product_id, discount_code)
-    amount = discount['final_amount'] if discount else product.price
+    amount, shipping = compute_order_amount(product, discount)
 
     order = Order(
         user_id=session.get('user_id'),

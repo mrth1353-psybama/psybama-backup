@@ -9,7 +9,7 @@ load_dotenv(Path(__file__).parent.parent / '.env')
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_cors import CORS
 
-from models import db
+from models import db, Product
 from models import iran_now
 from auth import login_required, create_or_update_otp, verify_otp
 from sms_service import send_otp
@@ -23,7 +23,7 @@ from rag_handler import load_knowledge_base
 EBOOK_PRODUCT_NAME = 'کتاب مدیر هوشمند'
 EBOOK_PRODUCT_LEGACY_NAME = 'ایبوک — عنوان جایگزین (به‌زودی نهایی می‌شود)'
 EBOOK_PRODUCT_DESCRIPTION = 'کتاب مدیر هوشمند — راهنمای کاربردی برای مدیرانی که می‌خواهند هوشمندانه‌تر تصمیم بگیرند و تیمشان را مؤثرتر هدایت کنند.'
-EBOOK_PRODUCT_PRICE = 220000
+EBOOK_PRODUCT_PRICE = 300000
 
 # ── Feature flags ─────────────────────────────────────────────────────────────
 # پرسشنامه فرسودگی شغلی ماسلاچ (MBI): برای فعال‌سازی مجدد فقط True کنید.
@@ -447,7 +447,9 @@ def create_app():
 
     @app.route('/knot')
     def knot():
-        return render_template('knot.html')
+        book = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        book_promo_link = f'/shop/checkout/{book.id}?promo=KNOT50' if book else '/shop'
+        return render_template('knot.html', book=book, book_promo_link=book_promo_link)
 
     @app.route('/knot/webinar/success')
     def knot_webinar_success():
@@ -499,11 +501,15 @@ def create_app():
                     daemon=True
                 ).start()
 
+        book = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        book_promo_link = f'/shop/checkout/{book.id}?promo=KNOT50' if book else '/shop'
         return render_template(
             'knot_webinar_success.html',
             webinar_title=KNOT_WEBINAR_TITLE,
             webinar_date=KNOT_WEBINAR_DATE,
-            webinar_has_date=KNOT_WEBINAR_HAS_DATE
+            webinar_has_date=KNOT_WEBINAR_HAS_DATE,
+            book=book,
+            book_promo_link=book_promo_link
         )
 
     # ── Auth API ──────────────────────────────────────────────────────────────

@@ -189,6 +189,11 @@ function renderResults(scores) {
         const cta = document.getElementById('webinarCta');
         if (cta) cta.scrollIntoView({behavior: 'smooth', block: 'nearest'});
     }, 300);
+
+    // نمایش پاپ‌آپ پیشنهاد کتاب مدیر هوشمند، ۵ ثانیه پس از نمایش نتیجه
+    if (typeof window.scheduleBookPromo === 'function') {
+        window.scheduleBookPromo(5000);
+    }
 }
 
 async function submitAssessment(btn) {
