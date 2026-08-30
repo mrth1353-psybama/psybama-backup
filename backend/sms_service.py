@@ -21,6 +21,15 @@ def _sender() -> str:
     return os.getenv('FARAZSMS_SENDER', '').strip() or DEFAULT_SENDER
 
 
+def _otp_sender() -> str:
+    """خط ارسال پیامک کد تأیید — در صورت تنظیم FARAZSMS_OTP_SENDER از آن استفاده می‌شود.
+
+    برای تحویل سریع کد یک‌بارمصرف (OTP) فراز اس‌ام‌اس توصیه می‌کند از «خط پوش / کد یک‌بارمصرف»
+    استفاده شود؛ ارسال از خط عادی/خدماتی باعث صف و تأخیر چنددقیقه‌ای در رسیدن پیامک می‌شود.
+    """
+    return os.getenv('FARAZSMS_OTP_SENDER', '').strip() or _sender()
+
+
 def _safe_json(response) -> dict:
     try:
         return response.json()
@@ -80,7 +89,7 @@ def send_sms(phone_number: str, message: str) -> dict:
         if data.get('status') == 'success':
             return {'success': True, 'mode': 'production'}
         return {'success': False, 'error': str(data.get('messages') or data)}
-    except Exception:
+    except Exception as e:
         return {'success': False, 'error': str(e)}
 
 
@@ -141,15 +150,17 @@ def _send_farazsms(phone_number: str, otp_code: str) -> dict:
 def _send_farazsms_pattern(phone_number: str, otp_code: str, api_key: str) -> dict:
     pattern_code = os.getenv('FARAZSMS_PATTERN', '').strip()
     pattern_var = os.getenv('FARAZSMS_PATTERN_VAR', 'code').strip() or 'code'
+    sender = _otp_sender()
 
     url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/pattern'
     payload = {
         'code': pattern_code,
         'attributes': {pattern_var: otp_code},
         'recipient': phone_number,
-        'line_number': _sender(),
+        'line_number': sender,
         'number_format': 'english',
     }
+    print(f"[SMS OTP] pattern={pattern_code} sender={sender} -> recipient={phone_number}")
     try:
         response = requests.post(url, json=payload, headers=_headers(api_key), timeout=10)
         data = _safe_json(response)
@@ -162,14 +173,16 @@ def _send_farazsms_pattern(phone_number: str, otp_code: str, api_key: str) -> di
 
 def _send_farazsms_simple(phone_number: str, otp_code: str, api_key: str) -> dict:
     message = f"کد تأیید سای‌باما:\n{otp_code}\nاین کد ۵ دقیقه اعتبار دارد."
+    sender = _otp_sender()
     url = f'{FARAZSMS_BASE_URL}/ws/v1/sms/simple'
     payload = {
         'text': message,
-        'line_number': _sender(),
+        'line_number': sender,
         'recipients': [phone_number],
         'number_format': 'english',
         'schedule': None,
     }
+    print(f"[SMS OTP] simple sender={sender} -> recipient={phone_number}")
     try:
         response = requests.post(url, json=payload, headers=_headers(api_key), timeout=10)
         data = _safe_json(response)
