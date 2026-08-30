@@ -512,6 +512,67 @@ def create_app():
             book_promo_link=book_promo_link
         )
 
+    @app.route('/knot/webinar')
+    def knot_webinar_landing():
+        """لندینگ پیج مستقل ثبت‌نام در وبینار رایگان ریشه‌یابی گره کور شغلی — مستقل از مسیر پرسشنامه."""
+        book = Product.query.filter_by(name=EBOOK_PRODUCT_NAME).first()
+        book_promo_link = f'/shop/checkout/{book.id}?promo=KNOT50' if book else '/shop'
+        return render_template(
+            'knot_webinar_landing.html',
+            webinar_title=KNOT_WEBINAR_TITLE,
+            webinar_date=KNOT_WEBINAR_DATE,
+            webinar_has_date=KNOT_WEBINAR_HAS_DATE,
+            book=book,
+            book_promo_link=book_promo_link
+        )
+
+    @app.route('/api/knot/webinar/register', methods=['POST'])
+    def knot_webinar_register():
+        """ثبت‌نام مستقل در وبینار گره کور (لندینگ پیج) — ذخیره مشخصات در پنل ادمین + ارسال پیامک و ایمیل."""
+        import re
+        import threading
+
+        data = request.get_json(silent=True) or {}
+        name = (data.get('name') or '').strip()
+        email = (data.get('email') or '').strip()
+        phone = (data.get('phone') or '').strip()
+
+        if not name:
+            return jsonify({'error': 'invalid_name', 'message': 'نام و نام خانوادگی الزامی است'}), 400
+        if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+            return jsonify({'error': 'invalid_email', 'message': 'ایمیل معتبر نیست'}), 400
+        if not re.match(r'^09\d{9}$', phone):
+            return jsonify({'error': 'invalid_phone', 'message': 'شماره موبایل معتبر نیست'}), 400
+
+        from models import WebinarRegistration
+
+        reg = (WebinarRegistration.query
+               .filter_by(phone=phone, webinar_title=KNOT_WEBINAR_TITLE)
+               .first())
+        if reg is None:
+            reg = WebinarRegistration(
+                name=name,
+                email=email,
+                phone=phone,
+                webinar_title=KNOT_WEBINAR_TITLE,
+                webinar_date=_knot_webinar_date_env or None
+            )
+            db.session.add(reg)
+            db.session.commit()
+
+            threading.Thread(
+                target=_send_webinar_notifications_bg,
+                args=(app, reg.id, phone, name, _knot_webinar_date_env),
+                daemon=True
+            ).start()
+
+        return jsonify({
+            'success': True,
+            'webinar_title': KNOT_WEBINAR_TITLE,
+            'webinar_date': KNOT_WEBINAR_DATE,
+            'webinar_has_date': KNOT_WEBINAR_HAS_DATE
+        })
+
     # ── Auth API ──────────────────────────────────────────────────────────────
 
     @app.route('/api/auth/request-otp', methods=['POST'])

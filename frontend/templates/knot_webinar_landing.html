@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block title %}وبینار رایگان ریشه‌یابی گره کور شغلی | سای‌باما{% endblock %}
+
+{% block extra_css %}
+<style>
+.webinar-landing {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(46,139,122,0.14), transparent 42%),
+        radial-gradient(circle at 88% 82%, rgba(29,95,166,0.13), transparent 46%),
+        linear-gradient(135deg, var(--cloud-blue) 0%, var(--mint-mist) 55%, var(--coral-mist) 130%);
+    padding: 3rem 1.25rem 4.5rem;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.webinar-landing-inner {
+    width: 100%;
+    max-width: 840px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 1.75rem;
+    align-items: center;
+}
+
+@media (max-width: 760px) {
+    .webinar-landing-inner { grid-template-columns: 1fr; }
+    .webinar-landing { padding: 2rem 1rem 3rem; }
+}
+
+.webinar-hero {
+    text-align: right;
+}
+
+.webinar-eyebrow {
+    display: inline-block;
+    font-family: var(--font-title);
+    font-size: 0.82rem;
+    color: var(--ocean-blue);
+    background: rgba(29,95,166,0.08);
+    border: 1px solid rgba(29,95,166,0.2);
+    border-radius: 999px;
+    padding: 0.35rem 1rem;
+    margin-bottom: 1.1rem;
+}
+
+.webinar-hero h1 {
+    font-family: var(--font-title);
+    font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+    line-height: 1.55;
+    color: var(--slate-blue);
+    margin-bottom: 1rem;
+}
+
+.webinar-hero h1 .highlight {
+    color: var(--ocean-blue);
+}
+
+.webinar-hero .lead {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--text-primary);
+    max-width: 520px;
+    margin-bottom: 1.75rem;
+}
+
+.webinar-points {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: grid;
+    gap: 0.7rem;
+}
+
+.webinar-points li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--slate-blue);
+}
+
+.webinar-points .tick {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--sage-teal);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.15rem;
+}
+
+.webinar-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: 0.8rem 1.1rem;
+    font-size: 0.95rem;
+    color: var(--slate-blue);
+}
+
+.webinar-badge strong {
+    color: var(--ocean-blue);
+    font-family: var(--font-title);
+}
+
+/* ── Form card ──────────────────────────────────── */
+.webinar-form-card {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: 2rem 1.75rem;
+}
+
+.webinar-form-card h2 {
+    font-family: var(--font-title);
+    font-size: 1.35rem;
+    color: var(--slate-blue);
+    margin-bottom: 0.4rem;
+    text-align: center;
+}
+
+.webinar-form-card .form-sub {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.security-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+/* ── Success (inline) ───────────────────────────── */
+.webinar-success {
+    text-align: center;
+    display: none;
+}
+
+.webinar-success.show { display: block; }
+
+.webinar-success-icon {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    margin: 0.25rem auto 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--ocean-blue), var(--sage-teal));
+    box-shadow: 0 10px 30px rgba(46,139,122,0.35);
+}
+
+.webinar-success-icon svg { width: 38px; height: 38px; }
+
+.webinar-success h2 {
+    font-family: var(--font-title);
+    font-size: 1.45rem;
+    color: var(--slate-blue);
+    line-height: 1.7;
+    margin-bottom: 0.4rem;
+}
+
+.webinar-success .success-date {
+    background: var(--mint-mist);
+    border: 1px solid rgba(46,139,122,0.25);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: var(--slate-blue);
+    margin: 1.25rem 0;
+}
+
+.webinar-success .success-date strong { font-family: var(--font-title); color: var(--ocean-blue); }
+
+.webinar-success .thanks {
+    font-family: var(--font-title);
+    font-size: 1.25rem;
+    color: var(--slate-blue);
+    margin-bottom: 1.25rem;
+}
+
+.webinar-success .note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-top: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="webinar-landing">
+    <div class="webinar-landing-inner">
+
+        <div class="webinar-hero">
+            <span class="webinar-eyebrow">وبینار رایگان</span>
+            <h1>ریشه‌یابی <span class="highlight">گره کور شغلی</span></h1>
+            <p class="lead">
+                خیلی وقت‌ها سردرگمی و فرسودگی شغلی از جایی شروع می‌شود که روش‌ها و انتظارات قبلی ما از کار، دیگر با واقعیت امروزمان جور درنمی‌آیند. در این وبینار یاد می‌گیرید ریشهٔ واقعی این درجا زدن را پیدا کنید — نه فقط نشانه‌هایش را.
+            </p>
+
+            <ul class="webinar-points">
+                <li><span class="tick">✓</span> تشخیص اینکه گیر اصلی‌تان دقیقاً کجاست</li>
+                <li><span class="tick">✓</span> نقشهٔ مشخص برای قدم بعدی — به‌جای تلاش و تحمل بیشتر</li>
+                <li><span class="tick">✓</span> رویکردی علمی و دیتامحور، برای واقعیت محیط کار ایران</li>
+            </ul>
+
+            <div class="webinar-badge">
+                <span>تاریخ برگزاری:</span>
+                <strong>{{ webinar_date }}</strong>
+            </div>
+        </div>
+
+        <div class="webinar-form-card">
+            <div id="webinarFormWrap">
+                <h2>ثبت‌نام در وبینار رایگان</h2>
+                <p class="form-sub">جزئیات دسترسی را پس از ثبت‌نام دریافت می‌کنید.</p>
+
+                <div id="webinarFormError" class="alert alert-error hidden"></div>
+
+                <form id="webinarForm">
+                    <div class="form-group">
+                        <label class="form-label" for="wvName">نام و نام خانوادگی</label>
+                        <input type="text" id="wvName" class="form-input" placeholder="نام و نام خانوادگی" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="wvPhone">تلفن</label>
+                        <input type="tel" id="wvPhone" class="form-input" placeholder="09xxxxxxxxx" maxlength="11" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="wvEmail">ایمیل</label>
+                        <input type="email" id="wvEmail" class="form-input" placeholder="example@email.com" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg w-full" id="wvSubmit">
+                        ثبت‌نام در وبینار رایگان
+                    </button>
+                </form>
+
+                <p class="security-note">اطلاعات شما فقط برای این وبینار استفاده می‌شود و محرمانه می‌ماند.</p>
+            </div>
+
+            <div class="webinar-success" id="webinarSuccess">
+                <div class="webinar-success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <h2>ثبت‌نام شما در وبینار رایگان<br>«{{ webinar_title }}» انجام شد</h2>
+                <div class="success-date">
+                    تاریخ برگزاری وبینار: <strong>{{ webinar_date }}</strong> می‌باشد.
+                </div>
+                <p class="thanks">سپاس از همراهی شما</p>
+                <a href="/" class="btn btn-primary">بازگشت به صفحه اصلی</a>
+                <p class="note">همیشه جاری باشید</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var form = document.getElementById('webinarForm');
+    var errorBox = document.getElementById('webinarFormError');
+    var submitBtn = document.getElementById('wvSubmit');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        errorBox.classList.add('hidden');
+        errorBox.textContent = '';
+
+        var name = document.getElementById('wvName').value.trim();
+        var phone = document.getElementById('wvPhone').value.trim();
+        var email = document.getElementById('wvEmail').value.trim();
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ثبت‌نام...';
+
+        fetch('/api/knot/webinar/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name, phone: phone, email: email })
+        })
+        .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, body: d }; }); })
+        .then(function (res) {
+            if (!res.ok) {
+                errorBox.textContent = res.body.message || 'خطا در ثبت‌نام. دوباره تلاش کنید.';
+                errorBox.classList.remove('hidden');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ثبت‌نام در وبینار رایگان';
+                return;
+            }
+            document.getElementById('webinarFormWrap').style.display = 'none';
+            document.getElementById('webinarSuccess').classList.add('show');
+        })
+        .catch(function () {
+            errorBox.textContent = 'خطا در ارتباط با سرور. دوباره تلاش کنید.';
+            errorBox.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'ثبت‌نام در وبینار رایگان';
+        });
+    });
+});
+</script>
+{% endblock %}
