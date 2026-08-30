@@ -9,6 +9,8 @@ from models import CareerKnotAssessment
 from models import WebinarRegistration
 from models import iran_now
 
+KNOT_WEBINAR_TITLE = 'ریشه‌یابی گره koron شغلی'
+
 admin_bp = Blueprint('admin', __name__)
 
 
@@ -192,6 +194,25 @@ def list_webinar_registrations():
 @admin_bp.route('/webinar-registrations/<int:reg_id>/delete', methods=['POST'])
 @admin_required
 def delete_webinar_registration(reg_id):
+    reg = WebinarRegistration.query.get_or_404(reg_id)
+    db.session.delete(reg)
+    db.session.commit()
+    return jsonify({'success': True})
+
+
+@admin_bp.route('/knot-webinar-registrations')
+@admin_required
+def list_knot_webinar_registrations():
+    regs = (WebinarRegistration.query
+            .filter_by(webinar_title=KNOT_WEBINAR_TITLE)
+            .order_by(WebinarRegistration.created_at.desc())
+            .all())
+    return jsonify({'registrations': [r.to_dict() for r in regs]})
+
+
+@admin_bp.route('/knot-webinar-registrations/<int:reg_id>/delete', methods=['POST'])
+@admin_required
+def delete_knot_webinar_registration(reg_id):
     reg = WebinarRegistration.query.get_or_404(reg_id)
     db.session.delete(reg)
     db.session.commit()

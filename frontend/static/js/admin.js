@@ -610,6 +610,49 @@ const Admin = (() => {
         }
     }
 
+    // ── Knot Webinar Registrations ───────────────────────
+
+    async function loadKnotWebinars() {
+        const tbody = document.getElementById('knotWebinarsTableBody');
+        try {
+            const res = await fetch('/admin/knot-webinar-registrations');
+            const data = await res.json();
+
+            if (!data.registrations.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی برای وبینار کnoten ثبت نشده</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.registrations.map(r => `
+                <tr>
+                    <td>${r.id}</td>
+                    <td>${escapeHtml(r.name || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.email || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.phone)}</td>
+                    <td><span class="badge badge-info">${escapeHtml(r.webinar_title)}</span></td>
+                    <td style="white-space:nowrap">${escapeHtml(r.webinar_date || '—')}</td>
+                    <td style="white-space:nowrap">${formatDateTime(r.created_at)}</td>
+                    <td>
+                        <span class="badge ${r.sms_sent ? 'badge-success' : 'badge-warning'}">${r.sms_sent ? 'ارسال شد' : 'ارسال نشده'}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteKnotWebinar(${r.id})">🗑 حذف</button>
+                    </td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    Admin.deleteKnotWebinar = function(id) {
+        if (!confirm('این ثبت‌nam حذف شود؟')) return;
+        try {
+            fetch(`/admin/knot-webinar-registrations/${id}/delete`, {method: 'POST'})
+                .then(() => loadKnotWebinars());
+        } catch (e) {}
+    }
+
     async function deleteWebinar(id) {
         if (!confirm('این ثبت‌نام حذف شود؟')) return;
         try {
@@ -732,6 +775,7 @@ const Admin = (() => {
         document.getElementById('btnCloseUserOrders').addEventListener('click', closeUserOrders);
 
         initTabs();
+        loadKnotWebinars();
         checkAdminStatus();
     }
 
