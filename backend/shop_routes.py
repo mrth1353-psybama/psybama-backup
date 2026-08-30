@@ -1,4 +1,6 @@
 import os
+from urllib.parse import quote
+
 from flask import Blueprint, render_template, redirect, request, session, jsonify
 from models import db, Product, Order, User
 from models import iran_now
@@ -52,6 +54,18 @@ def _popup_pricing(product, session_shipping):
     return discount, final_amount + shipping, shipping
 
 
+def _login_redirect(product_id):
+    """ری‌دایرکت به صفحه ورود با حفظ پروموی پاپ‌آپ در `next`.
+
+    بدون این، بعد از ورود کاربر به `/shop/checkout/<id>` (بدون `?promo=KNOT50`) می‌رسد
+    و به‌جای قیمت ۳۵۰,۰۰۰ پاپ‌آپ، قیمت ۴۰۰,۰۰۰ نمایش داده می‌شود.
+    """
+    target = f'/shop/checkout/{product_id}'
+    if session.get('was_popup_path'):
+        target += f'?promo={POPUP_PROMO_CODE}'
+    return redirect(f'/shop/login?next={quote(target, safe="/")}')
+
+
 @shop_bp.route('/')
 def shop():
     products = Product.query.filter_by(is_active=True).all()
@@ -71,7 +85,11 @@ def shop_login():
 def checkout(product_id):
     product = Product.query.get_or_404(product_id)
     if not session.get('user_id'):
-        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
+        promo = (request.args.get('promo') or '').strip()
+        target = f'/shop/checkout/{product_id}'
+        if promo == POPUP_PROMO_CODE:
+            target += f'?promo={POPUP_PROMO_CODE}'
+        return redirect(f'/shop/login?next={quote(target, safe="/")}')
     promo = (request.args.get('promo') or '').strip()
     shipping = SHIPPING_COST if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else 0
     final_price = POPUP_FINAL_PRICE if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else product.price
@@ -110,7 +128,7 @@ def validate_discount():
 def pay(product_id):
     product = Product.query.get_or_404(product_id)
     if not session.get('user_id'):
-        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
+        return _login_redirect(product_id)
     method = request.form.get('payment_method')
 
     if method not in ('online', 'card'):
@@ -167,7 +185,11 @@ def online_form(product_id):
     disc = session.get('shop_discount')
     discount = disc if disc and disc.get('product_id') == product_id else None
     shipping = disc.get('shipping', 0) if disc else 0
-    return render_template('payment_online.html', product=product, discount=discount, shipping=shipping)
+    back_link = f'/shop/checkout/{product_id}'
+    if discount and discount.get('code') == POPUP_PROMO_CODE:
+        back_link += f'?promo={POPUP_PROMO_CODE}'
+    return render_template('payment_online.html', product=product, discount=discount,
+                           shipping=shipping, back_link=back_link)
 
 
 def _resolve_discount(product, product_id, form_code):
@@ -184,7 +206,7 @@ def _resolve_discount(product, product_id, form_code):
 def online_pay(product_id):
     product = Product.query.get_or_404(product_id)
     if not session.get('user_id'):
-        return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
+        return _login_redirect(product_id)
 
     full_name = (request.form.get('full_name') or '').strip()
     phone = (request.form.get('phone') or '').strip()
@@ -192,7 +214,9 @@ def online_pay(product_id):
     postal_code = (request.form.get('postal_code') or '').strip()
 
     if not full_name or not phone or not address or not postal_code:
+        back_link = f'/shop/checkout/{product_id}'
         return render_template('payment_online.html', product=product, discount=None, shipping=0,
+                               back_link=back_link,
                                error='لطفاً تمام فیلدها را پر کنید.')
 
     was_popup = session.get('was_popup_path', False)
@@ -245,7 +269,9 @@ def online_pay(product_id):
 
     db.session.delete(order)
     db.session.commit()
+    back_link = f'/shop/checkout/{product_id}'
     return render_template('payment_online.html', product=product, discount=None, shipping=0,
+                           back_link=back_link,
                            error=result.get('error', 'خطا در اتصال به درگاه پرداخت.'))
 
 
