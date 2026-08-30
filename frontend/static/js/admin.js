@@ -645,11 +645,12 @@ const Admin = (() => {
         }
     }
 
-    Admin.deleteKnotWebinar = function(id) {
-        if (!confirm('این ثبت‌nam حذف شود؟')) return;
+    async function deleteKnotWebinar(id) {
+        if (!confirm('این ثبت‌نام حذف شود؟')) return;
         try {
-            fetch(`/admin/knot-webinar-registrations/${id}/delete`, {method: 'POST'})
-                .then(() => loadKnotWebinars());
+            await fetch(`/admin/knot-webinar-registrations/${id}/delete`, {method: 'POST'});
+            await loadKnotWebinars();
+            await loadStats();
         } catch (e) {}
     }
 
@@ -785,5 +786,5 @@ const Admin = (() => {
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
             markShipped,
             saveProduct, toggleProduct, deleteLead, viewLeadDetails,
-            deleteWebinar, viewUserOrders, closeUserOrders};
+            deleteWebinar, deleteKnotWebinar, viewUserOrders, closeUserOrders};
 })();
