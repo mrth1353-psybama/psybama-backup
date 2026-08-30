@@ -163,7 +163,7 @@
             <div class="icon">🎓</div>
             <div>
                 <h3>{{ product.name }}</h3>
-                <div class="price">{{ '{:,}'.format(product.price) }} تومان</div>
+                <div class="price">{{ '{:,}'.format(final_price) }} تومان</div>
             </div>
         </div>
 
@@ -178,7 +178,7 @@
             </div>
 
             <div class="price-summary">
-                <span class="final" id="finalPrice">{{ '{:,}'.format(product.price) }} تومان</span>
+                <span class="final" id="finalPrice">{{ '{:,}'.format(final_price) }} تومان</span>
                 {% if shipping %}
                 <div class="ship-line" id="shipLine" style="display:none">
                     + هزینه ارسال: <span id="shipAmount">{{ '{:,}'.format(shipping) }}</span> تومان
@@ -219,12 +219,11 @@
 <script>
 (function () {
     var basePrice = {{ product.price }};
+    var initialFinalPrice = {{ final_price }};
     var maxShipping = {{ shipping }};
     var popupPromo = 'KNOT50';
-    // Set initial final price: 350,000 tomans for popup path, 400,000 for normal path
-    var isPopupPath = {{ promo == 'KNOT50' }};
-    var initialFinalPrice = isPopupPath ? 350000 : 400000;
-    finalEl.textContent = group(initialFinalPrice) + ' تومان';
+    // مسیر پاپ‌آپ: قیمت نهایی همیشه ۳۵۰,۰۰۰ تومان؛ مسیر عادی: ۴۰۰,۰۰۰ تومان
+    var isPopupPath = {{ 'true' if promo == 'KNOT50' else 'false' }};
     var productId = {{ product.id }};
     var codeInput = document.getElementById('discountCode');
     var msg = document.getElementById('discountMsg');
@@ -234,6 +233,12 @@
 
     function group(n) { return Number(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
+    function showDefault() {
+        finalEl.className = 'final';
+        finalEl.textContent = group(initialFinalPrice) + ' تومان';
+        if (shipLine) shipLine.style.display = isPopupPath ? 'block' : 'none';
+    }
+
     function updatePrice(discountAmount, finalAmount, saving, ship) {
         var total = finalAmount + ship;
         if (discountAmount && discountAmount > 0 && saving) {
@@ -242,9 +247,7 @@
                 + ' <span class="orig">' + group(basePrice + ship) + ' تومان</span>';
             if (shipLine) shipLine.style.display = ship ? 'block' : 'none';
         } else {
-            finalEl.className = 'final';
-            finalEl.textContent = group(basePrice) + ' تومان';
-            if (shipLine) shipLine.style.display = 'none';
+            showDefault();
         }
     }
 
@@ -254,7 +257,7 @@
         if (!code) {
             msg.className = 'discount-msg';
             msg.textContent = '';
-            updatePrice(0, basePrice, false, 0);
+            showDefault();
             return;
         }
         msg.className = 'discount-msg';
@@ -266,7 +269,12 @@
         })
         .then(function (r) { return r.json(); })
         .then(function (data) {
-            if (data.valid) {
+            if (isPopupPath) {
+                // از مسیر پاپ‌آپ، مبلغ قابل پرداخت همیشه ۳۵۰,۰۰۰ تومان است
+                msg.className = 'discount-msg ok';
+                msg.textContent = 'تخفیف ویژه پاپ‌آپ اِعمال شد.';
+                showDefault();
+            } else if (data.valid) {
                 msg.className = 'discount-msg ok';
                 msg.textContent = data.message;
                 var ship = (data.code === popupPromo) ? maxShipping : 0;
@@ -274,13 +282,13 @@
             } else {
                 msg.className = 'discount-msg err';
                 msg.textContent = data.message;
-                updatePrice(0, basePrice, false, 0);
+                showDefault();
             }
         })
         .catch(function () {
             msg.className = 'discount-msg err';
             msg.textContent = 'خطا در بررسی کد. دوباره تلاش کنید.';
-            updatePrice(0, basePrice, false, 0);
+            showDefault();
         });
     }
 
@@ -298,6 +306,8 @@
         codeInput.value = prefill;
         validate();
     }
+
+    showDefault();
 })();
 </script>
 {% endblock %}

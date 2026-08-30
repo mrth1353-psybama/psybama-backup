@@ -16,6 +16,9 @@ CONTACT_PHONE = '09910216842'
 # هزینه ارسال کتاب فیزیکی (تومان) — فقط در جریان پاپ‌آپ اعمال می‌شود
 SHIPPING_COST = 150000
 
+# قیمت نهایی مسیر پاپ‌آپ (کتاب + هزینه ارسال) — در تمام مراحل و درگاه پرداخت همین عدد است
+POPUP_FINAL_PRICE = 350000
+
 # کد تخفیف اختصاصی پاپ‌آپ کتاب مدیر هوشمند (۵۰٪ + ارسال)
 POPUP_PROMO_CODE = 'KNOT50'
 
@@ -30,6 +33,23 @@ def compute_order_amount(product, discount):
     is_popup = bool(discount) and discount.get('code') == POPUP_PROMO_CODE
     shipping = SHIPPING_COST if (is_popup and getattr(product, 'delivery_type', None) == 'physical') else 0
     return base + shipping, shipping
+
+
+def _popup_pricing(product, session_shipping):
+    """قیمت نهایی مسیر پاپ‌آپ — همیشه POPUP_FINAL_PRICE تومان (کتاب + ارسال).
+
+    بدون توجه به قیمت پایه محصول، مبلغ قابل پرداخت از مسیر پاپ‌آپ ثابت است.
+    """
+    shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
+    final_amount = POPUP_FINAL_PRICE - shipping
+    discount_amount = max(product.price - final_amount, 0)
+    discount = {
+        'code': POPUP_PROMO_CODE,
+        'final_amount': final_amount,
+        'discount_amount': discount_amount,
+        'type': 'amount',
+    }
+    return discount, final_amount + shipping, shipping
 
 
 @shop_bp.route('/')
@@ -54,9 +74,11 @@ def checkout(product_id):
         return redirect(f'/shop/login?next=/shop/checkout/{product_id}')
     promo = (request.args.get('promo') or '').strip()
     shipping = SHIPPING_COST if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else 0
+    final_price = POPUP_FINAL_PRICE if (promo == POPUP_PROMO_CODE and product.delivery_type == 'physical') else product.price
     session['checkout_shipping'] = shipping
     session['was_popup_path'] = (promo == POPUP_PROMO_CODE)
-    return render_template('checkout.html', product=product, promo=promo, shipping=shipping)
+    return render_template('checkout.html', product=product, promo=promo,
+                           shipping=shipping, final_price=final_price)
 
 
 @shop_bp.route('/api/validate-discount', methods=['POST'])
@@ -92,50 +114,37 @@ def pay(product_id):
     method = request.form.get('payment_method')
 
     if method not in ('online', 'card'):
-        return render_template('checkout.html', product=product, error='روش پرداخت نامعتبر است')
+        return render_template('checkout.html', product=product, error='روش پرداخت نامعتبر است',
+                               promo='', shipping=0, final_price=product.price)
 
     discount_code = (request.form.get('discount_code') or '').strip()
-    discount = evaluate_discount(discount_code, product)
-    session_shipping = session.pop('checkout_shipping', 0)
     was_popup = session.get('was_popup_path', False)
-    
-    if discount:
-        amount, shipping = compute_order_amount(product, discount)
-    elif was_popup and product.delivery_type == 'physical':
-        # Apply implicit KNOT50 popup discount when coming from popup path
-        base = product.price
-        discount_amount = int(round(base * 50 / 100))  # 50% KNOT50 discount
-        final_amount = base - discount_amount
-        shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
-        amount = final_amount + shipping
+    session_shipping = session.pop('checkout_shipping', 0)
+
+    if was_popup and product.delivery_type == 'physical':
+        # مسیر پاپ‌آپ: قیمت نهایی همیشه POPUP_FINAL_PRICE تومان است
+        discount, amount, shipping = _popup_pricing(product, session_shipping)
+        discount_code = discount['code']
     else:
-        amount = product.price
-        shipping = session_shipping
-    
+        discount = evaluate_discount(discount_code, product)
+        if discount:
+            amount, shipping = compute_order_amount(product, discount)
+        else:
+            amount = product.price
+            shipping = session_shipping
+
     if method == 'online':
         if discount:
             session['shop_discount'] = {
                 'product_id': product_id,
-                'code': discount_code,
+                'code': discount['code'],
                 'final_amount': discount['final_amount'],
                 'discount_amount': discount['discount_amount'],
                 'shipping': shipping,
             }
         else:
-            if was_popup and product.delivery_type == 'physical':
-                # Store implicit KNOT50 popup discount in session
-                base = product.price
-                discount_amount = int(round(base * 50 / 100))
-                session['shop_discount'] = {
-                    'product_id': product_id,
-                    'code': POPUP_PROMO_CODE,
-                    'final_amount': base - discount_amount,
-                    'discount_amount': discount_amount,
-                    'shipping': session_shipping if session_shipping > 0 else SHIPPING_COST,
-                }
-            else:
-                session['was_popup_path'] = was_popup
-                session.pop('shop_discount', None)
+            session['was_popup_path'] = was_popup
+            session.pop('shop_discount', None)
         return redirect(f'/shop/checkout/{product_id}/online')
 
     order = Order(
@@ -183,30 +192,19 @@ def online_pay(product_id):
     postal_code = (request.form.get('postal_code') or '').strip()
 
     if not full_name or not phone or not address or not postal_code:
-        return render_template('payment_online.html', product=product,
+        return render_template('payment_online.html', product=product, discount=None, shipping=0,
                                error='لطفاً تمام فیلدها را پر کنید.')
 
     was_popup = session.get('was_popup_path', False)
     session_shipping = session.pop('checkout_shipping', 0)
-    
-    # Prioritize implicit KNOT50 popup discount when coming from popup path
+
     if was_popup and product.delivery_type == 'physical':
-        base = product.price
-        discount_amount = int(round(base * 50 / 100))  # 50% KNOT50 discount
-        final_amount = base - discount_amount
-        shipping = session_shipping if session_shipping > 0 else SHIPPING_COST
-        amount = final_amount + shipping
-        discount_code = POPUP_PROMO_CODE
-        discount = {
-            'code': discount_code,
-            'final_amount': final_amount,
-            'discount_amount': discount_amount,
-            'type': 'percent',
-        }
+        # مسیر پاپ‌آپ: قیمت نهایی همیشه POPUP_FINAL_PRICE تومان است
+        discount, amount, shipping = _popup_pricing(product, session_shipping)
+        discount_code = discount['code']
     else:
         discount_code = (request.form.get('discount_code') or '').strip()
         discount = evaluate_discount(discount_code, product)
-        session_shipping = session.pop('checkout_shipping', 0)
         if discount:
             amount, shipping = compute_order_amount(product, discount)
         else:
@@ -247,7 +245,7 @@ def online_pay(product_id):
 
     db.session.delete(order)
     db.session.commit()
-    return render_template('payment_online.html', product=product,
+    return render_template('payment_online.html', product=product, discount=None, shipping=0,
                            error=result.get('error', 'خطا در اتصال به درگاه پرداخت.'))
 
 

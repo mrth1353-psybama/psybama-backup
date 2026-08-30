@@ -9,6 +9,7 @@
         <div class="book-promo-body">
             <div class="book-promo-tag">پیشنهاد ویژه</div>
             <h3 class="book-promo-title">همین الان با ۵۰ درصد تخفیف، کتاب را تهیه کنید</h3>
+            <p class="book-promo-author">نویسنده: دکتر مرضیه فیضی</p>
             <p class="book-promo-sub">۵۰ درصد تخفیف + هزینه ارسال</p>
             <div class="book-promo-price">
                 <span class="book-promo-price-label">قیمت نهایی (کتاب + ارسال):</span>
@@ -97,6 +98,12 @@
     color: var(--slate-blue);
     margin-bottom: 0.35rem;
 }
+.book-promo-author {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--slate-blue);
+    margin-bottom: 0.25rem;
+}
 .book-promo-sub {
     font-size: 0.82rem;
     color: var(--text-muted);
@@ -171,10 +178,10 @@
         popup.setAttribute('aria-hidden', 'true');
     }
 
-    // زمان‌بندی نمایش پاپ‌آپ با تأخیر (مثلاً ۵ ثانیه پس از ورود به صفحه نتیجه)
+    // زمان‌بندی نمایش پاپ‌آپ با تأخیر (مثلاً ۸ ثانیه پس از ورود به صفحه نتیجه)
     window.scheduleBookPromo = function (delay) {
         if (timer) clearTimeout(timer);
-        timer = setTimeout(showPopup, delay || 5000);
+        timer = setTimeout(showPopup, delay || 8000);
     };
 
     if (closeBtn) {
