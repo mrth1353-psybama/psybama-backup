@@ -71,6 +71,7 @@ const Admin = (() => {
         loadLeads();
         loadWebinars();
         loadKnotWebinars();
+        loadLandingWebinars();
         loadOrders();
         loadProducts();
     }
@@ -668,6 +669,54 @@ const Admin = (() => {
         } catch (e) {}
     }
 
+    // ── Landing Page Webinar Registrations ───────────────
+
+    async function loadLandingWebinars() {
+        const tbody = document.getElementById('landingWebinarsTableBody');
+        try {
+            const res = await fetch('/admin/landing-webinar-registrations');
+            if (!res.ok) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی از طریق لندینگ پیج ثبت نشده</td></tr>';
+                return;
+            }
+            const data = await res.json();
+
+            if (!data.registrations.length) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی از طریق لندینگ پیج ثبت نشده</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.registrations.map(r => `
+                <tr>
+                    <td>${r.id}</td>
+                    <td>${escapeHtml(r.name || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.email || '—')}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(r.phone)}</td>
+                    <td><span class="badge badge-info">${escapeHtml(r.webinar_title)}</span></td>
+                    <td style="white-space:nowrap">${escapeHtml(r.webinar_date || '—')}</td>
+                    <td style="white-space:nowrap">${formatDateTime(r.created_at)}</td>
+                    <td>
+                        <span class="badge ${r.sms_sent ? 'badge-success' : 'badge-warning'}">${r.sms_sent ? 'ارسال شد' : 'ارسال نشده'}</span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteLandingWebinar(${r.id})">🗑 حذف</button>
+                    </td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    async function deleteLandingWebinar(id) {
+        if (!confirm('این ثبت‌نام حذف شود؟')) return;
+        try {
+            await fetch(`/admin/landing-webinar-registrations/${id}/delete`, {method: 'POST'});
+            await loadLandingWebinars();
+            await loadStats();
+        } catch (e) {}
+    }
+
     // ── Search ────────────────────────────────────────
 
     async function doSearch() {
@@ -759,6 +808,7 @@ const Admin = (() => {
 
                 if (btn.dataset.tab === 'knot-webinars') loadKnotWebinars();
                 if (btn.dataset.tab === 'webinars') loadWebinars();
+                if (btn.dataset.tab === 'landing-webinars') loadLandingWebinars();
             });
         });
     }
@@ -793,5 +843,6 @@ const Admin = (() => {
             openKeyPanel, closeKeyPanel, submitKey, cancelOrder,
             markShipped,
             saveProduct, toggleProduct, deleteLead, viewLeadDetails,
-            deleteWebinar, deleteKnotWebinar, viewUserOrders, closeUserOrders};
+            deleteWebinar, deleteKnotWebinar, deleteLandingWebinar,
+            viewUserOrders, closeUserOrders};
 })();

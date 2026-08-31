@@ -346,6 +346,7 @@ class WebinarRegistration(db.Model):
     webinar_date = db.Column(db.String(100), nullable=True)
     lead_id = db.Column(db.Integer, db.ForeignKey('assessment_leads.id'), nullable=True)
     sms_sent = db.Column(db.Boolean, default=False)
+    source = db.Column(db.String(30), nullable=True)
     created_at = db.Column(db.DateTime, default=iran_now)
 
     def to_dict(self):
@@ -358,5 +359,6 @@ class WebinarRegistration(db.Model):
             'webinar_date': self.webinar_date,
             'lead_id': self.lead_id,
             'sms_sent': self.sms_sent,
+            'source': self.source,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }

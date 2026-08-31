@@ -219,6 +219,26 @@ def delete_knot_webinar_registration(reg_id):
     return jsonify({'success': True})
 
 
+@admin_bp.route('/landing-webinar-registrations')
+@admin_required
+def list_landing_webinar_registrations():
+    """ثبت‌نام‌هایی که منحصراً از طریق لندینگ پیج وبینار صورت گرفته‌اند."""
+    regs = (WebinarRegistration.query
+            .filter_by(source='landing')
+            .order_by(WebinarRegistration.created_at.desc())
+            .all())
+    return jsonify({'registrations': [r.to_dict() for r in regs]})
+
+
+@admin_bp.route('/landing-webinar-registrations/<int:reg_id>/delete', methods=['POST'])
+@admin_required
+def delete_landing_webinar_registration(reg_id):
+    reg = WebinarRegistration.query.get_or_404(reg_id)
+    db.session.delete(reg)
+    db.session.commit()
+    return jsonify({'success': True})
+
+
 @admin_bp.route('/assessment-leads/<int:lead_id>/details')
 @admin_required
 def assessment_lead_details(lead_id):

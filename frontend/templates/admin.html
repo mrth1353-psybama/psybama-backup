@@ -97,7 +97,8 @@
             <button class="tab-btn" data-tab="contacts">📩 درخواست مشاوره <span id="unreadBadge" class="hidden" style="background:var(--error);color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
             <button class="tab-btn" data-tab="leads">📝 لیدهای پرسشنامه</button>
             <button class="tab-btn" data-tab="webinars">🎓 ثبت‌نام وبینار</button>
-<button class="tab-btn" data-tab="knot-webinars">📊 ثبت‌نام وبینار گره کور شغلی</button>
+            <button class="tab-btn" data-tab="knot-webinars">📊 ثبت‌نام وبینار گره کور شغلی</button>
+            <button class="tab-btn" data-tab="landing-webinars">🌐 ثبت‌نام در وبینار از طریق لندینگ پیج</button>
             <button class="tab-btn" data-tab="orders">🛍 سفارش‌ها <span id="pendingOrdersBadge" class="hidden" style="background:var(--error);color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
             <button class="tab-btn" data-tab="products">📦 محصولات</button>
             <button class="tab-btn" data-tab="search">🔍 جستجو</button>
@@ -257,6 +258,30 @@
                         </tr>
                     </thead>
                     <tbody id="knotWebinarsTableBody">
+                        <tr><td colspan="9" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Landing Page Webinar Registrations Tab -->
+        <div class="tab-content" id="tab-landing-webinars">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>نام و نام خانوادگی</th>
+                            <th>ایمیل</th>
+                            <th>شماره موبایل</th>
+                            <th>وبینار</th>
+                            <th>تاریخ برگزاری</th>
+                            <th>تاریخ ثبت‌نام</th>
+                            <th>پیامک</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="landingWebinarsTableBody">
                         <tr><td colspan="9" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
                     </tbody>
                 </table>

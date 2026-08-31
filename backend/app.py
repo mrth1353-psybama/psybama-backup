@@ -555,7 +555,8 @@ def create_app():
                 email=email,
                 phone=phone,
                 webinar_title=KNOT_WEBINAR_TITLE,
-                webinar_date=_knot_webinar_date_env or None
+                webinar_date=_knot_webinar_date_env or None,
+                source='landing'
             )
             db.session.add(reg)
             db.session.commit()
@@ -994,6 +995,17 @@ def create_app():
                 "UPDATE products SET delivery_type='digital' WHERE delivery_type IS NULL OR delivery_type=''"
             ))
             db.session.commit()
+        except Exception:
+            db.session.rollback()
+
+        # Migration: add source column to webinar_registrations (landing page marker)
+        try:
+            from sqlalchemy import text
+            db.session.execute(text(
+                'ALTER TABLE webinar_registrations ADD COLUMN source TEXT'
+            ))
+            db.session.commit()
+            print('[DB] Migration: added source column to webinar_registrations')
         except Exception:
             db.session.rollback()
 
