@@ -70,6 +70,7 @@ const Admin = (() => {
         loadContacts();
         loadLeads();
         loadWebinars();
+        loadKnotWebinars();
         loadOrders();
         loadProducts();
     }
