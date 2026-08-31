@@ -560,6 +560,16 @@ def create_app():
             )
             db.session.add(reg)
             db.session.commit()
+        else:
+            # ردیف قبلی بدون منبع (مثلاً ثبت‌نام از مسیرهای دیگر) وجود دارد؛
+            # چون همین حالا از طریق لندینگ پیج ثبت‌نام کامل شده، منبع را به landing به‌روزرسانی کن.
+            if reg.source != 'landing':
+                reg.source = 'landing'
+                if name:
+                    reg.name = name
+                if email:
+                    reg.email = email
+                db.session.commit()
 
             threading.Thread(
                 target=_send_webinar_notifications_bg,
