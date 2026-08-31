@@ -617,6 +617,10 @@ const Admin = (() => {
         const tbody = document.getElementById('knotWebinarsTableBody');
         try {
             const res = await fetch('/admin/knot-webinar-registrations');
+            if (!res.ok) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی ثبت نشده</td></tr>';
+                return;
+            }
             const data = await res.json();
 
             if (!data.registrations.length) {
@@ -752,6 +756,9 @@ const Admin = (() => {
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 btn.classList.add('active');
                 document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+
+                if (btn.dataset.tab === 'knot-webinars') loadKnotWebinars();
+                if (btn.dataset.tab === 'webinars') loadWebinars();
             });
         });
     }
@@ -777,7 +784,6 @@ const Admin = (() => {
         document.getElementById('btnCloseUserOrders').addEventListener('click', closeUserOrders);
 
         initTabs();
-        loadKnotWebinars();
         checkAdminStatus();
     }
 
