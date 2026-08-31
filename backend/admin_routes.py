@@ -9,7 +9,7 @@ from models import CareerKnotAssessment
 from models import WebinarRegistration
 from models import iran_now
 
-KNOT_WEBINAR_TITLE = 'ریشه‌یابی گره koron شغلی'
+KNOT_WEBINAR_TITLE = 'ریشه‌یابی گره کور شغلی'
 
 admin_bp = Blueprint('admin', __name__)
 

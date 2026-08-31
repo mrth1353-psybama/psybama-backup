@@ -619,7 +619,7 @@ const Admin = (() => {
             const data = await res.json();
 
             if (!data.registrations.length) {
-                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی برای وبینار کnoten ثبت نشده</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted" style="padding:2rem">هنوز ثبت‌نامی برای وبینار گره کور شغلی ثبت نشده</td></tr>';
                 return;
             }
 
