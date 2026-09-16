@@ -37,10 +37,16 @@
         {% if mbi_assessment_enabled %}
         <li><a href="/assessment">پرسشنامه فرسودگی شغلی</a></li>
         {% endif %}
-        <li><a href="/knot"><span style="font-size:0.75rem; font-weight:normal;">پرسشنامه ریشه‌یابی گره کور شغلی</span></a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle">خدمات مشاوره</a>
+            <ul class="dropdown-menu">
+                <li><a href="/intake/career">رزرو مشاوره شغلی</a></li>
+                <li><a href="/intake/organizational">خدمات سازمانی</a></li>
+            </ul>
+        </li>
+        <li><a href="#">مقالات</a></li>
         <li><a href="/shop">فروشگاه</a></li>
         <li id="navUserPanel"><a id="navUserPanelLink" href="/shop/login?next=/panel">ورود</a></li>
-        <li><a href="/chat" class="btn btn-sm" style="margin-right:0.5rem; background:var(--ocean-blue); color:white; font-size:0.85rem;">گفتگو با سای‌باما<span style="font-size:0.7rem;">(دستیار هوشمند سلامت روان در محیط کار)</span></a></li>
     </ul>
 </nav>
 {% endblock %}
@@ -84,10 +90,19 @@ document.addEventListener('DOMContentLoaded', function() {
             hamburgerBtn.classList.toggle('active');
             navbarLinks.classList.toggle('active');
         });
-        navbarLinks.querySelectorAll('a').forEach(function(link) {
+        navbarLinks.querySelectorAll('a:not(.dropdown-toggle)').forEach(function(link) {
             link.addEventListener('click', function() {
                 hamburgerBtn.classList.remove('active');
                 navbarLinks.classList.remove('active');
+            });
+        });
+
+        var dropdownToggles = navbarLinks.querySelectorAll('.dropdown-toggle');
+        dropdownToggles.forEach(function(toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                var parent = toggle.closest('.dropdown');
+                if (parent) parent.classList.toggle('open');
             });
         });
     }

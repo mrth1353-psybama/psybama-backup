@@ -362,3 +362,81 @@ class WebinarRegistration(db.Model):
             'source': self.source,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+
+
+class CareerIntake(db.Model):
+    __tablename__ = 'career_intakes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    q1_name = db.Column(db.String(150), nullable=False)
+    q2_marital = db.Column(db.String(100), nullable=False)
+    q3_contact = db.Column(db.String(200), nullable=False)
+    q4_job = db.Column(db.String(200), nullable=False)
+    q5_city = db.Column(db.String(100), nullable=False)
+    q6_income = db.Column(db.String(60), nullable=False)
+    q7_knot = db.Column(db.Text, nullable=False)
+    q8_ideal = db.Column(db.Text, nullable=False)
+    q9_actions = db.Column(db.Text, nullable=False)
+    q10_treatment = db.Column(db.String(80), nullable=False)
+    q11_commitment = db.Column(db.String(10), nullable=False)
+    q12_priority = db.Column(db.String(80), nullable=False)
+    created_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'answers': [
+                {'q': '۱. نام و نام خانوادگی', 'a': self.q1_name},
+                {'q': '۲. سن / وضعیت تأهل', 'a': self.q2_marital},
+                {'q': '۳. شماره تماس و ایمیل', 'a': self.q3_contact},
+                {'q': '۴. شغل فعلی و زمینه فعالیت', 'a': self.q4_job},
+                {'q': '۵. شهر محل زندگی و کار', 'a': self.q5_city},
+                {'q': '۶. میزان درآمد تقریبی ماهانه', 'a': self.q6_income},
+                {'q': '۷. بزرگ‌ترین گره کور یا چالش شغلی', 'a': self.q7_knot},
+                {'q': '۸. شش ماه بعد به نتیجه ایده‌آل — شاخص موفقیت', 'a': self.q8_ideal},
+                {'q': '۹. اقدامات قبلی و نتیجه', 'a': self.q9_actions},
+                {'q': '۱۰. سابقه درمان روان‌پزشکی/روان‌درمانی', 'a': self.q10_treatment},
+                {'q': '۱۱. میزان تعهد و انرژی (۱ تا ۱۰)', 'a': self.q11_commitment},
+                {'q': '۱۲. اولویت سرمایه‌گذاری روی رشد شغلی', 'a': self.q12_priority},
+            ],
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }
+
+
+class OrgIntake(db.Model):
+    __tablename__ = 'org_intakes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    q1_org = db.Column(db.String(200), nullable=False)
+    q2_filler = db.Column(db.String(200), nullable=False)
+    q3_industry = db.Column(db.String(200), nullable=False)
+    q4_staff = db.Column(db.String(80), nullable=False)
+    q5_turnover = db.Column(db.String(200), nullable=False)
+    q6_budget = db.Column(db.String(200), nullable=False)
+    q7_focus = db.Column(db.String(120), nullable=False)
+    q8_symptoms = db.Column(db.Text, nullable=False)
+    q9_root = db.Column(db.Text, nullable=False)
+    q10_kpi = db.Column(db.Text, nullable=False)
+    q11_readiness = db.Column(db.String(10), nullable=False)
+    q12_horizon = db.Column(db.String(60), nullable=False)
+    created_at = db.Column(db.DateTime, default=iran_now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'answers': [
+                {'q': '۱. نام سازمان / برند', 'a': self.q1_org},
+                {'q': '۲. نام و سمت تکمیل‌کننده فرم', 'a': self.q2_filler},
+                {'q': '۳. زمینه فعالیت و صنعت', 'a': self.q3_industry},
+                {'q': '۴. تعداد پرسنل فعال', 'a': self.q4_staff},
+                {'q': '۵. میزان گردش مالی سالانه', 'a': self.q5_turnover},
+                {'q': '۶. بودجه مصوب توسعه منابع انسانی', 'a': self.q6_budget},
+                {'q': '۷. تمرکز اصلی فرآیند کوچینگ', 'a': self.q7_focus},
+                {'q': '۸. سه نشانه / چالش رفتاری اصلی', 'a': self.q8_symptoms},
+                {'q': '۹. ریشه چالش‌ها و موانع رفع آن', 'a': self.q9_root},
+                {'q': '۱۰. شاخص کلیدی موفقیت (KPI)', 'a': self.q10_kpi},
+                {'q': '۱۱. میزان آمادگی هیئت‌مدیره (۱ تا ۵)', 'a': self.q11_readiness},
+                {'q': '۱۲. افق زمانی اجرای برنامه', 'a': self.q12_horizon},
+            ],
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+        }

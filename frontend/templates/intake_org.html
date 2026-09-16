@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}فرم پذیرش کوچینگ سازمانی | سای‌باما{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/intake.css">{% endblock %}
+
+{% block content %}
+<div class="intake-wrap">
+
+    <header class="intake-header">
+        <span class="intake-eyebrow">مشاوره و کوچینگ سازمانی</span>
+        <h1>فرم سنجش و پذیرش مشاوره و کوچینگ سازمانی</h1>
+        <p class="intake-doctor-line">دکتر مرضیه فیضی: دکترای روان‌شناسی بالینی از علوم پزشکی شهید بهشتی، متمرکز بر روان‌شناسی سازمانی و کوچینگ شغلی و سازمانی</p>
+        <p class="intake-privacy-note">کلیه اطلاعات ورودی این فرم، طبق تعهد حرفه‌ای من به حفظ حریم خصوصی سازمان شما، کاملاً محرمانه باقی خواهد ماند و صرفاً برای طراحی دقیق‌تر مسیر همکاری استفاده می‌شود.</p>
+    </header>
+
+    <div class="intake-error-banner" id="intakeError"></div>
+
+    <form id="intakeForm" novalidate>
+
+        <!-- ── بخش اول ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۱</span>
+                <h2>بخش اول: اطلاعات ساختاری و ابعاد سازمان</h2>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q1_org"><span class="q-num">۱.</span> نام سازمان / برند<span class="q-required">*</span></label>
+                <input type="text" id="q1_org" name="q1_org" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q2_filler"><span class="q-num">۲.</span> نام و سمت تکمیل‌کننده فرم<span class="q-required">*</span></label>
+                <input type="text" id="q2_filler" name="q2_filler" class="intake-input" required placeholder="مدیرعامل / مدیر منابع انسانی / هم‌بنیان‌گذار">
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q3_industry"><span class="q-num">۳.</span> زمینه فعالیت و صنعت<span class="q-required">*</span></label>
+                <input type="text" id="q3_industry" name="q3_industry" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۴.</span> تعداد پرسنل فعال<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="q4_staff" value="زیر ۱۰ نفر (استارتاپ / تیم کوچک)" required><span>زیر ۱۰ نفر (استارتاپ / تیم کوچک)</span></label>
+                    <label class="choice"><input type="radio" name="q4_staff" value="۱۰ تا ۵۰ نفر (کسب‌وکار در حال رشد)" required><span>۱۰ تا ۵۰ نفر (کسب‌وکار در حال رشد)</span></label>
+                    <label class="choice"><input type="radio" name="q4_staff" value="۵۰ تا ۲۰۰ نفر (سازمان متوسط)" required><span>۵۰ تا ۲۰۰ نفر (سازمان متوسط)</span></label>
+                    <label class="choice"><input type="radio" name="q4_staff" value="بالای ۲۰۰ نفر (سازمان بزرگ / Enterprise)" required><span>بالای ۲۰۰ نفر (سازمان بزرگ / Enterprise)</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q5_turnover"><span class="q-num">۵.</span> میزان گردش مالی یا درآمد سالانه تقریبی سازمان<span class="q-required">*</span><span class="q-note">(برای تناسب‌سنجی بودجه با دامنه پروژه عارضه‌یابی و کوچینگ)</span></label>
+                <input type="text" id="q5_turnover" name="q5_turnover" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q6_budget"><span class="q-num">۶.</span> بودجه تقریبی مصوب برای فرآیند آموزش / کوچینگ / توسعه منابع انسانی<span class="q-required">*</span></label>
+                <input type="text" id="q6_budget" name="q6_budget" class="intake-input" required>
+            </div>
+        </section>
+
+        <!-- ── بخش دوم ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۲</span>
+                <h2>بخش دوم: عارضه‌یابی سیستمی و رفتاری سازمان <small style="font-family:var(--font-body);font-weight:400;color:var(--text-muted);font-size:12.5px;direction:ltr">Organizational &amp; Behavioral Diagnosis</small></h2>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۷.</span> تمرکز اصلی این فرآیند کوچینگ روی کدام سطح است؟<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="q7_focus" value="کوچینگ رهبری و مدیران ارشد (Executive Coaching)" required><span>کوچینگ رهبری و مدیران ارشد (Executive Coaching)</span></label>
+                    <label class="choice"><input type="radio" name="q7_focus" value="هم‌راستاسازی و حل تعارضات تیم‌لیدها / مدیران میانی (Team Coaching)" required><span>هم‌راستاسازی و حل تعارضات تیم‌لیدها / مدیران میانی (Team Coaching)</span></label>
+                    <label class="choice"><input type="radio" name="q7_focus" value="تغییر فرهنگ سازمانی، بهبود انگیزش و رفتار کارکنان (Behavioral Transformation)" required><span>تغییر فرهنگ سازمانی، بهبود انگیزش و رفتار کارکنان (Behavioral Transformation)</span></label>
+                    <label class="choice"><input type="radio" name="q7_focus" value="بهبود عملکرد و بهره‌وری فرایندی / فردی" required><span>بهبود عملکرد و بهره‌وری فرایندی / فردی</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q8_symptoms"><span class="q-num">۸.</span> سه نشانه (سمپتوم) یا چالش رفتاری اصلی که در حال حاضر در سازمان مشاهده می‌کنید چیست؟<span class="q-required">*</span></label>
+                <textarea id="q8_symptoms" name="q8_symptoms" class="intake-input" rows="6" required placeholder="مثال: فرسودگی شغلی، اهمال‌کاری تیمی، ترک خدمت نیروهای کلیدی، عدم تفویض اختیار مدیران"></textarea>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q9_root"><span class="q-num">۹.</span> از نظر شما ریشه این چالش‌ها کجاست و چه عاملی تاکنون مانع رفع آن شده است؟<span class="q-required">*</span></label>
+                <textarea id="q9_root" name="q9_root" class="intake-input" rows="6" required></textarea>
+            </div>
+        </section>
+
+        <!-- ── بخش سوم ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۳</span>
+                <h2>بخش سوم: انتظارات و پایش خروجی <small style="font-family:var(--font-body);font-weight:400;color:var(--text-muted);font-size:12.5px;direction:ltr">Outcomes &amp; Metrics</small></h2>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q10_kpi"><span class="q-num">۱۰.</span> شاخص کلیدی موفقیت (KPI) شما برای این دوره چیست؟<span class="q-required">*</span></label>
+                <textarea id="q10_kpi" name="q10_kpi" class="intake-input" rows="6" required placeholder="مثلاً: کاهش نرخ خروج پرسنل به میزان ۲۰٪، افزایش نرخ تحقق اهداف تیمی، بهبود ارزیابی ۳۶۰ درجه مدیران"></textarea>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۱۱.</span> میزان آمادگی و تعهد هیئت‌مدیره / مدیران ارشد برای همراهی با تغییرات چقدر است؟<span class="q-required">*</span></label>
+                <div class="scale-row">
+                    <label class="scale-opt"><input type="radio" name="q11_readiness" value="۱" required><span>۱</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_readiness" value="۲" required><span>۲</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_readiness" value="۳" required><span>۳</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_readiness" value="۴" required><span>۴</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_readiness" value="۵" required><span>۵</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۱۲.</span> افق زمانی مدنظر شما برای اجرای این برنامه چقدر است؟<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="q12_horizon" value="۳ ماهه (تمرکز بر پروژه‌های ضربتی)" required><span>۳ ماهه (تمرکز بر پروژه‌های ضربتی)</span></label>
+                    <label class="choice"><input type="radio" name="q12_horizon" value="۶ ماهه (استاندارد تغییر رفتار و تثبیت)" required><span>۶ ماهه (استاندارد تغییر رفتار و تثبیت)</span></label>
+                    <label class="choice"><input type="radio" name="q12_horizon" value="سالانه و مستمر" required><span>سالانه و مستمر</span></label>
+                </div>
+            </div>
+        </section>
+
+        <div class="intake-submit">
+            <p class="intake-submit-hint" id="submitHint">برای فعال شدن دکمه، به همه سوالات پاسخ دهید</p>
+            <button type="submit" class="btn-intake-submit" id="submitBtn" disabled>ارسال فرم</button>
+        </div>
+
+    </form>
+
+    <!-- Success panel (shown after submit) -->
+    <div class="intake-success hidden" id="intakeSuccess">
+        <div class="intake-success-icon">✓</div>
+        <p>
+            فرم شما ارسال شد.
+            به زودی با شما تماس می‌گیریم. با احترام.
+            <span class="intake-success-sign">دکتر مرضیه فیضی</span>
+        </p>
+        <a href="/">بازگشت به صفحه اصلی</a>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var form = document.getElementById('intakeForm');
+    var submitBtn = document.getElementById('submitBtn');
+    var success = document.getElementById('intakeSuccess');
+    var errorBox = document.getElementById('intakeError');
+
+    function refresh() {
+        submitBtn.disabled = !form.checkValidity();
+    }
+
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ارسال…';
+
+        var payload = {};
+        new FormData(form).forEach(function (value, key) {
+            payload[key] = value;
+        });
+
+        fetch('/intake/organizational', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        }).then(function (r) {
+            return r.json().then(function (d) { return {ok: r.ok, data: d}; });
+        }).then(function (res) {
+            if (res.ok && res.data.success) {
+                form.classList.add('hidden');
+                success.classList.remove('hidden');
+                success.scrollIntoView({behavior: 'smooth', block: 'center'});
+            } else {
+                throw new Error(res.data.error || 'خطا در ارسال');
+            }
+        }).catch(function (err) {
+            errorBox.textContent = 'ارسال فرم با خطا مواجه شد. لطفاً دوباره تلاش کنید.';
+            errorBox.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'ارسال فرم';
+            errorBox.scrollIntoView({behavior: 'smooth'});
+        });
+    });
+})();
+</script>
+{% endblock %}

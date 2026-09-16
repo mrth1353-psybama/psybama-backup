@@ -166,6 +166,36 @@ input, textarea {
     color: var(--ocean-blue);
 }
 
+.navbar-links .dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    list-style: none;
+    min-width: 170px;
+    padding: 0.4rem;
+    display: none;
+    z-index: 120;
+}
+
+.navbar-links .dropdown:hover .dropdown-menu,
+.navbar-links .dropdown.open .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu a {
+    display: block;
+    white-space: nowrap;
+    font-size: 0.85rem;
+}
+
 /* ── Buttons ─────────────────────────────────────── */
 .btn {
     display: inline-flex;
@@ -485,6 +515,20 @@ input, textarea {
     }
     .navbar-links li {
         width: 100%;
+    }
+    .navbar-links .dropdown {
+        width: 100%;
+    }
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: none;
+        border-inline-start: 2px solid var(--ocean-blue);
+        background: var(--cloud-blue);
+        border-radius: var(--radius-sm);
+        margin-top: 0.25rem;
+        width: 100%;
+        padding: 0.25rem;
     }
     .navbar-links a {
         display: block;

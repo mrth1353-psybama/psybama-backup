@@ -74,6 +74,8 @@ const Admin = (() => {
         loadLandingWebinars();
         loadOrders();
         loadProducts();
+        loadCareerIntakes();
+        loadOrgIntakes();
     }
 
     // ── Stats ─────────────────────────────────────────
@@ -90,6 +92,8 @@ const Admin = (() => {
             document.getElementById('statWaaq').textContent = data.total_waaq_assessments;
             document.getElementById('statKnot').textContent = data.total_knot_assessments;
             document.getElementById('statWebinar').textContent = data.total_webinar_registrations;
+            document.getElementById('statCareer').textContent = data.total_career_intakes;
+            document.getElementById('statOrg').textContent = data.total_org_intakes;
 
             const badge = document.getElementById('unreadBadge');
             if (data.unread_contact_requests > 0) {
@@ -717,6 +721,154 @@ const Admin = (() => {
         } catch (e) {}
     }
 
+    // ── Career Intake Forms (فرم پذیرش کوچینگ شغلی) ───────
+
+    async function loadCareerIntakes() {
+        const tbody = document.getElementById('careerIntakesTableBody');
+        try {
+            const res = await fetch('/admin/career-intakes');
+            const data = await res.json();
+
+            if (!data.intakes.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:2rem">هنوز فرمی ثبت نشده است</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.intakes.map(i => `
+                <tr>
+                    <td>${i.id}</td>
+                    <td>${escapeHtml(i.name)}</td>
+                    <td>${escapeHtml(i.job)}</td>
+                    <td style="white-space:nowrap">${formatDateTime(i.created_at)}</td>
+                    <td><button class="btn btn-outline btn-sm" onclick="Admin.viewCareerIntake(${i.id})">📋 مشاهده</button></td>
+                    <td><button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteCareerIntake(${i.id})">🗑 حذف</button></td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    async function viewCareerIntake(id) {
+        const panel = document.getElementById('careerIntakeDetailsPanel');
+        const titleEl = document.getElementById('careerIntakeDetailsTitle');
+        const contentEl = document.getElementById('careerIntakeDetailsContent');
+        try {
+            const res = await fetch(`/admin/career-intakes/${id}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const item = data.intake;
+
+            titleEl.textContent = `فرم پذیرش کوچینگ شغلی #${item.id} — ${item.answers[0].a}`;
+
+            contentEl.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead><tr><th style="width:35%">سؤال</th><th>پاسخ</th></tr></thead>
+                        <tbody>
+                            ${item.answers.map(ans => `
+                                <tr>
+                                    <td>${escapeHtml(ans.q)}</td>
+                                    <td style="white-space:pre-wrap;word-break:break-word"><strong>${escapeHtml(ans.a)}</strong></td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({behavior: 'smooth', block: 'start'});
+        } catch (e) {
+            alert('خطا در بارگذاری پاسخ‌ها');
+        }
+    }
+
+    function closeCareerIntakeDetails() {
+        document.getElementById('careerIntakeDetailsPanel').classList.add('hidden');
+    }
+
+    async function deleteCareerIntake(id) {
+        if (!confirm('این فرم حذف شود؟')) return;
+        try {
+            await fetch(`/admin/career-intakes/${id}/delete`, {method: 'POST'});
+            await loadCareerIntakes();
+            await loadStats();
+        } catch (e) {}
+    }
+
+    // ── Org Intake Forms (فرم پذیرش کوچینگ سازمانی) ───────
+
+    async function loadOrgIntakes() {
+        const tbody = document.getElementById('orgIntakesTableBody');
+        try {
+            const res = await fetch('/admin/org-intakes');
+            const data = await res.json();
+
+            if (!data.intakes.length) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:2rem">هنوز فرمی ثبت نشده است</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.intakes.map(i => `
+                <tr>
+                    <td>${i.id}</td>
+                    <td>${escapeHtml(i.org)}</td>
+                    <td>${escapeHtml(i.filler)}</td>
+                    <td style="white-space:nowrap">${formatDateTime(i.created_at)}</td>
+                    <td><button class="btn btn-outline btn-sm" onclick="Admin.viewOrgIntake(${i.id})">📋 مشاهده</button></td>
+                    <td><button class="btn btn-sm" style="background:#FEE2E2;color:#B91C1C;border:none" onclick="Admin.deleteOrgIntake(${i.id})">🗑 حذف</button></td>
+                </tr>`).join('');
+
+        } catch (e) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="color:var(--error);padding:2rem">خطا در بارگذاری</td></tr>';
+        }
+    }
+
+    async function viewOrgIntake(id) {
+        const panel = document.getElementById('orgIntakeDetailsPanel');
+        const titleEl = document.getElementById('orgIntakeDetailsTitle');
+        const contentEl = document.getElementById('orgIntakeDetailsContent');
+        try {
+            const res = await fetch(`/admin/org-intakes/${id}`);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const item = data.intake;
+
+            titleEl.textContent = `فرم پذیرش کوچینگ سازمانی #${item.id} — ${item.answers[0].a}`;
+
+            contentEl.innerHTML = `
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead><tr><th style="width:35%">سؤال</th><th>پاسخ</th></tr></thead>
+                        <tbody>
+                            ${item.answers.map(ans => `
+                                <tr>
+                                    <td>${escapeHtml(ans.q)}</td>
+                                    <td style="white-space:pre-wrap;word-break:break-word"><strong>${escapeHtml(ans.a)}</strong></td>
+                                </tr>`).join('')}
+                        </tbody>
+                    </table>
+                </div>`;
+
+            panel.classList.remove('hidden');
+            panel.scrollIntoView({behavior: 'smooth', block: 'start'});
+        } catch (e) {
+            alert('خطا در بارگذاری پاسخ‌ها');
+        }
+    }
+
+    function closeOrgIntakeDetails() {
+        document.getElementById('orgIntakeDetailsPanel').classList.add('hidden');
+    }
+
+    async function deleteOrgIntake(id) {
+        if (!confirm('این فرم حذف شود؟')) return;
+        try {
+            await fetch(`/admin/org-intakes/${id}/delete`, {method: 'POST'});
+            await loadOrgIntakes();
+            await loadStats();
+        } catch (e) {}
+    }
+
     // ── Search ────────────────────────────────────────
 
     async function doSearch() {
@@ -809,6 +961,8 @@ const Admin = (() => {
                 if (btn.dataset.tab === 'knot-webinars') loadKnotWebinars();
                 if (btn.dataset.tab === 'webinars') loadWebinars();
                 if (btn.dataset.tab === 'landing-webinars') loadLandingWebinars();
+                if (btn.dataset.tab === 'career-intakes') loadCareerIntakes();
+                if (btn.dataset.tab === 'org-intakes') loadOrgIntakes();
             });
         });
     }
@@ -833,6 +987,9 @@ const Admin = (() => {
 
         document.getElementById('btnCloseUserOrders').addEventListener('click', closeUserOrders);
 
+        document.getElementById('btnCloseCareerIntakeDetails').addEventListener('click', closeCareerIntakeDetails);
+        document.getElementById('btnCloseOrgIntakeDetails').addEventListener('click', closeOrgIntakeDetails);
+
         initTabs();
         checkAdminStatus();
     }
@@ -844,5 +1001,7 @@ const Admin = (() => {
             markShipped,
             saveProduct, toggleProduct, deleteLead, viewLeadDetails,
             deleteWebinar, deleteKnotWebinar, deleteLandingWebinar,
-            viewUserOrders, closeUserOrders};
+            viewUserOrders, closeUserOrders,
+            viewCareerIntake, closeCareerIntakeDetails, deleteCareerIntake,
+            viewOrgIntake, closeOrgIntakeDetails, deleteOrgIntake};
 })();

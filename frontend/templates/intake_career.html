@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block title %}فرم پذیرش کوچینگ شغلی | سای‌باما{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="/static/css/intake.css">{% endblock %}
+
+{% block content %}
+<div class="intake-wrap">
+
+    <header class="intake-header">
+        <span class="intake-eyebrow">کوچینگ و مشاوره شغلی</span>
+        <h1>فرم سنجش و پذیرش اولیه کوچینگ و مشاوره شغلی</h1>
+        <div class="intake-en-sub">Career &amp; Executive Coaching — Intake Form</div>
+        <p class="intake-doctor-line">دکتر مرضیه فیضی: دکترای روان‌شناسی بالینی از علوم پزشکی شهید بهشتی، متمرکز بر روان‌شناسی سازمانی و کوچینگ شغلی و سازمانی</p>
+        <p class="intake-privacy-note">کلیه اطلاعات ورودی این فرم، طبق تعهد حرفه‌ای من به حفظ حریم خصوصی شما، کاملاً محرمانه باقی خواهد ماند و صرفاً برای طراحی دقیق‌تر مسیر همکاری استفاده می‌شود.</p>
+    </header>
+
+    <div class="intake-error-banner" id="intakeError"></div>
+
+    <form id="intakeForm" novalidate>
+
+        <!-- ── بخش اول ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۱</span>
+                <h2>بخش اول: اطلاعات هویتی و عمومی</h2>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q1_name"><span class="q-num">۱.</span> نام و نام خانوادگی<span class="q-required">*</span></label>
+                <input type="text" id="q1_name" name="q1_name" class="intake-input" required autocomplete="name">
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q2_marital"><span class="q-num">۲.</span> سن / وضعیت تأهل<span class="q-required">*</span></label>
+                <input type="text" id="q2_marital" name="q2_marital" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q3_contact"><span class="q-num">۳.</span> شماره تماس و ایمیل<span class="q-required">*</span></label>
+                <input type="text" id="q3_contact" name="q3_contact" class="intake-input" required placeholder="مثلاً: ۰۹۱۲…‌ — you@email.com">
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q4_job"><span class="q-num">۴.</span> شغل فعلی و زمینه فعالیت<span class="q-required">*</span></label>
+                <input type="text" id="q4_job" name="q4_job" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q5_city"><span class="q-num">۵.</span> شهر محل زندگی و کار<span class="q-required">*</span></label>
+                <input type="text" id="q5_city" name="q5_city" class="intake-input" required>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۶.</span> میزان درآمد تقریبی ماهانه<span class="q-required">*</span></label>
+                <div class="choice-grid" id="q6_group">
+                    <label class="choice"><input type="radio" name="q6_income" value="زیر ۳۰ میلیون تومان" required><span>زیر ۳۰ میلیون تومان</span></label>
+                    <label class="choice"><input type="radio" name="q6_income" value="۳۰ تا ۷۰ میلیون تومان" required><span>۳۰ تا ۷۰ میلیون تومان</span></label>
+                    <label class="choice"><input type="radio" name="q6_income" value="۷۰ تا ۱۵۰ میلیون تومان" required><span>۷۰ تا ۱۵۰ میلیون تومان</span></label>
+                    <label class="choice"><input type="radio" name="q6_income" value="بالای ۱۵۰ میلیون تومان" required><span>بالای ۱۵۰ میلیون تومان</span></label>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── بخش دوم ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۲</span>
+                <h2>بخش دوم: شفاف‌سازی هدف و چالش شغلی</h2>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q7_knot"><span class="q-num">۷.</span> بزرگ‌ترین گره کور یا چالش شغلی که در حال حاضر با آن روبه‌رو هستید و باعث شده به این مسیر فکر کنید چیست؟<span class="q-required">*</span><span class="q-note">(پاسخ تشریحی)</span></label>
+                <textarea id="q7_knot" name="q7_knot" class="intake-input" rows="6" required></textarea>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q8_ideal"><span class="q-num">۸.</span> اگر شش ماه بعد از شروع این مسیر به نتیجه ایده‌آل برسید، چه تغییری در مسیر شغلی یا سازمانتان رخ داده است؟<span class="q-required">*</span><span class="q-note">(لطفاً شاخص موفقیت را ملموس و مشخص بیان کنید)</span></label>
+                <textarea id="q8_ideal" name="q8_ideal" class="intake-input" rows="6" required></textarea>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q9_actions"><span class="q-num">۹.</span> تاکنون برای حل این مسئله چه اقداماتی انجام داده‌اید و نتیجه چه بوده است؟<span class="q-required">*</span></label>
+                <textarea id="q9_actions" name="q9_actions" class="intake-input" rows="6" required></textarea>
+            </div>
+        </section>
+
+        <!-- ── بخش سوم ─────────────────────────────────────────────────────── -->
+        <section class="intake-section">
+            <div class="intake-section-head">
+                <span class="intake-section-num">۳</span>
+                <h2>بخش سوم: سنجش آمادگی و هماهنگی با مسیر درمانی</h2>
+            </div>
+
+            <p class="intake-section-note">
+                این مسیر، کوچینگ تشخیصی-شغلی است و جایگزین درمان روان‌پزشکی یا روان‌درمانی فعال نمی‌شود.
+                اگر در حال حاضر تحت چنین درمانی هستید، لازم است هماهنگی لازم بین این مسیر و درمان اصلی شما انجام شود.
+            </p>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۱۰.</span> آیا در حال حاضر یا طی دو سال گذشته تحت درمان روان‌پزشکی (دارودرمانی) یا روان‌درمانی برای مواردی مانند افسردگی شدید، تروما یا اختلالات اضطرابی بوده‌اید؟<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="q10_treatment" value="بله، هم‌اکنون تحت درمانم." required><span>بله، هم‌اکنون تحت درمانم.</span></label>
+                    <label class="choice"><input type="radio" name="q10_treatment" value="قبلاً بودم و دوره تمام شده است." required><span>قبلاً بودم و دوره تمام شده است.</span></label>
+                    <label class="choice"><input type="radio" name="q10_treatment" value="خیر، سابقه‌ای ندارم." required><span>خیر، سابقه‌ای ندارم.</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۱۱.</span> میزان تعهد و انرژی خود را برای انجام تمرین‌ها، تغییر عادات و مسئولیت‌پذیری در قبال تصمیم‌هایتان از ۱ تا ۱۰ چقدر ارزیابی می‌کنید؟<span class="q-required">*</span></label>
+                <div class="scale-row">
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۱" required><span>۱</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۲" required><span>۲</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۳" required><span>۳</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۴" required><span>۴</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۵" required><span>۵</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۶" required><span>۶</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۷" required><span>۷</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۸" required><span>۸</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۹" required><span>۹</span></label>
+                    <label class="scale-opt"><input type="radio" name="q11_commitment" value="۱۰" required><span>۱۰</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label"><span class="q-num">۱۲.</span> سرمایه‌گذاری روی مسیر شغلی و رشد فردی چقدر در اولویت شش ماه آینده شماست؟<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="q12_priority" value="اولویت اول و قطعی" required><span>اولویت اول و قطعی</span></label>
+                    <label class="choice"><input type="radio" name="q12_priority" value="در صورت مناسب بودن شرایط و هزینه" required><span>در صورت مناسب بودن شرایط و هزینه</span></label>
+                    <label class="choice"><input type="radio" name="q12_priority" value="صرفاً جهت کنجکاوی و آشنایی" required><span>صرفاً جهت کنجکاوی و آشنایی</span></label>
+                </div>
+            </div>
+        </section>
+
+        <div class="intake-submit">
+            <p class="intake-submit-hint" id="submitHint">برای فعال شدن دکمه، به همه سوالات پاسخ دهید</p>
+            <button type="submit" class="btn-intake-submit" id="submitBtn" disabled>ارسال فرم</button>
+        </div>
+
+    </form>
+
+    <!-- Success panel (shown after submit) -->
+    <div class="intake-success hidden" id="intakeSuccess">
+        <div class="intake-success-icon">✓</div>
+        <p>
+            فرم شما ارسال شد.
+            به زودی با شما تماس می‌گیریم. با احترام.
+            <span class="intake-success-sign">دکتر مرضیه فیضی</span>
+        </p>
+        <a href="/">بازگشت به صفحه اصلی</a>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+    var form = document.getElementById('intakeForm');
+    var submitBtn = document.getElementById('submitBtn');
+    var success = document.getElementById('intakeSuccess');
+    var errorBox = document.getElementById('intakeError');
+
+    function refresh() {
+        submitBtn.disabled = !form.checkValidity();
+    }
+
+    form.addEventListener('input', refresh);
+    form.addEventListener('change', refresh);
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'در حال ارسال…';
+
+        var payload = {};
+        new FormData(form).forEach(function (value, key) {
+            payload[key] = value;
+        });
+
+        fetch('/intake/career', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        }).then(function (r) {
+            return r.json().then(function (d) { return {ok: r.ok, data: d}; });
+        }).then(function (res) {
+            if (res.ok && res.data.success) {
+                form.classList.add('hidden');
+                success.classList.remove('hidden');
+                success.scrollIntoView({behavior: 'smooth', block: 'center'});
+            } else {
+                throw new Error(res.data.error || 'خطا در ارسال');
+            }
+        }).catch(function (err) {
+            errorBox.textContent = 'ارسال فرم با خطا مواجه شد. لطفاً دوباره تلاش کنید.';
+            errorBox.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'ارسال فرم';
+            errorBox.scrollIntoView({behavior: 'smooth'});
+        });
+    });
+})();
+</script>
+{% endblock %}

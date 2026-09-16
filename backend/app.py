@@ -17,6 +17,7 @@ from chat_handler import send_message, get_history
 from admin_routes import admin_bp
 from shop_routes import shop_bp
 from panel_routes import panel_bp
+from intake_routes import intake_bp
 from rag_handler import load_knowledge_base
 
 
@@ -362,6 +363,7 @@ def create_app():
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(shop_bp, url_prefix='/shop')
     app.register_blueprint(panel_bp, url_prefix='/panel')
+    app.register_blueprint(intake_bp)
 
     # ── Session lifetime enforcement (۱ روز) ───────────────────────────────────
     # سشن‌های کاربر و ادمین پس از گذشت SESSION_MAX_AGE_SECONDS منقضی می‌شوند؛
@@ -415,20 +417,21 @@ def create_app():
             name = (request.form.get('name') or '').strip()
             phone = (request.form.get('phone') or '').strip()
             message = (request.form.get('message') or '').strip()
-            if name and phone:
-                from models import ContactRequest
-                cr = ContactRequest(name=name, phone=phone, message=message)
-                db.session.add(cr)
-                db.session.commit()
-                try:
-                    from email_service import send_contact_notification
-                    result = send_contact_notification(name, phone, message)
-                    if not result.get('success'):
-                        print(f"[EMAIL NOTIFICATION] Failed: {result.get('error')}")
-                except Exception as e:
-                    print(f"[EMAIL NOTIFICATION] Error: {e}")
-                return render_template('contact.html', success=True)
-            return render_template('contact.html', error=True)
+            website = (request.form.get('website') or '').strip()
+            if not name or not phone or website:
+                return render_template('contact.html', error=True)
+            from models import ContactRequest
+            cr = ContactRequest(name=name, phone=phone, message=message)
+            db.session.add(cr)
+            db.session.commit()
+            try:
+                from email_service import send_contact_notification
+                result = send_contact_notification(name, phone, message)
+                if not result.get('success'):
+                    print(f"[EMAIL NOTIFICATION] Failed: {result.get('error')}")
+            except Exception as e:
+                print(f"[EMAIL NOTIFICATION] Error: {e}")
+            return render_template('contact.html', success=True)
         return render_template('contact.html')
 
     @app.route('/assessment')

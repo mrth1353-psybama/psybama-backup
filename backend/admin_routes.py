@@ -7,6 +7,7 @@ from auth import admin_required
 from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product, WaaqAssessment
 from models import CareerKnotAssessment
 from models import WebinarRegistration
+from models import CareerIntake, OrgIntake
 from models import iran_now
 
 KNOT_WEBINAR_TITLE = 'ریشه‌یابی گره کور شغلی'
@@ -414,7 +415,67 @@ def get_stats():
         'total_contact_requests': ContactRequest.query.count(),
         'unread_contact_requests': ContactRequest.query.filter_by(is_read=False).count(),
         'pending_orders': pending,
+        'total_career_intakes': CareerIntake.query.count(),
+        'total_org_intakes': OrgIntake.query.count(),
     })
+
+
+@admin_bp.route('/career-intakes')
+@admin_required
+def list_career_intakes():
+    items = (CareerIntake.query
+             .order_by(CareerIntake.created_at.desc())
+             .all())
+    return jsonify({'intakes': [
+        {'id': i.id, 'name': i.q1_name, 'job': i.q4_job,
+         'created_at': i.created_at.isoformat() if i.created_at else None}
+        for i in items
+    ]})
+
+
+@admin_bp.route('/career-intakes/<int:item_id>')
+@admin_required
+def career_intake_detail(item_id):
+    item = CareerIntake.query.get_or_404(item_id)
+    return jsonify({'intake': item.to_dict()})
+
+
+@admin_bp.route('/career-intakes/<int:item_id>/delete', methods=['POST'])
+@admin_required
+def delete_career_intake(item_id):
+    item = CareerIntake.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify({'success': True})
+
+
+@admin_bp.route('/org-intakes')
+@admin_required
+def list_org_intakes():
+    items = (OrgIntake.query
+             .order_by(OrgIntake.created_at.desc())
+             .all())
+    return jsonify({'intakes': [
+        {'id': i.id, 'org': i.q1_org, 'filler': i.q2_filler,
+         'created_at': i.created_at.isoformat() if i.created_at else None}
+        for i in items
+    ]})
+
+
+@admin_bp.route('/org-intakes/<int:item_id>')
+@admin_required
+def org_intake_detail(item_id):
+    item = OrgIntake.query.get_or_404(item_id)
+    return jsonify({'intake': item.to_dict()})
+
+
+@admin_bp.route('/org-intakes/<int:item_id>/delete', methods=['POST'])
+@admin_required
+def delete_org_intake(item_id):
+    item = OrgIntake.query.get_or_404(item_id)
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify({'success': True})
 
 
 @admin_bp.route('/export')
@@ -678,6 +739,63 @@ def export_excel():
     ws_web.column_dimensions['E'].width = 32
     ws_web.column_dimensions['F'].width = 18
     ws_web.column_dimensions['G'].width = 22
+
+    # Sheet 10: Career Intake Forms (فرم پذیرش کوچینگ شغلی)
+    ws_career = wb.create_sheet('فرم پذیرش کوچینگ شغلی')
+    headers_car = ['شناسه', 'نام و نام خانوادگی', 'سن / وضعیت تأهل', 'شماره تماس و ایمیل',
+                   'شغل فعلی', 'شهر', 'میزان درآمد', 'گره کور شغلی', 'نتیجه ایده‌آل',
+                   'اقدامات قبلی', 'سابقه درمان', 'میزان تعهد', 'اولویت سرمایه‌گذاری', 'تاریخ ثبت']
+    ws_career.append(headers_car)
+    for cell in ws_career[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for i in CareerIntake.query.order_by(CareerIntake.created_at.desc()).all():
+        ws_career.append([
+            i.id, i.q1_name, i.q2_marital, i.q3_contact,
+            i.q4_job, i.q5_city, i.q6_income,
+            i.q7_knot, i.q8_ideal, i.q9_actions,
+            i.q10_treatment, i.q11_commitment, i.q12_priority,
+            str(i.created_at)[:19] if i.created_at else ''
+        ])
+
+    ws_career.column_dimensions['B'].width = 24
+    ws_career.column_dimensions['C'].width = 20
+    ws_career.column_dimensions['D'].width = 26
+    ws_career.column_dimensions['H'].width = 60
+    ws_career.column_dimensions['I'].width = 60
+    ws_career.column_dimensions['J'].width = 60
+    ws_career.column_dimensions['N'].width = 22
+
+    # Sheet 11: Org Intake Forms (فرم پذیرش کوچینگ سازمانی)
+    ws_org = wb.create_sheet('فرم پذیرش کوچینگ سازمانی')
+    headers_org = ['شناسه', 'نام سازمان', 'نام و سمت تکمیل‌کننده', 'زمینه فعالیت',
+                   'تعداد پرسنل', 'گردش مالی سالانه', 'بودجه مصوب', 'تمرکز کوچینگ',
+                   'چالش‌های رفتاری', 'ریشه چالش‌ها', 'KPI', 'آمادگی هیئت‌مدیره',
+                   'افق زمانی', 'تاریخ ثبت']
+    ws_org.append(headers_org)
+    for cell in ws_org[1]:
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = center_align
+
+    for i in OrgIntake.query.order_by(OrgIntake.created_at.desc()).all():
+        ws_org.append([
+            i.id, i.q1_org, i.q2_filler, i.q3_industry,
+            i.q4_staff, i.q5_turnover, i.q6_budget, i.q7_focus,
+            i.q8_symptoms, i.q9_root, i.q10_kpi, i.q11_readiness,
+            i.q12_horizon,
+            str(i.created_at)[:19] if i.created_at else ''
+        ])
+
+    ws_org.column_dimensions['B'].width = 28
+    ws_org.column_dimensions['C'].width = 26
+    ws_org.column_dimensions['G'].width = 22
+    ws_org.column_dimensions['I'].width = 60
+    ws_org.column_dimensions['J'].width = 60
+    ws_org.column_dimensions['K'].width = 60
+    ws_org.column_dimensions['M'].width = 22
 
     buf = io.BytesIO()
     wb.save(buf)

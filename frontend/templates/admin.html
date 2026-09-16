@@ -81,6 +81,14 @@
                 <div class="stat-number" id="statWebinar">—</div>
                 <div class="stat-label">ثبت‌نام وبینار</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statCareer">—</div>
+                <div class="stat-label">فرم پذیرش شغلی</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="statOrg">—</div>
+                <div class="stat-label">فرم پذیرش سازمانی</div>
+            </div>
         </div>
 
         <!-- Export button -->
@@ -96,6 +104,8 @@
             <button class="tab-btn" data-tab="conversations">💬 گفتگوها</button>
             <button class="tab-btn" data-tab="contacts">📩 درخواست مشاوره <span id="unreadBadge" class="hidden" style="background:var(--error);color:white;font-size:0.7rem;padding:1px 6px;border-radius:10px;margin-right:4px"></span></button>
             <button class="tab-btn" data-tab="leads">📝 لیدهای پرسشنامه</button>
+            <button class="tab-btn" data-tab="career-intakes">📋 فرم پذیرش شغلی</button>
+            <button class="tab-btn" data-tab="org-intakes">🏢 فرم پذیرش سازمانی</button>
             <button class="tab-btn" data-tab="webinars">🎓 ثبت‌نام وبینار</button>
             <button class="tab-btn" data-tab="knot-webinars">📊 ثبت‌نام وبینار گره کور شغلی</button>
             <button class="tab-btn" data-tab="landing-webinars">🌐 ثبت‌نام در وبینار از طریق لندینگ پیج</button>
@@ -213,6 +223,62 @@
                     <button class="btn btn-ghost btn-sm" id="btnCloseLeadDetails">✕ بستن</button>
                 </div>
                 <div id="leadDetailsContent" style="padding:1rem"></div>
+            </div>
+        </div>
+
+        <!-- Career Intake Forms Tab -->
+        <div class="tab-content" id="tab-career-intakes">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>نام و نام خانوادگی</th>
+                            <th>شغل فعلی</th>
+                            <th>تاریخ</th>
+                            <th>پاسخ‌ها</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="careerIntakesTableBody">
+                        <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="careerIntakeDetailsPanel" class="conv-viewer hidden" style="margin-top:1rem">
+                <div class="conv-viewer-header">
+                    <span id="careerIntakeDetailsTitle"></span>
+                    <button class="btn btn-ghost btn-sm" id="btnCloseCareerIntakeDetails">✕ بستن</button>
+                </div>
+                <div id="careerIntakeDetailsContent" style="padding:1rem"></div>
+            </div>
+        </div>
+
+        <!-- Org Intake Forms Tab -->
+        <div class="tab-content" id="tab-org-intakes">
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>نام سازمان</th>
+                            <th>تکمیل‌کننده فرم</th>
+                            <th>تاریخ</th>
+                            <th>پاسخ‌ها</th>
+                            <th>حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orgIntakesTableBody">
+                        <tr><td colspan="6" class="text-center text-muted" style="padding:2rem">در حال بارگذاری...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="orgIntakeDetailsPanel" class="conv-viewer hidden" style="margin-top:1rem">
+                <div class="conv-viewer-header">
+                    <span id="orgIntakeDetailsTitle"></span>
+                    <button class="btn btn-ghost btn-sm" id="btnCloseOrgIntakeDetails">✕ بستن</button>
+                </div>
+                <div id="orgIntakeDetailsContent" style="padding:1rem"></div>
             </div>
         </div>
 

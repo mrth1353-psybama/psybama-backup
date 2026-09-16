@@ -4,282 +4,327 @@
 
 {% block extra_css %}
 <style>
-/* ── Page Header ──────────────────────────────── */
-.page-hero {
-    background: linear-gradient(160deg, var(--pure-white) 0%, var(--cloud-blue) 60%, var(--mint-mist) 100%);
-    padding: 5rem 2rem 4rem;
-    text-align: center;
-}
+    /* ── About Hero ─────────────────────────────── */
+    .about-hero {
+        padding: 70px 32px;
+        background: var(--arctic-white);
+    }
+    .about-hero-inner {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 52px;
+        align-items: center;
+        max-width: 1120px;
+        margin: 0 auto;
+    }
+    .about-photo {
+        border-radius: 20px;
+        overflow: hidden;
+        aspect-ratio: 4/5;
+        box-shadow: var(--shadow-md);
+    }
+    .about-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .about-hero-text .lead {
+        font-size: 19px;
+        color: var(--slate-blue);
+        font-weight: 600;
+        line-height: 1.9;
+        margin-bottom: 18px;
+    }
+    .about-hero-text p {
+        font-size: 15.5px;
+        color: var(--text-muted);
+        line-height: 2.1;
+        margin-bottom: 16px;
+    }
+    .about-hero-text .credentials {
+        font-size: 15px;
+        color: var(--slate-blue);
+        line-height: 2.1;
+        margin: 22px 0 0;
+        padding-right: 18px;
+        border-right: 3px solid var(--sage-teal);
+    }
+    .about-hero-text .credentials span {
+        color: var(--text-muted);
+    }
 
-.page-hero h1 {
-    font-family: var(--font-title);
-    font-size: 1.5rem;
-    color: var(--slate-blue);
-    margin-bottom: 0.6rem;
-    line-height: 1.4;
-}
+    /* ── Pillars (روش من دو بخش دارد) ──────────── */
+    .pillars { padding: 80px 32px; }
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .section-head h2 {
+        font-family: var(--font-title);
+        font-size: 30px;
+        color: var(--slate-blue);
+        margin-bottom: 12px;
+    }
+    .section-head p { font-size: 15px; color: var(--text-muted); }
+    .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+    .pillar-card {
+        background: var(--cloud-blue);
+        border-radius: 16px;
+        padding: 34px;
+        border: 1px solid var(--border);
+    }
+    .pillar-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        margin-bottom: 18px;
+    }
+    .pillar-card:nth-child(1) .pillar-icon { background: linear-gradient(135deg, var(--ocean-blue), var(--slate-blue)); }
+    .pillar-card:nth-child(2) .pillar-icon { background: linear-gradient(135deg, var(--sage-teal), var(--slate-blue)); }
+    .pillar-icon svg { width: 26px; height: 26px; stroke: #fff; fill: none; stroke-width: 1.8; }
+    .pillar-card h3 { font-family: var(--font-title); font-size: 19px; color: var(--slate-blue); margin-bottom: 12px; }
+    .pillar-card p { font-size: 14.5px; color: var(--text-muted); line-height: 1.9; }
 
-.page-hero h1 em {
-    font-style: normal;
-    color: var(--ocean-blue);
-}
+    /* ── Credibility Strip (مثل صفحه اصلی) ─────── */
+    .credibility-strip { background: var(--warm-sand); padding: 36px 32px; }
+    .cred-inner { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    .cred-item {
+        background: #fff;
+        border-radius: 14px;
+        padding: 22px 30px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+        min-width: 210px;
+    }
+    .cred-icon {
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: var(--arctic-white);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cred-icon svg { width: 22px; height: 22px; stroke: var(--ocean-blue); fill: none; stroke-width: 1.8; }
+    .cred-item b { display: block; font-size: 20px; color: var(--slate-blue); font-weight: 800; margin-bottom: 4px; }
+    .cred-item span { font-size: 13px; color: var(--text-muted); }
 
-.page-hero p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    max-width: 560px;
-    margin: 0 auto;
-    line-height: 1.85;
-}
+    /* ── Story (مسیری که از ریاضی شروع کردم) ───── */
+    .story { padding: 90px 32px; background: var(--arctic-white); }
+    .story-text { max-width: 720px; margin: 0 auto; }
+    .story-text h2 {
+        font-family: var(--font-title);
+        font-size: 26px;
+        color: var(--slate-blue);
+        margin-bottom: 24px;
+        text-align: center;
+    }
+    .story-text p { font-size: 15px; color: var(--text-muted); line-height: 2.1; margin-bottom: 18px; }
+    .story-text .highlight { color: var(--ocean-blue); font-weight: 700; }
 
-/* ── About section ────────────────────────────── */
-.about-section {
-    padding: 4rem 2rem;
-    max-width: 760px;
-    margin: 0 auto;
-}
+    /* ── Closing CTA ────────────────────────────── */
+    .closing-cta {
+        padding: 48px 32px;
+        text-align: center;
+        background: linear-gradient(135deg, #122B4A 0%, #173A5E 55%, var(--ocean-blue) 100%);
+    }
+    .closing-cta h2 {
+        font-family: var(--font-title);
+        font-size: 24px;
+        color: #fff;
+        margin: 0 auto 28px;
+        max-width: 640px;
+        line-height: 1.8;
+    }
+    .btn-cta {
+        display: inline-block;
+        background: #fff;
+        color: var(--slate-blue);
+        padding: 16px 36px;
+        border-radius: 10px;
+        font-size: 15.5px;
+        font-weight: 700;
+    }
 
-/* Photo slot: shows the real photo once dropped in /static/images/;
-   falls back to the gradient monogram if the file is missing. */
-.photo-slot {
-    position: relative;
-    width: 340px;
-    height: 510px;
-    border-radius: var(--radius-xl);
-    margin: 0 auto 2rem;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-}
+    /* ── Credentials box (اعتبار علمی من) ───────── */
+    .credentials-box { padding: 70px 32px; background: #fff; }
+    .credentials-inner {
+        max-width: 800px;
+        margin: 0 auto;
+        background: var(--arctic-white);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 44px 48px;
+    }
+    .credentials-inner h2 {
+        font-family: var(--font-title);
+        font-size: 26px;
+        color: var(--slate-blue);
+        text-align: center;
+        margin-bottom: 28px;
+    }
+    .credentials-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+    .credentials-list li {
+        font-size: 14.5px;
+        color: var(--text-muted);
+        line-height: 1.9;
+        padding-right: 24px;
+        position: relative;
+    }
+    .credentials-list li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ocean-blue);
+        position: absolute;
+        right: 4px;
+        top: 0.75em;
+    }
+    .credentials-list li a {
+        color: var(--ocean-blue);
+        text-decoration: underline;
+        font-weight: 600;
+    }
+    .credentials-list li a:hover {
+        color: var(--sage-teal);
+    }
 
-.photo-slot-fallback {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-family: var(--font-title);
-    font-size: 3.5rem;
-}
-
-.photo-slot img {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.about-intro {
-    text-align: center;
-    margin-bottom: 3rem;
-}
-
-.about-intro h2 {
-    font-family: var(--font-title);
-    font-size: 1.15rem;
-    color: var(--slate-blue);
-    margin-bottom: 0.75rem;
-}
-
-.about-intro p {
-    color: var(--text-muted);
-    font-size: 0.92rem;
-    line-height: 1.9;
-}
-
-.about-belief {
-    background: var(--cloud-blue);
-    border-radius: var(--radius-xl);
-    padding: 1.5rem 1.75rem;
-    margin: 2rem 0;
-    color: var(--slate-blue);
-    font-size: 0.95rem;
-    line-height: 1.9;
-    border-inline-start: 4px solid var(--ocean-blue);
-}
-
-/* ── Brand story ───────────────────────────────── */
-.story-section {
-    background: var(--warm-sand);
-    border-top: 1px solid var(--warm-sand-border);
-    border-bottom: 1px solid var(--warm-sand-border);
-    padding: 4rem 2rem;
-}
-
-.story-inner {
-    max-width: 680px;
-    margin: 0 auto;
-}
-
-.story-inner h2 {
-    font-family: var(--font-title);
-    font-size: 1.15rem;
-    color: var(--slate-blue);
-    margin-bottom: 1.75rem;
-    text-align: center;
-}
-
-.story-inner p {
-    color: var(--text-primary);
-    font-size: 0.95rem;
-    line-height: 2;
-    margin-bottom: 1.25rem;
-}
-
-.story-path {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-top: 2.5rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-}
-
-.story-path span {
-    font-family: var(--font-title);
-    font-size: 0.9rem;
-    color: var(--ocean-blue);
-    background: var(--cloud-blue);
-    padding: 0.5rem 1.1rem;
-    border-radius: 20px;
-}
-
-.story-path i {
-    color: var(--text-muted);
-    font-style: normal;
-}
-
-/* ── Credentials ───────────────────────────────── */
-.credentials-section {
-    max-width: 860px;
-    margin: 4rem auto;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    background: var(--ocean-blue);
-    border-radius: var(--radius-xl);
-}
-
-.credentials-section h2 {
-    font-family: var(--font-title);
-    font-size: 1.05rem;
-    color: var(--pure-white);
-    margin-bottom: 1.5rem;
-}
-
-.credentials-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    font-size: 0.9rem;
-    color: var(--cloud-blue);
-}
-
-.credentials-list li {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.credentials-list li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--pure-white);
-    flex-shrink: 0;
-}
-
-.about-cta {
-    text-align: center;
-    padding: 0 2rem 5rem;
-}
-
-.about-cta a {
-    display: inline-block;
-}
+    /* ── Responsive ─────────────────────────────── */
+    @media (max-width: 860px) {
+        .about-hero-inner { grid-template-columns: 1fr; }
+        .pillar-grid { grid-template-columns: 1fr; }
+        .credentials-inner { padding: 32px 24px; }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Page Hero -->
-<section class="page-hero">
-    <h1>متخصص <em>سلامت روان در محیط کار</em></h1>
-    <p>دکترای روان شناسی بالینی با تخصص در حوزه روانشناسی سازمانی. گره‌های کور شغلی را ریشه‌یابی می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم.</p>
-</section>
-
-<!-- Bio -->
-<section class="about-section">
-    <!--
-        محل عکس: صحنه «تخصص» از راهنمای عکاسی برندگاید.
-        فایل را با نام about-portrait.jpg و ابعاد ۱۲۰۰×۱۸۰۰ پیکسل (نسبت ۲:۳، عمودی)
-        در مسیر frontend/static/images/ قرار دهید — خودکار جایگزین این جعبه می‌شود.
-    -->
-    <div class="photo-slot">
-        <div class="photo-slot-fallback">س</div>
-        <img src="/static/images/about-portrait.jpg" alt="دکتر مرضیه فیضی" onerror="this.style.display='none'">
-    </div>
-    <div class="about-intro">
-        <h2>مرضیه فیضی هستم</h2>
-        <p>
-            دکترای روان‌شناسی با تمرکز بر روان‌شناسی سازمانی از دانشگاه علوم پزشکی شهید بهشتی، ساکن ایران.
-            قوت اصلی‌ام تبدیل علم پیچیده روان‌شناسی به زبان ساده و قابل‌استفاده است — و مهارت انسانی‌ام
-            دیدن الگوهایی است که دیگران نمی‌بینند. این دو با هم به من کمک می‌کنند ریشه واقعی مشکل را پیدا کنم،
-            نه فقط علائمش را.
-        </p>
-    </div>
-    <div class="about-belief">
-        <div style="text-align:center;">
-            عمیقاً باور دارم که هر انسانی — حتی در سخت‌ترین شرایط — پتانسیل حرکت دارد.
-            <div style="margin-top:0.5rem; font-weight:bold;">این باور هر تصمیم حرفه‌ای‌ام را هدایت می‌کند.</div>
+<section class="about-hero">
+    <div class="about-hero-inner">
+        <div class="about-photo">
+            <img src="/static/images/5.jpg" alt="دکتر مرضیه فیضی">
+        </div>
+        <div class="about-hero-text">
+            <p class="lead">شما الان در نقطه‌ای از مسیر شغلی‌تان گیر کرده‌اید — می‌دانید چیزی درست نیست، اما نمی‌دانید از کجا شروع کنید یا چطور آن را تغییر دهید.</p>
+            <p>شاید احساس می‌کنید توانایی واقعی‌تان دیده نمی‌شود، کار و تلاش می‌کنید، اما نتیجه‌ای که سزاوارش هستید نمی‌گیرید. به شما کمک می‌کنیم که ریشه این مشکل را پیدا کنید و با یک نقشه راه در مسیر درستی گام بردارید.</p>
+            <div class="credentials">
+                من دکتر مرضیه فیضی هستم. بیش از ۱۰ سال است به‌عنوان گروه‌درمانگر و مشاور فعالیت می‌کنم. دکترای روان‌شناسی بالینی از دانشگاه علوم پزشکی شهید بهشتی دارم و متمرکز بر روان‌شناسی سازمانی و کوچینگ شغلی هستم. کار من این است که گره‌های کور شغلی را ریشه‌یابی و حل کنم — نه با حدس، با علم عمیق روان‌شناسی و مهارت‌های کوچینگ. تاکنون بیش از ۵۰۰۰ جلسه مشاوره فردی و سازمانی برگزار کرده‌ام. شماره نظام روان‌شناسی من 35599 است.
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Brand Story -->
-<section class="story-section">
-    <div class="story-inner">
-        <h2>لحظه تحول</h2>
-        <p>خیلی از متخصصانی که پیشم می‌آیند یک چیز مشترک دارند — سخت کار کرده‌اند، چیزهای زیادی امتحان کرده‌اند، اما هنوز گم‌اند. می‌دانند چیزی درست نیست، اما نمی‌دانند کجا.</p>
-        <p>من این حس را می‌شناسم — نه از کتاب، بلکه از تجربه.</p>
-        <p>دو سال در دانشگاه علوم پزشکی کار کردم. حجم اثرگذاری‌ام آن‌قدر بود که حتی مدیران باورشان نمی‌شد. موقع تمدید قرارداد — رد شدم. می‌توانستم تسلیم شرایط شوم. اما یک سوال پرسیدم: پتانسیل واقعی‌ام کجاست؟</p>
-        <p>دکترا گرفتم. پیشنهاد هیئت علمی را رد کردم. کسب‌وکار خودم را ساختم — در کرونا، در جنگ، در هر شرایطی. نه به‌خاطر اینکه شرایط آسان بود، بلکه چون یاد گرفتم مسیرم را در همین شرایط ببینم.</p>
-        <p>حالا همین را به متخصصان ایرانی یاد می‌دهم.</p>
-
-        <div class="story-path">
-            <span>پذیرش</span>
-            <i>←</i>
-            <span>دیدن پتانسیل</span>
-            <i>←</i>
-            <span>ساختن در همین شرایط</span>
+<section class="pillars">
+    <div class="section-head">
+        <h2>روش من دو بخش دارد</h2>
+        <p>ترکیبی که کمتر جایی پیدا می‌کنید</p>
+    </div>
+    <div class="pillar-grid">
+        <div class="pillar-card">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <h3>روان‌شناسی</h3>
+            <p>لایه‌های عمیق مشکل شما را می‌بینم و الگوهایی را شناسایی می‌کنم که خودتان شاید متوجه‌شان نشده‌اید.</p>
+        </div>
+        <div class="pillar-card">
+            <div class="pillar-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-5.28 3.06-3.06 5.28 5.28-3.06 3.06-5.28z"/></svg></div>
+            <h3>کوچینگ</h3>
+            <p>از تجربه واقعی، نه فقط تئوری، مسیر مشخص و گام‌به‌گام می‌سازم؛ می‌دانید دقیقاً چه باید بکنید و از کجا شروع کنید.</p>
         </div>
     </div>
 </section>
 
-<!-- Credentials -->
-<section class="credentials-section">
-    <h2>اعتبار علمی من</h2>
-    <ul class="credentials-list">
-        <li>دکترای روان‌شناسی بالینی، تمرکز بر روان‌شناسی سازمانی — دانشگاه علوم پزشکی شهید بهشتی</li>
-        <li>نویسنده کتاب مدیر هوشمند؛ صفر تا صد هوش هیجانی برای مدیران</li>
-        <li>نویسنده کتاب زندگی هوشمندانه؛ گام‌های حساب‌شده تا خلق دستاورد</li>
-        <li>همکاری در ترجمه کتاب «درمانگری تخصصی در سلامت، آموزش و هنر خلاق»، انتشارات آموزشی و پژوهشی بوعلی</li>
-        <li>مدیر وبسایت روانِ بیدار — <a href="https://www.ravanebidar.com" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline;">ravanebidar.com</a></li>
-        <li>بنیان‌گذار سای‌باما، دستیار هوشمند فارسی برای سلامت روان در محیط کار</li>
-        <li>بیش از ۵۰۰۰ جلسه مشاوره فردی و سازمانی — با بیش از ۱۰ سال تجربه</li>
-        <li>مقالات علمی دکتر مرضیه فیضی در Google Scholar قابل مشاهده است.</li>
-    </ul>
+<section class="credibility-strip">
+    <div class="wrap cred-inner">
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <b>۵۰۰۰+</b><span>جلسه مشاوره فردی و سازمانی</span>
+        </div>
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div>
+            <b>دکترای روان‌شناسی بالینی</b><span>دانشگاه علوم پزشکی شهید بهشتی</span>
+        </div>
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div>
+            <b>۱۰+</b><span>سال فعالیت به‌عنوان گروه‌درمانگر و مشاور</span>
+        </div>
+    </div>
 </section>
 
-<!-- CTA -->
-<section class="about-cta">
-    <a href="/chat" class="btn btn-primary btn-lg">شروع گفتگو با سای‌باما</a>
+<section class="story">
+    <div class="story-text">
+        <h2>مسیری که از ریاضی شروع کردم</h2>
+        <p>تا سی سالگی، مسیر من ریاضی بود. تصمیم گرفتم آن را تغییر دهم — چون بالاخره فهمیدم مسیر واقعی‌ام کجاست.</p>
+        <p>کارشناسی ارشد روان‌شناسی گرفتم و در یک دانشگاه علوم پزشکی مشغول به کار شدم. آنجا بود که برای اولین‌بار دیدم چقدر می‌توانم تأثیرگذار باشم.</p>
+        <p>وقتی قراردادم تمدید نشد، احساس کردم یک فرصت بزرگ را از دست داده‌ام. اما به‌جای توقف، یک سؤال دیگر پرسیدم: <span class="highlight">پتانسیل واقعی‌ام کجاست؟</span></p>
+        <p>دوباره درس خواندم. در آزمون دکترا شرکت کردم و در دانشگاه علوم پزشکی شهید بهشتی پذیرفته شدم. همان‌جا فهمیدم فرصت‌ها آن‌قدر که فکر می‌کردم محدود نبودند.</p>
+        <p>در کنار تحصیل، مشاوره دادن به دیگران و فعالیت در گروه‌درمانی‌ها را جدی‌تر دنبال کردم. این تجربه، الگوهای رفتاری تیم‌ها و سازمان‌ها را به من نشان داد — اینکه چطور یک تیم به موفقیت می‌رسد یا در جا می‌زند. همین شناخت، مرا به‌سمت روان‌شناسی سازمانی و کوچینگ شغلی کشاند.</p>
+        <p>امروز، کار من ترکیب همین دو تخصص است: علم روان‌شناسی برای دیدن ریشه واقعی مشکل، و کوچینگ برای ساختن مسیر مشخص به‌سمت جلو.</p>
+        <p class="highlight">همان‌طور که من مسیرم را در سخت‌ترین شرایط پیدا کردم، معتقدم شما هم می‌توانید.</p>
+    </div>
 </section>
 
+<section class="closing-cta">
+    <h2>اگر همین امروز شروع نکنید، همین سردرگمی و ایستادن در جای ثابت ادامه پیدا می‌کند.<br>اما اگر ریشه مشکل مشخص شود، مسیر هم مشخص می‌شود.</h2>
+    <a class="btn-cta" href="/intake/career">رزرو مشاوره شغلی</a>
+</section>
+
+<section class="credentials-box">
+    <div class="credentials-inner">
+        <h2>اعتبار علمی من</h2>
+        <ul class="credentials-list">
+            <li>دکترای روان‌شناسی بالینی، تمرکز بر روان‌شناسی سازمانی — دانشگاه علوم پزشکی شهید بهشتی</li>
+            <li>نویسنده کتابِ مدیر هوشمند؛ صفر تا صد هوش هیجانی برای مدیران</li>
+            <li>نویسنده کتابِ زندگی هوشمندانه؛ گام‌های حساب‌شده تا خلق دستاورد</li>
+            <li>همکاری در ترجمه کتاب «درمانگری تخصصی در سلامت، آموزش و هنر خلاق»، انتشارات آموزشی و پژوهشی بوعلی</li>
+            <li>مدیر وبسایت روانِ بیدار — <a href="https://ravanebidar.ir/" target="_blank" rel="noopener noreferrer">ravanebidar.ir</a></li>
+            <li>بنیان‌گذار سای‌باما، دستیار هوشمند فارسی برای سلامت روان در محیط کار</li>
+            <li>بیش از ۵۰۰۰ جلسه مشاوره فردی و سازمانی — با بیش از ۱۰ سال تجربه</li>
+            <li>مقالات … ، pubmed ، ISI و علمی دکتر مرضیه فیضی در <a href="https://scholar.google.com/citations?user=c32LnvIAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Google Scholar</a> قابل مشاهده است.</li>
+        </ul>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}
+<footer style="background: #14243D; color: #B9C6D6; padding: 60px 32px 28px; font-family: var(--font-body); direction: rtl;">
+    <div style="max-width: 1120px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 40px;">
+        <div>
+            <p style="font-size: 11px; color: #6E8194; margin-bottom: 6px; letter-spacing: .5px;">سای‌باما</p>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">دکتر مرضیه فیضی</h4>
+            <p style="font-size: 12px; color: #6E8194; margin-bottom: 4px;">روان‌شناس بالینی و کوچ مسیر شغلی؛ برای متخصصان و مدیران</p>
+            <p style="font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">همراه امن سلامت روان در محیط کار</p>
+            <div style="display: flex; gap: 14px; margin-top: 14px;">
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">Instagram</a>
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">LinkedIn</a>
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">Telegram</a>
+            </div>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">خدمات</h4>
+            <a href="/intake/career" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">رزرو مشاوره شغلی</a>
+            <a href="/intake/organizational" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">خدمات سازمانی</a>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">لینک‌ها</h4>
+            <a href="/about" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">درباره من</a>
+            <a href="#" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">مقالات</a>
+            <a href="#" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">تماس</a>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">ارتباط با ما</h4>
+            <a href="mailto:info@drfeyzi.com" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">info@drfeyzi.com</a>
+            <a href="tel:+98000000000" dir="ltr" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px; text-align: right;">۰۲۱-۰۰۰۰۰۰۰</a>
+        </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,.08); padding-top: 22px; max-width: 1120px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; text-align: center; font-size: 13px; color: #6E8194;">
+        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=774044&Code=Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=774044&Code=Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM' alt='نماد اعتماد الکترونیکی' style='cursor:pointer; max-width:90px;' code='Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM'></a>
+        <span>شماره نظام روان‌شناسی: ۳۵۵۹۹ — همیشه جاری باشید...</span>
+    </div>
+</footer>
 {% endblock %}

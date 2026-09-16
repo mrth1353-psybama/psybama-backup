@@ -77,3 +77,37 @@ def send_webinar_registration_notification(name: str, email: str, phone: str,
         '\nجزئیات کامل در پنل مدیریت بخش «ثبت‌نامی‌های وبینار» موجود است.'
     )
     return _send(subject, body)
+
+
+def send_career_intake_notification(answers: dict) -> dict:
+    lines = []
+    for item in answers['answers']:
+        val = item['a']
+        if len(val) > 500:
+            val = val[:500] + '…'
+        lines.append(f"{item['q']}:\n  {val}")
+    body = '\n\n'.join(lines)
+    subject = f'فرم پذیرش کوچینگ شغلی جدید — {answers["answers"][0]["a"]}'
+    full_body = (
+        'فرم جدید پذیرش کوچینگ شغلی در سایت سای‌باما ثبت شد.\n\n'
+        + body
+        + '\n\nجزئیات کامل در پنل مدیریت بخش «فرم پذیرش شغلی» موجود است.'
+    )
+    return _send(subject, full_body)
+
+
+def send_org_intake_notification(answers: dict) -> dict:
+    lines = []
+    for item in answers['answers']:
+        val = item['a']
+        if len(val) > 500:
+            val = val[:500] + '…'
+        lines.append(f"{item['q']}:\n  {val}")
+    body = '\n\n'.join(lines)
+    subject = f'فرم پذیرش کوچینگ سازمانی جدید — {answers["answers"][0]["a"]}'
+    full_body = (
+        'فرم جدید پذیرش کوچینگ سازمانی در سایت سای‌باما ثبت شد.\n\n'
+        + body
+        + '\n\nجزئیات کامل در پنل مدیریت بخش «فرم پذیرش سازمانی» موجود است.'
+    )
+    return _send(subject, full_body)

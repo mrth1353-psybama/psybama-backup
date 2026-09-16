@@ -1,562 +1,589 @@
 {% extends "base.html" %}
 
-{% block title %}سای‌باما — متخصص سلامت روان در محیط کار{% endblock %}
+{% block title %}سای‌باما — دکتر مرضیه فیضی | روان‌شناسی سازمان و کسب‌وکار{% endblock %}
 
 {% block extra_css %}
 <style>
-/* ── Page Header ──────────────────────────────── */
-.page-hero {
-    background: linear-gradient(160deg, #3D5166 0%, #1D5FA6 100%);
-    padding: 2rem 2rem 2rem;
-    text-align: center;
-}
-
-.page-hero h1 {
-    font-family: var(--font-title);
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    color: white;
-    margin-bottom: 0;
-    line-height: 1.3;
-}
-
-.page-hero h1 em {
-    font-style: normal;
-    color: var(--ocean-blue);
-}
-
-.page-hero p {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.75);
-    margin-top: 0.5rem;
-}
-
-/* ── Service Cards ────────────────────────────── */
-.services-section {
-    padding: 1.5rem 2rem 4rem;
-    max-width: 1060px;
-    margin: 0 auto;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.75rem;
-    margin-top: 1rem;
-}
-
-.service-card {
-    background: var(--pure-white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-xl);
-    padding: 1.25rem 1.25rem;
-    transition: box-shadow 0.25s, transform 0.25s;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.service-card .btn {
-    margin-top: auto;
-    align-self: center;
-}
-
-.service-card::before {
-    content: '';
-    position: absolute;
-    top: 0; right: 0;
-    width: 100%; height: 4px;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-}
-
-.service-card.blue::before   { background: var(--ocean-blue); }
-.service-card.blue           { background: var(--cloud-blue); }
-.service-card.teal::before   { background: var(--sage-teal); }
-.service-card.teal           { background: var(--mint-mist); }
-.service-card.coral::before  { background: var(--soft-coral); }
-.service-card.coral          { background: var(--coral-mist); }
-
-.service-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-4px);
-}
-
-.service-card h3 {
-    font-family: var(--font-title);
-    font-size: 1rem;
-    color: var(--slate-blue);
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
-}
-
-.service-card p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    line-height: 1.75;
-    margin-bottom: 1rem;
-}
-
-.service-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.7rem;
-    border-radius: 20px;
-    background: var(--arctic-white);
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-}
-
-/* ── Featured: AI Chatbot ─────────────────────── */
-.chatbot-feature {
-    background: linear-gradient(135deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
-    border-radius: var(--radius-xl);
-    padding: 4rem 3rem;
-    margin: 4rem auto;
-    max-width: 1060px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    align-items: center;
-    color: white;
-}
-
-.chatbot-feature-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.35);
-    border-radius: 20px;
-    padding: 0.3rem 1rem;
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 1.25rem;
-    letter-spacing: 0.5px;
-}
-
-.chatbot-feature h2 {
-    font-family: var(--font-title);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: white;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-}
-
-.chatbot-feature p {
-    font-size: 0.95rem;
-    color: rgba(255,255,255,0.85);
-    line-height: 1.85;
-    margin-bottom: 2rem;
-}
-
-.chatbot-feature-points {
-    list-style: none;
-    margin-bottom: 2.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-}
-
-.chatbot-feature-points li {
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.9);
-}
-
-.chatbot-feature-points li::before {
-    content: '✓';
-    width: 20px; height: 20px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    flex-shrink: 0;
-}
-
-.btn-white {
-    background: white;
-    color: var(--ocean-blue);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-}
-
-.btn-white:hover {
-    filter: brightness(0.96);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-
-.btn-white-outline {
-    background: transparent;
-    color: white;
-    border: 1.5px solid rgba(255,255,255,0.5);
-}
-
-.btn-white-outline:hover {
-    background: rgba(255,255,255,0.12);
-}
-
-/* Chat Preview Box */
-.chat-preview {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: var(--radius-xl);
-    padding: 1.5rem;
-    backdrop-filter: blur(8px);
-}
-
-.chat-preview-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-}
-
-.chat-preview-logo {
-    width: 36px; height: 36px;
-    background: white;
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ocean-blue);
-    font-family: var(--font-title);
-    font-size: 0.95rem;
-    font-weight: bold;
-}
-
-.chat-preview-info h4 {
-    color: white;
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.chat-preview-info span {
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.65);
-}
-
-.online-dot-white {
-    width: 8px; height: 8px;
-    background: var(--success);
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 4px;
-}
-
-.preview-messages {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-    margin-bottom: 1.25rem;
-}
-
-.preview-msg {
-    max-width: 85%;
-    padding: 0.7rem 1rem;
-    border-radius: var(--radius-lg);
-    font-size: 0.82rem;
-    line-height: 1.6;
-}
-
-.preview-msg.bot {
-    background: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.95);
-    align-self: flex-start;
-    border-bottom-right-radius: 4px;
-}
-
-.preview-msg.user {
-    background: rgba(255,255,255,0.9);
-    color: var(--slate-blue);
-    align-self: flex-end;
-    border-bottom-left-radius: 4px;
-}
-
-.preview-input {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: var(--radius-md);
-    padding: 0.65rem 1rem;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.5);
-    text-align: right;
-}
-
-/* ── Meet Dr. Feyzi ────────────────────────────── */
-.meet-section {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 1rem 2rem 4rem;
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.meet-photo {
-    position: relative;
-    width: 280px;
-    height: 420px;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    flex-shrink: 0;
-    box-shadow: var(--shadow-md);
-}
-
-.meet-photo-fallback {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, var(--ocean-blue) 0%, var(--sage-teal) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-family: var(--font-title);
-    font-size: 3rem;
-}
-
-.meet-photo img {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.meet-text {
-    flex: 1;
-    min-width: 260px;
-    max-width: 480px;
-}
-
-.meet-text h2 {
-    font-family: var(--font-title);
-    font-size: 1.3rem;
-    color: var(--slate-blue);
-    margin-bottom: 0.75rem;
-}
-
-.meet-text p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.85;
-    margin-bottom: 1.25rem;
-}
-
-/* ── Assessment Section ───────────────────────── */
-.assessment-section {
-    background: linear-gradient(160deg, #3D5166 0%, #1D5FA6 100%);
-    padding: 5rem 2rem;
-    text-align: center;
-}
-
-.assessment-section .inner {
-    max-width: 700px;
-    margin: 0 auto;
-}
-
-.assessment-section h2 {
-    font-family: var(--font-title);
-    font-size: 1.65rem;
-    color: white;
-    margin-bottom: 0.85rem;
-}
-
-.assessment-section p {
-    color: rgba(255,255,255,0.8);
-    font-size: 0.95rem;
-    line-height: 1.85;
-    margin-bottom: 2rem;
-}
-
-.assessment-steps {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
-    flex-wrap: wrap;
-}
-
-.assessment-step {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.85rem;
-    color: white;
-}
-
-.assessment-step-num {
-    width: 28px; height: 28px;
-    background: white;
-    color: var(--ocean-blue);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.75rem;
-    flex-shrink: 0;
-}
-
-/* ── Responsive ───────────────────────────────── */
-@media (max-width: 720px) {
-    .chatbot-feature {
-        grid-template-columns: 1fr;
-        padding: 2.5rem 1.5rem;
-        gap: 2rem;
+    :root {
+        --p-ocean: #1D5FA6;
+        --p-teal: #2E8B7A;
+        --p-slate: #3D5166;
+        --p-navy: #14243D;
+        --p-midnight: #122B4A;
+        --p-deepteal: #1F5F52;
+        --p-arctic: #F7F9FC;
+        --p-sand: #F5F0E8;
+        --p-coral: #E8927C;
+        --p-ink: #182430;
+        --p-muted: #6E8296;
     }
-    .chat-preview { display: none; }
-    .services-section { padding: 3rem 1.25rem; }
-    .page-hero { padding: 3.5rem 1.25rem 3rem; }
-}
+
+    .home * { box-sizing: border-box; }
+
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
+
+    /* ── HERO ─────────────────────────────────────── */
+    .hero {
+        position: relative;
+        background: radial-gradient(120% 140% at 75% 20%, var(--p-ocean) 0%, var(--p-slate) 45%, var(--p-navy) 100%);
+        color: #fff;
+        overflow: hidden;
+        padding: 40px 32px 90px;
+    }
+
+    .hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+        background-size: 22px 22px;
+        opacity: .5;
+        pointer-events: none;
+    }
+
+    .hero-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        position: relative;
+        text-align: center;
+    }
+
+    .eyebrow-tag {
+        display: inline-block;
+        font-size: 14px;
+        color: #CFE0F2;
+        font-weight: 500;
+        border: 1px solid rgba(255,255,255,.25);
+        padding: 6px 16px;
+        border-radius: 20px;
+        margin-bottom: 28px;
+    }
+
+    .hero-text-col .eyebrow-tag { margin-bottom: 20px; }
+
+    .hero h1 {
+        font-family: var(--font-title);
+        font-weight: 700;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        line-height: 1.35;
+        color: #ffffff;
+        text-shadow: 0 2px 16px rgba(10, 27, 52, 0.5);
+        margin: 0 auto 22px;
+    }
+
+    .hero-text-col h1 { margin: 0 0 18px; max-width: 100%; }
+
+    .hero p {
+        font-size: 19px;
+        color: #D6E3F0;
+        max-width: 560px;
+        margin: 0 auto 40px;
+        font-weight: 400;
+    }
+
+    .hero-text-col p { margin: 0 0 32px; max-width: 100%; }
+
+    .hero-cta {
+        display: inline-flex;
+        gap: 16px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .hero-text-col .hero-cta { justify-content: flex-start; }
+
+    .btn-primary {
+        background: #fff;
+        color: var(--p-navy);
+        padding: 15px 32px;
+        border-radius: 9px;
+        font-weight: 700;
+        font-size: 16px;
+        display: inline-block;
+    }
+
+    .btn-ghost {
+        border: 1px solid rgba(255,255,255,.4);
+        color: #fff;
+        padding: 15px 32px;
+        border-radius: 9px;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .btn-small {
+        display: inline-block;
+        background: var(--p-navy);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        width: fit-content;
+    }
+
+    /* ── HERO SPLIT (photo + text) ────────────────── */
+    .hero-split {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 48px;
+        align-items: center;
+        text-align: right;
+    }
+    .hero-text-col { text-align: right; }
+
+    .hero-photo {
+        aspect-ratio: 4/5;
+        border-radius: 20px;
+        background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #CFE0F2;
+        font-size: 13px;
+        padding: 20px;
+        text-align: center;
+        line-height: 1.9;
+        overflow: hidden;
+    }
+
+    .hero-photo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+        display: block;
+    }
+
+    /* ── PAIN BLOCK ───────────────────────────────── */
+    .pain-block { background: #fff; padding: 56px 32px; }
+    .pain-inner { max-width: 760px; text-align: center; }
+    .pain-inner p { font-size: 19px; color: var(--p-slate); line-height: 1.9; font-weight: 500; }
+
+    /* ── CREDIBILITY STRIP ────────────────────────── */
+    .credibility-strip { background: var(--p-sand); padding: 36px 32px; }
+    .cred-inner { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    .cred-item {
+        background: #fff;
+        border-radius: 14px;
+        padding: 22px 30px;
+        text-align: center;
+        box-shadow: 0 6px 18px rgba(20,36,61,.06);
+        min-width: 210px;
+    }
+    .cred-icon {
+        width: 42px;
+        height: 42px;
+        margin: 0 auto 12px;
+        border-radius: 50%;
+        background: var(--p-arctic);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cred-icon svg { width: 22px; height: 22px; stroke: var(--p-ocean); fill: none; stroke-width: 1.8; }
+    .cred-item b { display: block; font-size: 20px; color: var(--p-navy); font-weight: 800; margin-bottom: 4px; }
+    .cred-item span { font-size: 13px; color: var(--p-muted); }
+
+    /* ── GATES (از کجا شروع کنید؟) ───────────────── */
+    .gates { padding: 90px 32px 70px; }
+    .section-head { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+    .section-head h2 { font-size: 32px; font-weight: 800; color: var(--p-navy); margin-bottom: 14px; }
+    .section-head p { color: var(--p-muted); font-size: 16px; }
+    .gate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; max-width: 1120px; margin: 0 auto; }
+    .gate-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 34px 28px;
+        border: 1px solid var(--p-border, #E7ECF1);
+        transition: transform .2s ease;
+    }
+    .gate-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        color: #fff;
+    }
+    .gate-icon svg { width: 40px; height: 40px; stroke: #fff; fill: none; stroke-width: 1.8; }
+    .gate-card:nth-child(1) .gate-icon { background: linear-gradient(135deg, var(--p-ocean), var(--p-slate)); }
+    .gate-card:nth-child(2) .gate-icon { background: linear-gradient(135deg, var(--p-teal), var(--p-slate)); }
+    .gate-card:nth-child(3) .gate-icon { background: linear-gradient(135deg, var(--p-midnight), var(--p-ocean)); }
+    .gate-card h3 { font-size: 19px; font-weight: 700; margin-bottom: 10px; color: var(--p-navy); }
+    .gate-card p { font-size: 14.5px; color: var(--p-muted); margin-bottom: 18px; }
+    .gate-link { font-size: 14px; font-weight: 700; color: var(--p-ocean); }
+
+    /* ── FIT SECTION ──────────────────────────────── */
+    .fit-section { padding: 80px 32px; background: var(--p-arctic); }
+    .fit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1120px; margin: 0 auto; }
+    .fit-card { border-radius: 16px; padding: 32px 30px; background: #fff; border: 1px solid #E7ECF1; }
+    .fit-card h4 { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
+    .fit-yes h4 { color: var(--p-teal); }
+    .fit-no h4 { color: var(--p-slate); }
+    .fit-card ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .fit-card li { font-size: 14.5px; color: var(--p-muted); padding-right: 20px; position: relative; }
+    .fit-yes li::before { content: "✓"; position: absolute; right: 0; color: var(--p-teal); font-weight: 700; }
+    .fit-no li::before { content: "–"; position: absolute; right: 0; color: var(--p-muted); font-weight: 700; }
+    .fit-note { font-size: 13px; color: var(--p-muted); margin-top: 18px; line-height: 1.9; }
+
+    /* ── SERVICES ─────────────────────────────────── */
+    .services { padding: 60px 32px; background: #fff; }
+    .service-row {
+        max-width: 1120px;
+        margin: 0 auto 28px;
+        border-radius: 20px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        align-items: stretch;
+        min-height: 280px;
+    }
+    .service-row.reverse { grid-template-columns: 0.9fr 1.1fr; }
+    .service-text { padding: 48px; display: flex; flex-direction: column; justify-content: center; }
+    .service-tag { font-size: 16px; font-weight: 800; color: var(--p-teal); margin-bottom: 12px; }
+    .service-text h3 { font-size: 26px; font-weight: 800; color: var(--p-navy); margin-bottom: 14px; }
+    .service-text p { color: var(--p-muted); font-size: 15px; margin-bottom: 24px; max-width: 420px; }
+    .service-visual {
+        position: relative;
+        background: linear-gradient(135deg, var(--p-ocean) 0%, var(--p-slate) 60%, var(--p-navy) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 15px;
+        padding: 0;
+        min-height: 100%;
+        aspect-ratio: 16/10;
+        overflow: hidden;
+    }
+    .service-visual-portrait {
+        aspect-ratio: 4/5;
+    }
+    .service-visual img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    .service-row.reverse .service-visual {
+        background: linear-gradient(135deg, var(--p-teal) 0%, var(--p-slate) 65%, var(--p-navy) 100%);
+    }
+
+    /* ── SAYBAMA MINI ─────────────────────────────── */
+    .saybama-mini {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 20px 28px;
+        border-radius: 12px;
+        background: #F5F7FA;
+        border: 1px solid #E7ECF1;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .saybama-mini span { font-size: 12.5px; font-weight: 700; color: var(--p-muted); }
+    .saybama-mini p { font-size: 13.5px; color: var(--p-muted); flex: 1; min-width: 220px; margin: 0; }
+    .saybama-mini a { font-size: 13px; font-weight: 700; color: var(--p-ocean); white-space: nowrap; }
+
+    /* ── WARM QUOTE ───────────────────────────────── */
+    .quote-section { background: var(--p-sand); padding: 80px 32px; text-align: center; }
+    .quote-section blockquote {
+        max-width: 680px;
+        margin: 0 auto;
+        font-size: 23px;
+        font-weight: 600;
+        color: var(--p-navy);
+        line-height: 1.7;
+    }
+
+    /* ── ARTICLES ─────────────────────────────────── */
+    .articles { padding: 80px 32px; background: var(--p-arctic); }
+    .article-filters { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+    .chip {
+        font-size: 13px;
+        padding: 8px 18px;
+        border-radius: 20px;
+        border: 1px solid #DCE4EC;
+        color: var(--p-muted);
+        background: #fff;
+    }
+    .chip.active { background: var(--p-ocean); color: #fff; border-color: var(--p-ocean); }
+    .article-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1120px; margin: 0 auto; }
+    .article-card { background: #fff; border-radius: 14px; overflow: hidden; border: 1px solid #E7ECF1; }
+    .article-thumb { height: 140px; background: linear-gradient(135deg, var(--p-ocean), var(--p-slate)); }
+    .article-card:nth-child(2) .article-thumb { background: linear-gradient(135deg, var(--p-teal), var(--p-slate)); }
+    .article-card:nth-child(3) .article-thumb { background: linear-gradient(135deg, var(--p-midnight), var(--p-ocean)); }
+    .article-body { padding: 22px; }
+    .article-meta { font-size: 12.5px; color: var(--p-muted); margin-bottom: 10px; }
+    .article-card h4 { font-size: 16.5px; font-weight: 700; color: var(--p-navy); line-height: 1.6; margin-bottom: 10px; }
+    .article-card p { font-size: 13.5px; color: var(--p-muted); }
+    .article-more { text-align: center; margin-top: 36px; }
+    .article-more a { font-size: 14px; font-weight: 700; color: var(--p-ocean); }
+
+    /* ── ABOUT TEASER ─────────────────────────────── */
+    .about-teaser { padding: 70px 32px 100px; background: #fff; }
+    .about-inner {
+        max-width: 1120px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        align-items: center;
+    }
+    .about-photo {
+        aspect-ratio: 3/2;
+        border-radius: 18px;
+        overflow: hidden;
+        background: radial-gradient(140% 120% at 30% 20%, var(--p-ocean) 0%, var(--p-slate) 55%, var(--p-navy) 100%);
+    }
+    .about-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .about-inner h3 { font-size: 28px; font-weight: 800; color: var(--p-navy); margin-bottom: 16px; }
+    .about-inner p { color: var(--p-muted); font-size: 15.5px; margin-bottom: 22px; max-width: 440px; }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 860px) {
+        .hero-split { grid-template-columns: 1fr; }
+        .hero-text-col { text-align: center; }
+        .hero-text-col .hero-cta { justify-content: center; }
+        .fit-grid { grid-template-columns: 1fr; }
+        .cred-inner { gap: 30px; }
+        .gate-grid { grid-template-columns: 1fr; }
+        .service-row, .service-row.reverse { grid-template-columns: 1fr; }
+        .about-inner { grid-template-columns: 1fr; }
+        .hero h1 { font-size: 36px; }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- Page Hero -->
-<section class="page-hero">
-    <h1><strong>سای‌باما</strong></h1>
-    <p>همراه امنِ سلامت روان در محیط کار</p>
-</section>
-
-<!-- Service Cards -->
-<section class="services-section">
-    <div class="section-header">
-        <h2>چه کمکی می‌توانیم بکنیم؟</h2>
-    </div>
-
-    <div class="services-grid">
-
-        <!-- Service 1: Chatbot -->
-        <div class="service-card blue">
-            <h3>گفتگو با <strong>سای‌باما</strong><br><span style="font-size:0.8rem; font-weight:normal;">(دستیار هوشمند سلامت روان در محیط کار)</span></h3>
-            <p>این دستیار آموزش دیده است تا 24 ساعته در دسترس شما باشد ( نسخه آزمایشی).</p>
-            <a href="/chat" class="btn btn-primary">شروع گفتگو</a>
+<section class="hero">
+    <div class="hero-inner hero-split">
+        <div class="hero-photo-col">
+            <div class="hero-photo">
+                <img src="/static/images/1.png" alt="دکتر مرضیه فیضی">
+            </div>
         </div>
-
-        {% if mbi_assessment_enabled %}
-        <!-- Service 2: Assessment -->
-        <div class="service-card teal">
-            <h3>پرسشنامه استاندارد فرسودگی شغلی</h3>
-            <p>پرسشنامه ماسلاچ (MBI) — ابزار علمی استاندارد برای سنجش فرسودگی شغلی. نتایج فوری با تفسیر اختصاصی.</p>
-            <a href="/assessment" class="btn btn-teal">شروع پرسشنامه</a>
+        <div class="hero-text-col">
+            <span class="eyebrow-tag">دکتر مرضیه فیضی │ روان‌شناسی سازمان و کسب‌وکار</span>
+            <h1>اینجا چالش‌های شغلی خود را ریشه‌یابی و حل می‌کنید.</h1>
+            <p>برای متخصصان و مدیرانی که در شغل خود نتیجه دلخواهشان را نمی‌گیرند.</p>
+            <div class="hero-cta">
+                <a class="btn-primary" href="/intake/career">رزرو مشاوره شغلی</a>
+            </div>
         </div>
-        {% endif %}
-
-        <!-- Service 3: Online Consultation -->
-        <div class="service-card coral">
-            <h3>مشاوره آنلاین با دکتر فیضی</h3>
-            <p>جلسه مشاوره فردی با دکتر مرضیه فیضی — متخصص سلامت روان در محیط کار، با تمرکز بر ریشه‌یابی گره‌های کور شغلی.</p>
-            <a href="/contact" class="btn btn-coral">درخواست مشاوره</a>
-        </div>
-
     </div>
 </section>
 
-<!-- Featured: AI Chatbot Section -->
-<section style="padding: 0 2rem;">
-    <div class="chatbot-feature">
+<section class="pain-block">
+    <div class="wrap pain-inner">
+        <p>با ترکیب دانش روانشناسی بالینی و کوچینگ تخصصی به شما کمک می‌کنم که گره‌های رفتاری و شخصیتی خود را ریشه‌یابی کنید و نقشه گام به گام برای توسعه مسیر شغلی و عملکرد سازمانی داشته باشید.</p>
+    </div>
+</section>
 
-        <!-- Left: Text -->
-        <div>
-            <span class="chatbot-feature-badge">✦ ویژه — هوش مصنوعی فارسی</span>
-            <h2>دستیار هوشمند <strong>سای‌باما</strong></h2>
-            <p>
-                دستیار روانشناسی هوشمند فارسی‌زبان با تخصص در فرسودگی شغلی و سلامت روان سازمانی.
-                پشتوانه علمی، زبان فارسی، و درک واقعیت محیط کار ایران.
-            </p>
-            <ul class="chatbot-feature-points">
-                <li>آموزش‌دیده با منابع علمی تخصصی</li>
-                <li>فارسی کامل — درک شرایط محیط کار ایران</li>
-                <li>گفتگوها کاملا محرمانه است</li>
-                <li>همین الان شروع کنید — بدون نوبت‌دهی</li>
-                <li>رایگان( موقتا برای همه کاربران)</li>
+<section class="credibility-strip">
+    <div class="wrap cred-inner">
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <b>۵۰۰۰+</b><span>جلسه مشاوره فردی و سازمانی</span>
+        </div>
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div>
+            <b>دکترای روان‌شناسی بالینی</b><span>دانشگاه علوم پزشکی شهید بهشتی</span>
+        </div>
+        <div class="cred-item">
+            <div class="cred-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div>
+            <b>۱۰+</b><span>سال فعالیت به‌عنوان گروه‌درمانگر و مشاور</span>
+        </div>
+    </div>
+</section>
+
+<section class="gates">
+    <div class="section-head">
+        <h2>از کجا شروع کنید؟</h2>
+    </div>
+    <div class="gate-grid">
+        <div class="gate-card">
+            <div class="gate-icon"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></div>
+            <h3>بازگرداندن انرژی و تمرکز</h3>
+            <p>برای وقتی حس می‌کنید مدتی است انگیزه و تمرکز سابق را ندارید.</p>
+            <a class="gate-link" href="#">📝 پرسشنامه ۳ دقیقه‌ای: ریشه فرسودگی من کجاست؟</a>
+        </div>
+        <div class="gate-card">
+            <div class="gate-icon"><svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3 3-5 6-5s6 2 6 5"/><path d="M14 15c2 0 6 1 6 5"/></svg></div>
+            <h3>ساختن روابط کاری مؤثر</h3>
+            <p>حل تعارض با مدیر یا تیم، بدون فرسایش بیشتر.</p>
+            <a class="gate-link" href="#">📝 پرسشنامه ۲ دقیقه‌ای: سبک مواجهه من با تعارض</a>
+        </div>
+        <div class="gate-card">
+            <div class="gate-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 6-6 2 2-6z"/></svg></div>
+            <h3>طراحی مسیر رشد شغلی</h3>
+            <p>برای وقتی می‌دانید چیزی باید تغییر کند اما نمی‌دانید از کجا.</p>
+            <a class="gate-link" href="#">📝 پرسشنامه ۲ دقیقه‌ای: آیا وقتش رسیده که مسیر شغلی را تغییر بدهم؟</a>
+        </div>
+    </div>
+</section>
+
+<section class="fit-section">
+    <div class="section-head">
+        <h2>این مسیر برای چه کسی طراحی شده است؟</h2>
+    </div>
+    <div class="fit-grid">
+        <div class="fit-card fit-yes">
+            <h4>این مسیر برای شماست، اگر:</h4>
+            <ul>
+                <li>می‌خواهید بفهمید چرا با وجود تلاش زیاد، نتیجه‌ای که سزاوارش هستید نمی‌گیرید</li>
+                <li>باید یک تصمیم شغلی بزرگ بگیرید و به یک چارچوب مشخص نیاز دارید</li>
+                <li>دنبال ریشه‌یابی علمی هستید، نه توصیه‌های کلی</li>
             </ul>
-            <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-                <a href="/chat" class="btn btn-white btn-lg">شروع گفتگو با <strong>سای‌باما</strong></a>
-                {% if mbi_assessment_enabled %}
-                <a href="/assessment" class="btn btn-white-outline btn-lg">ابتدا پرسشنامه بدهم</a>
-                {% endif %}
-            </div>
         </div>
-
-        <!-- Right: Chat Preview -->
-        <div class="chat-preview">
-            <div class="chat-preview-header">
-                <div class="chat-preview-logo">س</div>
-                <div class="chat-preview-info">
-                    <h4><strong>سای‌باما</strong></h4>
-                    <span><span class="online-dot-white"></span>آنلاین</span>
-                </div>
-            </div>
-            <div class="preview-messages">
-                <div class="preview-msg bot">
-                    سلام. به <strong>سای‌باما</strong> خوش آمدید. اینجا فضایی امن و بدون قضاوت است. بگویید چه می‌گذرد؟
-                </div>
-                <div class="preview-msg user">
-                    خسته‌ام. انگار هرچقدر کار می‌کنم تفاوتی نمی‌کنه...
-                </div>
-                <div class="preview-msg bot">
-                    این خستگی که کارتان دیگر معنایی ندارد — یکی از نشانه‌های مهم فرسودگی شغلی است. بیشتر بگویید...
-                </div>
-            </div>
-            <div class="preview-input">پیام خود را بنویسید...</div>
+        <div class="fit-card fit-no">
+            <h4>این مسیر مناسب شما نیست، اگر:</h4>
+            <ul>
+                <li>به‌دنبال درمان بالینی اختلالات روانی (مانند افسردگی یا اضطراب) هستید</li>
+                <li>نیاز به روان‌درمانی فردی دارید</li>
+            </ul>
+            <p class="fit-note">خدمات این مجموعه، کوچینگ و مشاوره مسیر شغلی است، نه روان‌درمانی. برای درمان اختلالات روانی، مراجعه به روان‌پزشک یا روان‌درمانگر بالینی مسیر درست‌تری است.</p>
         </div>
-
     </div>
 </section>
 
-<!-- Meet Dr. Feyzi -->
-<section class="meet-section">
-    <!--
-        محل عکس: صحنه «تخصص» یا «تفکر» از راهنمای عکاسی برندگاید.
-        فایل را با نام home-portrait.jpg و ابعاد ۱۲۰۰×۱۸۰۰ پیکسل (نسبت ۲:۳، عمودی)
-        در مسیر frontend/static/images/ قرار دهید — خودکار جایگزین این جعبه می‌شود.
-    -->
-    <div class="meet-photo">
-        <div class="meet-photo-fallback">س</div>
-        <img src="/static/images/home-portrait.jpg" alt="دکتر مرضیه فیضی" onerror="this.style.display='none'">
+<section class="services">
+    <div class="service-row" id="diagnostic">
+        <div class="service-text">
+            <span class="service-tag">مشاوره شغلی</span>
+            <h3>کوچینگ شغلی برای متخصصان و مدیران</h3>
+            <p>جلسه تشخیصی، ابزار ارزیابی رسمی، مسیر گام‌به‌گام، و گزارش نهایی قابل‌نگهداری — با ترکیب روانشناسی بالینی و برنامه کوچینگ تخصصی.</p>
+            <a class="btn-small" href="/intake/career">رزرو مشاوره شغلی</a>
+        </div>
+        <div class="service-visual service-visual-portrait">
+            <img src="/static/images/6.jpg" alt="کوچینگ شغلی">
+        </div>
     </div>
-    <div class="meet-text">
-        <h2>مرضیه فیضی هستم</h2>
-        <p>روان‌شناس سازمانی؛ گره‌های کور شغلی را ریشه‌یابی می‌کنم و راهکار ساختاریافته‌ی علمی ارائه می‌دهم — برای واقعیت محیط کار ایران.</p>
-        <a href="/about" class="btn btn-outline">بیشتر بدانید</a>
+
+    <div class="service-row reverse" id="organizational">
+        <div class="service-visual">
+            <img src="/static/images/3.jpg" alt="مشاوره سازمانی">
+        </div>
+        <div class="service-text">
+            <span class="service-tag" style="color: var(--p-teal);">خدمات سازمانی</span>
+            <h3>عارضه‌یابی و کوچینگ رهبری</h3>
+            <p>برای مدیران و HR که می‌خواهند ریشه چالش‌های تیمی و رشد بیشتر را با روش علمی پیدا کنند.</p>
+            <a class="btn-small" href="/intake/organizational">درخواست عارضه‌یابی</a>
+        </div>
+    </div>
+
+    <div class="saybama-mini" id="saybama">
+        <span>🔹 ابزار تکمیلی</span>
+        <p><b>سای‌باما</b> — دستیاری برای لحظه‌ای که به یک هم‌صحبت فارسی‌زبان و بدون قضاوت نیاز دارید.</p>
+        <a href="#">بیشتر بدانید ←</a>
     </div>
 </section>
 
-{% if mbi_assessment_enabled %}
-<!-- Assessment Section -->
-<section class="assessment-section">
-    <div class="inner">
-        <h2>نمی‌دانید از کجا شروع کنید؟</h2>
-        <p>
-            پرسشنامه فرسودگی شغلی ماسلاچ را تکمیل کنید.
-            در کمتر از ۵ دقیقه دقیقاً می‌دانید وضعیت‌تان چیست.
-        </p>
-        <div class="assessment-steps">
-            <div class="assessment-step">
-                <div class="assessment-step-num">۱</div>
-                <span>۲۲ سوال ساده</span>
-            </div>
-            <div class="assessment-step">
-                <div class="assessment-step-num">۲</div>
-                <span>نمره‌دهی فوری</span>
-            </div>
-            <div class="assessment-step">
-                <div class="assessment-step-num">۳</div>
-                <span>بازخورد اختصاصی</span>
+<section class="quote-section">
+    <blockquote>«شما هیچ‌وقت با ابهام از اینجا نمی‌روید. خواهید دانست مشکل کجاست و قدم بعدی چیست.»</blockquote>
+</section>
+
+<section class="articles">
+    <div class="section-head">
+        <h2>مقالات</h2>
+    </div>
+    <div class="article-filters">
+        <span class="chip active">همه</span>
+        <span class="chip">فرسودگی شغلی</span>
+        <span class="chip">تعارض در محیط کار</span>
+        <span class="chip">مسیر شغلی</span>
+        <span class="chip">سازمان و رهبری</span>
+    </div>
+    <div class="article-grid">
+        <div class="article-card">
+            <div class="article-thumb"></div>
+            <div class="article-body">
+                <div class="article-meta">۲۳ شهریور ۱۴۰۵ — دکتر مرضیه فیضی</div>
+                <h4>ریشه فرسودگی شغلی چیست؟</h4>
+                <p>سه ریشه اصلی فرسودگی — سازمانی، رفتاری، معنایی — و راه تشخیص هرکدام.</p>
             </div>
         </div>
-        <a href="/assessment" class="btn btn-white btn-lg">پرسشنامه فرسودگی شغلی</a>
+        <div class="article-card">
+            <div class="article-thumb"></div>
+            <div class="article-body">
+                <div class="article-meta">۱۸ شهریور ۱۴۰۵ — دکتر مرضیه فیضی</div>
+                <h4>با مدیر سمی چطور مرزگذاری کنیم؟</h4>
+                <p>سه تکنیک عملی برای گفت‌وگو با مدیر، بدون تنش غیرضروری.</p>
+            </div>
+        </div>
+        <div class="article-card">
+            <div class="article-thumb"></div>
+            <div class="article-body">
+                <div class="article-meta">۱۰ شهریور ۱۴۰۵ — دکتر مرضیه فیضی</div>
+                <h4>چه زمانی باید مسیر شغلی را عوض کرد؟</h4>
+                <p>پنج نشانه‌ای که نشان می‌دهد وقت تصمیم رسیده، نه فقط شک.</p>
+            </div>
+        </div>
+    </div>
+    <div class="article-more">
+        <a href="#">مشاهده همه مقالات ←</a>
     </div>
 </section>
-{% endif %}
 
+<section class="about-teaser">
+    <div class="about-inner">
+        <div class="about-photo">
+            <img src="/static/images/4.jpg" alt="دکتر مرضیه فیضی">
+        </div>
+        <div>
+            <h3>دکتر مرضیه فیضی:</h3>
+            <p>دکترای روانشناسی بالینی از دانشگاه علوم پزشکی شهید بهشتی دارم و متمرکز بر روانشناسی سازمانی و کوچینگ شغلی هستم.</p>
+            <a class="btn-small" href="/about">بیشتر بدانید</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}
+<footer style="background: #14243D; color: #B9C6D6; padding: 60px 32px 28px; font-family: var(--font-body); direction: rtl;">
+    <div style="max-width: 1120px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 40px;">
+        <div>
+            <p style="font-size: 11px; color: #6E8194; margin-bottom: 6px; letter-spacing: .5px;">سای‌باما</p>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">دکتر مرضیه فیضی</h4>
+            <p style="font-size: 12px; color: #6E8194; margin-bottom: 4px;">روان‌شناسی سازمان و کسب‌وکار</p>
+            <p style="font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">ریشه‌یابی رفتاری برای توسعه مسیر شغلی و عملکرد سازمانی</p>
+            <div style="display: flex; gap: 14px; margin-top: 14px;">
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">Instagram</a>
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">LinkedIn</a>
+                <a href="#" style="font-size: 12.5px; color: #8CA0B5; border: 1px solid rgba(255,255,255,.15); padding: 5px 12px; border-radius: 20px;">Telegram</a>
+            </div>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">خدمات</h4>
+            <a href="/intake/career" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">رزرو مشاوره شغلی</a>
+            <a href="/intake/organizational" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">خدمات سازمانی</a>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">لینک‌ها</h4>
+            <a href="/about" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">درباره من</a>
+            <a href="#" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">مقالات</a>
+            <a href="#" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">تماس</a>
+        </div>
+        <div>
+            <h4 style="color: #fff; font-size: 15px; margin-bottom: 14px;">ارتباط با ما</h4>
+            <a href="mailto:info@drfeyzi.com" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px;">info@drfeyzi.com</a>
+            <a href="tel:+989910216842" dir="ltr" style="display: block; font-size: 13.5px; color: #8CA0B5; margin-bottom: 8px; text-align: right;">09910216842</a>
+        </div>
+    </div>
+    <div style="border-top: 1px solid rgba(255,255,255,.08); padding-top: 22px; max-width: 1120px; margin: 0 auto; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap; text-align: center; font-size: 13px; color: #6E8194;">
+        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=774044&Code=Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=774044&Code=Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM' alt='نماد اعتماد الکترونیکی' style='cursor:pointer; max-width:90px;' code='Aq3sk6FH4jGDaClvzhlVw9DpOdp55saM'></a>
+        <span>شماره نظام روان‌شناسی: ۳۵۵۹۹ — همیشه جاری باشید...</span>
+    </div>
+</footer>
 {% endblock %}
