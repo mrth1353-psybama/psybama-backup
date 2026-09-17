@@ -8,6 +8,9 @@ load_dotenv(Path(__file__).parent.parent / '.env')
 
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from limiter_config import limiter
 
 from models import db, Product
 from models import iran_now
@@ -346,7 +349,25 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JSON_AS_ASCII'] = False
 
-    CORS(app, resources={r'/api/*': {'origins': '*'}}, supports_credentials=True)
+    CORS(app, resources={r'/api/*': {'origins': site_url or '*'}}, supports_credentials=True)
+
+    # ── Max content length (1 MB) ──────────────────────────────────────
+    app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
+
+    # ── Rate limiter ────────────────────────────────────────────────────
+    limiter.init_app(app)
+
+    # ── Security headers ────────────────────────────────────────────────
+    @app.after_request
+    def set_security_headers(response):
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
+        if site_url.startswith('https://'):
+            response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        return response
 
     # Cache-busting for static assets: changes on every server start
     import time
@@ -411,6 +432,7 @@ def create_app():
     def about():
         return render_template('about.html')
 
+    @limiter.limit("3 per minute")
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         if request.method == 'POST':
@@ -589,6 +611,7 @@ def create_app():
 
     # ── Auth API ──────────────────────────────────────────────────────────────
 
+    @limiter.limit("5 per minute")
     @app.route('/api/auth/request-otp', methods=['POST'])
     def request_otp():
         data = request.get_json()
@@ -613,6 +636,7 @@ def create_app():
             'mode': result.get('mode')
         })
 
+    @limiter.limit("10 per minute")
     @app.route('/api/auth/verify-otp', methods=['POST'])
     def verify_otp_route():
         data = request.get_json()

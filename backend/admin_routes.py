@@ -4,6 +4,7 @@ from flask import Blueprint, request, jsonify, session, send_file, render_templa
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
 from auth import admin_required
+from limiter_config import limiter
 from models import db, User, Conversation, Message, Assessment, ContactRequest, AssessmentLead, Order, Product, WaaqAssessment
 from models import CareerKnotAssessment
 from models import WebinarRegistration
@@ -21,6 +22,7 @@ def admin_index():
     return render_template('admin.html')
 
 
+@limiter.limit("5 per minute")
 @admin_bp.route('/login', methods=['POST'])
 def admin_login():
     data = request.get_json()
