@@ -1,5 +1,5 @@
 import os
-import random
+import secrets
 import string
 from datetime import datetime, timedelta
 from functools import wraps
@@ -10,7 +10,7 @@ FIXED_TEST_OTP = '1234'
 
 
 def generate_otp() -> str:
-    return ''.join(random.choices(string.digits, k=6))
+    return ''.join(secrets.choice(string.digits) for _ in range(6))
 
 
 def create_or_update_otp(phone_number: str):
