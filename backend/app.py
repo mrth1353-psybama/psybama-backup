@@ -1022,6 +1022,19 @@ def create_app():
         except Exception:
             db.session.rollback()
 
+        # Migration: split contact field in intake forms (phone + email)
+        for table, col in (('career_intakes', 'q3_phone'), ('career_intakes', 'q3_email'),
+                           ('org_intakes', 'q_contact_phone'), ('org_intakes', 'q_contact_email')):
+            try:
+                from sqlalchemy import text
+                db.session.execute(text(
+                    f'ALTER TABLE {table} ADD COLUMN {col} TEXT'
+                ))
+                db.session.commit()
+                print(f'[DB] Migration: added {col} column to {table}')
+            except Exception:
+                db.session.rollback()
+
         # Seed placeholder products if none exist
         from models import Product
         if Product.query.count() == 0:

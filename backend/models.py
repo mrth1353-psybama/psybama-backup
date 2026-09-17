@@ -370,7 +370,9 @@ class CareerIntake(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     q1_name = db.Column(db.String(150), nullable=False)
     q2_marital = db.Column(db.String(100), nullable=False)
-    q3_contact = db.Column(db.String(200), nullable=False)
+    q3_contact = db.Column(db.String(200), nullable=True)
+    q3_phone = db.Column(db.String(50), nullable=True)
+    q3_email = db.Column(db.String(150), nullable=True)
     q4_job = db.Column(db.String(200), nullable=False)
     q5_city = db.Column(db.String(100), nullable=False)
     q6_income = db.Column(db.String(60), nullable=False)
@@ -383,21 +385,26 @@ class CareerIntake(db.Model):
     created_at = db.Column(db.DateTime, default=iran_now)
 
     def to_dict(self):
+        phone = self.q3_phone or ''
+        email = self.q3_email or ''
+        if not phone and not email and self.q3_contact:
+            phone = self.q3_contact
         return {
             'id': self.id,
             'answers': [
                 {'q': '۱. نام و نام خانوادگی', 'a': self.q1_name},
                 {'q': '۲. سن / وضعیت تأهل', 'a': self.q2_marital},
-                {'q': '۳. شماره تماس و ایمیل', 'a': self.q3_contact},
-                {'q': '۴. شغل فعلی و زمینه فعالیت', 'a': self.q4_job},
-                {'q': '۵. شهر محل زندگی و کار', 'a': self.q5_city},
-                {'q': '۶. میزان درآمد تقریبی ماهانه', 'a': self.q6_income},
-                {'q': '۷. بزرگ‌ترین گره کور یا چالش شغلی', 'a': self.q7_knot},
-                {'q': '۸. شش ماه بعد به نتیجه ایده‌آل — شاخص موفقیت', 'a': self.q8_ideal},
-                {'q': '۹. اقدامات قبلی و نتیجه', 'a': self.q9_actions},
-                {'q': '۱۰. سابقه درمان روان‌پزشکی/روان‌درمانی', 'a': self.q10_treatment},
-                {'q': '۱۱. میزان تعهد و انرژی (۱ تا ۱۰)', 'a': self.q11_commitment},
-                {'q': '۱۲. اولویت سرمایه‌گذاری روی رشد شغلی', 'a': self.q12_priority},
+                {'q': '۳. شماره تماس', 'a': phone},
+                {'q': '۴. ایمیل', 'a': email},
+                {'q': '۵. شغل فعلی و زمینه فعالیت', 'a': self.q4_job},
+                {'q': '۶. شهر محل زندگی و کار', 'a': self.q5_city},
+                {'q': '۷. میزان درآمد تقریبی ماهانه', 'a': self.q6_income},
+                {'q': '۸. بزرگ‌ترین گره کور یا چالش شغلی', 'a': self.q7_knot},
+                {'q': '۹. شش ماه بعد به نتیجه ایده‌آل — شاخص موفقیت', 'a': self.q8_ideal},
+                {'q': '۱۰. اقدامات قبلی و نتیجه', 'a': self.q9_actions},
+                {'q': '۱۱. سابقه درمان روان‌پزشکی/روان‌درمانی', 'a': self.q10_treatment},
+                {'q': '۱۲. میزان تعهد و انرژی (۱ تا ۱۰)', 'a': self.q11_commitment},
+                {'q': '۱۳. اولویت سرمایه‌گذاری روی رشد شغلی', 'a': self.q12_priority},
             ],
             'created_at': self.created_at.isoformat() if self.created_at else None,
         }
@@ -409,6 +416,8 @@ class OrgIntake(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     q1_org = db.Column(db.String(200), nullable=False)
     q2_filler = db.Column(db.String(200), nullable=False)
+    q_contact_phone = db.Column(db.String(50), nullable=True)
+    q_contact_email = db.Column(db.String(150), nullable=True)
     q3_industry = db.Column(db.String(200), nullable=False)
     q4_staff = db.Column(db.String(80), nullable=False)
     q5_turnover = db.Column(db.String(200), nullable=False)
@@ -427,16 +436,18 @@ class OrgIntake(db.Model):
             'answers': [
                 {'q': '۱. نام سازمان / برند', 'a': self.q1_org},
                 {'q': '۲. نام و سمت تکمیل‌کننده فرم', 'a': self.q2_filler},
-                {'q': '۳. زمینه فعالیت و صنعت', 'a': self.q3_industry},
-                {'q': '۴. تعداد پرسنل فعال', 'a': self.q4_staff},
-                {'q': '۵. میزان گردش مالی سالانه', 'a': self.q5_turnover},
-                {'q': '۶. بودجه مصوب توسعه منابع انسانی', 'a': self.q6_budget},
-                {'q': '۷. تمرکز اصلی فرآیند کوچینگ', 'a': self.q7_focus},
-                {'q': '۸. سه نشانه / چالش رفتاری اصلی', 'a': self.q8_symptoms},
-                {'q': '۹. ریشه چالش‌ها و موانع رفع آن', 'a': self.q9_root},
-                {'q': '۱۰. شاخص کلیدی موفقیت (KPI)', 'a': self.q10_kpi},
-                {'q': '۱۱. میزان آمادگی هیئت‌مدیره (۱ تا ۵)', 'a': self.q11_readiness},
-                {'q': '۱۲. افق زمانی اجرای برنامه', 'a': self.q12_horizon},
+                {'q': '۳. شماره تماس', 'a': self.q_contact_phone or ''},
+                {'q': '۴. ایمیل', 'a': self.q_contact_email or ''},
+                {'q': '۵. زمینه فعالیت و صنعت', 'a': self.q3_industry},
+                {'q': '۶. تعداد پرسنل فعال', 'a': self.q4_staff},
+                {'q': '۷. میزان گردش مالی سالانه', 'a': self.q5_turnover},
+                {'q': '۸. بودجه مصوب توسعه منابع انسانی', 'a': self.q6_budget},
+                {'q': '۹. تمرکز اصلی فرآیند کوچینگ', 'a': self.q7_focus},
+                {'q': '۱۰. سه نشانه / چالش رفتاری اصلی', 'a': self.q8_symptoms},
+                {'q': '۱۱. ریشه چالش‌ها و موانع رفع آن', 'a': self.q9_root},
+                {'q': '۱۲. شاخص کلیدی موفقیت (KPI)', 'a': self.q10_kpi},
+                {'q': '۱۳. میزان آمادگی هیئت‌مدیره (۱ تا ۵)', 'a': self.q11_readiness},
+                {'q': '۱۴. افق زمانی اجرای برنامه', 'a': self.q12_horizon},
             ],
             'created_at': self.created_at.isoformat() if self.created_at else None,
         }

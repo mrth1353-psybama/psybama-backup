@@ -742,7 +742,7 @@ def export_excel():
 
     # Sheet 10: Career Intake Forms (فرم پذیرش کوچینگ شغلی)
     ws_career = wb.create_sheet('فرم پذیرش کوچینگ شغلی')
-    headers_car = ['شناسه', 'نام و نام خانوادگی', 'سن / وضعیت تأهل', 'شماره تماس و ایمیل',
+    headers_car = ['شناسه', 'نام و نام خانوادگی', 'سن / وضعیت تأهل', 'شماره تماس', 'ایمیل',
                    'شغل فعلی', 'شهر', 'میزان درآمد', 'گره کور شغلی', 'نتیجه ایده‌آل',
                    'اقدامات قبلی', 'سابقه درمان', 'میزان تعهد', 'اولویت سرمایه‌گذاری', 'تاریخ ثبت']
     ws_career.append(headers_car)
@@ -753,7 +753,7 @@ def export_excel():
 
     for i in CareerIntake.query.order_by(CareerIntake.created_at.desc()).all():
         ws_career.append([
-            i.id, i.q1_name, i.q2_marital, i.q3_contact,
+            i.id, i.q1_name, i.q2_marital, i.q3_phone or i.q3_contact or '', i.q3_email or '',
             i.q4_job, i.q5_city, i.q6_income,
             i.q7_knot, i.q8_ideal, i.q9_actions,
             i.q10_treatment, i.q11_commitment, i.q12_priority,
@@ -770,7 +770,7 @@ def export_excel():
 
     # Sheet 11: Org Intake Forms (فرم پذیرش کوچینگ سازمانی)
     ws_org = wb.create_sheet('فرم پذیرش کوچینگ سازمانی')
-    headers_org = ['شناسه', 'نام سازمان', 'نام و سمت تکمیل‌کننده', 'زمینه فعالیت',
+    headers_org = ['شناسه', 'نام سازمان', 'نام و سمت تکمیل‌کننده', 'شماره تماس', 'ایمیل', 'زمینه فعالیت',
                    'تعداد پرسنل', 'گردش مالی سالانه', 'بودجه مصوب', 'تمرکز کوچینگ',
                    'چالش‌های رفتاری', 'ریشه چالش‌ها', 'KPI', 'آمادگی هیئت‌مدیره',
                    'افق زمانی', 'تاریخ ثبت']
@@ -782,7 +782,7 @@ def export_excel():
 
     for i in OrgIntake.query.order_by(OrgIntake.created_at.desc()).all():
         ws_org.append([
-            i.id, i.q1_org, i.q2_filler, i.q3_industry,
+            i.id, i.q1_org, i.q2_filler, i.q_contact_phone or '', i.q_contact_email or '', i.q3_industry,
             i.q4_staff, i.q5_turnover, i.q6_budget, i.q7_focus,
             i.q8_symptoms, i.q9_root, i.q10_kpi, i.q11_readiness,
             i.q12_horizon,

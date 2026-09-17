@@ -163,15 +163,17 @@
     .pain-inner p { font-size: 19px; color: var(--p-slate); line-height: 1.9; font-weight: 500; }
 
     /* ── CREDIBILITY STRIP ────────────────────────── */
-    .credibility-strip { background: var(--p-sand); padding: 36px 32px; }
+    .credibility-strip { background: linear-gradient(180deg, #E7D6B4 0%, #DECFAE 100%); padding: 36px 32px; border-top: 1px solid #CBB98F; border-bottom: 1px solid #CBB98F; }
     .cred-inner { display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
     .cred-item {
-        background: #fff;
+        background: linear-gradient(180deg, #FFFFFF 0%, #FBF6EA 100%);
         border-radius: 14px;
         padding: 22px 30px;
         text-align: center;
-        box-shadow: 0 6px 18px rgba(20,36,61,.06);
+        border: 1px solid #D8C9A3;
+        box-shadow: 0 12px 24px rgba(20,36,61,.18), 0 2px 0 rgba(255,255,255,.9) inset, 0 -4px 10px rgba(120,100,60,.12) inset;
         min-width: 210px;
+        transform: translateZ(0);
     }
     .cred-icon {
         width: 42px;
@@ -276,6 +278,9 @@
     .service-row.reverse .service-visual {
         background: linear-gradient(135deg, var(--p-teal) 0%, var(--p-slate) 65%, var(--p-navy) 100%);
     }
+    .service-row-single { display: block; text-align: center; }
+    .service-text-centered { align-items: center; text-align: center; }
+    .service-text-centered p { margin-left: auto; margin-right: auto; }
 
     /* ── SAYBAMA MINI ─────────────────────────────── */
     .saybama-mini {
@@ -435,7 +440,7 @@
 
 <section class="fit-section">
     <div class="section-head">
-        <h2>این مسیر برای چه کسی طراحی شده است؟</h2>
+        <h2>این مسیر برای چه افرادی طراحی شده است؟</h2>
     </div>
     <div class="fit-grid">
         <div class="fit-card fit-yes">
@@ -458,15 +463,12 @@
 </section>
 
 <section class="services">
-    <div class="service-row" id="diagnostic">
-        <div class="service-text">
+    <div class="service-row service-row-single" id="diagnostic">
+        <div class="service-text service-text-centered">
             <span class="service-tag">مشاوره شغلی</span>
             <h3>کوچینگ شغلی برای متخصصان و مدیران</h3>
             <p>جلسه تشخیصی، ابزار ارزیابی رسمی، مسیر گام‌به‌گام، و گزارش نهایی قابل‌نگهداری — با ترکیب روانشناسی بالینی و برنامه کوچینگ تخصصی.</p>
             <a class="btn-small" href="/intake/career">رزرو مشاوره شغلی</a>
-        </div>
-        <div class="service-visual service-visual-portrait">
-            <img src="/static/images/6.jpg" alt="کوچینگ شغلی">
         </div>
     </div>
 

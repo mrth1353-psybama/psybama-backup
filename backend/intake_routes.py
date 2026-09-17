@@ -7,7 +7,8 @@ intake_bp = Blueprint('intake', __name__)
 CAREER_FIELDS = [
     ('q1_name', 'نام و نام خانوادگی'),
     ('q2_marital', 'سن / وضعیت تأهل'),
-    ('q3_contact', 'شماره تماس و ایمیل'),
+    ('q3_phone', 'شماره تماس'),
+    ('q3_email', 'ایمیل'),
     ('q4_job', 'شغل فعلی و زمینه فعالیت'),
     ('q5_city', 'شهر محل زندگی و کار'),
     ('q6_income', 'میزان درآمد تقریبی ماهانه'),
@@ -22,6 +23,8 @@ CAREER_FIELDS = [
 ORG_FIELDS = [
     ('q1_org', 'نام سازمان / برند'),
     ('q2_filler', 'نام و سمت تکمیل‌کننده'),
+    ('q_contact_phone', 'شماره تماس'),
+    ('q_contact_email', 'ایمیل'),
     ('q3_industry', 'زمینه فعالیت و صنعت'),
     ('q4_staff', 'تعداد پرسنل فعال'),
     ('q5_turnover', 'گردش مالی سالانه'),
@@ -45,11 +48,21 @@ def career_intake_form():
 @intake_bp.route('/intake/career', methods=['POST'])
 def submit_career_intake():
     data = request.get_json() or {}
-    missing = [label for field, label in CAREER_FIELDS if not data.get(field, '').strip()]
+    # Backward-compat: old single field q3_contact → split into phone/email
+    if not data.get('q3_phone', '').strip() and data.get('q3_contact', '').strip():
+        data['q3_phone'] = data['q3_contact'].strip()
+    if not data.get('q3_email', '').strip() and data.get('q3_contact', '').strip() and '@' in data.get('q3_contact', ''):
+        data['q3_email'] = data['q3_contact'].strip()
+    missing = [label for field, label in CAREER_FIELDS if not str(data.get(field, '')).strip()]
     if missing:
         return jsonify({'error': 'missing_fields', 'missing': missing}), 400
 
-    record = CareerIntake(**{field: data[field].strip() for field, _ in CAREER_FIELDS})
+    record = CareerIntake(**{field: str(data[field]).strip() for field, _ in CAREER_FIELDS})
+    # Keep legacy column populated for old exports
+    try:
+        record.q3_contact = f"{record.q3_phone} / {record.q3_email}"
+    except Exception:
+        pass
     db.session.add(record)
     db.session.commit()
 
@@ -77,11 +90,11 @@ def org_intake_form():
 @intake_bp.route('/intake/organizational', methods=['POST'])
 def submit_org_intake():
     data = request.get_json() or {}
-    missing = [label for field, label in ORG_FIELDS if not data.get(field, '').strip()]
+    missing = [label for field, label in ORG_FIELDS if not str(data.get(field, '')).strip()]
     if missing:
         return jsonify({'error': 'missing_fields', 'missing': missing}), 400
 
-    record = OrgIntake(**{field: data[field].strip() for field, _ in ORG_FIELDS})
+    record = OrgIntake(**{field: str(data[field]).strip() for field, _ in ORG_FIELDS})
     db.session.add(record)
     db.session.commit()
 
