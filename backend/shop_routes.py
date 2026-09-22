@@ -4,7 +4,7 @@ from urllib.parse import quote
 from flask import Blueprint, render_template, redirect, request, session, jsonify
 from models import db, Product, Order, User
 from models import iran_now
-from payment import create_payment, verify_payment
+from payment import create_payment, verify_payment, plog
 from sms_service import send_sms
 from discounts import evaluate_discount
 
@@ -212,6 +212,8 @@ def online_pay(product_id):
     phone = (request.form.get('phone') or '').strip()
     address = (request.form.get('address') or '').strip()
     postal_code = (request.form.get('postal_code') or '').strip()
+    plog(f"[PAYMENT] online_pay POST arrived: name={bool(full_name)} phone={bool(phone)} "
+         f"addr={bool(address)} postal={bool(postal_code)} discount_code={request.form.get('discount_code')!r}")
 
     if not full_name or not phone or not address or not postal_code:
         back_link = f'/shop/checkout/{product_id}'
@@ -257,8 +259,8 @@ def online_pay(product_id):
 
     session.pop('shop_discount', None)
 
-    print(f"[PAYMENT] online order={order.id} product={product.name} amount={amount} "
-          f"shipping={shipping} code={discount_code if discount else None}")
+    plog(f"[PAYMENT] online order={order.id} product={product.name} amount={amount} "
+         f"shipping={shipping} code={discount_code if discount else None}")
 
     site_url = os.getenv('SITE_URL', request.host_url.rstrip('/'))
     callback_url = f'{site_url}/shop/verify/{order.id}'

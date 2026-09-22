@@ -3,6 +3,17 @@ import requests
 
 SANDBOX = os.getenv('ZARINPAL_SANDBOX', 'true').lower() == 'true'
 
+
+def plog(msg):
+    """لاگ پرداخت — هم در stdout و هم در فایلی که قابل بررسی باشد."""
+    print(msg, flush=True)
+    try:
+        log_path = os.path.join(os.path.dirname(__file__), 'payment_debug.log')
+        with open(log_path, 'a', encoding='utf-8') as f:
+            f.write(msg + '\n')
+    except Exception:
+        pass
+
 if SANDBOX:
     REQUEST_URL  = 'https://sandbox.zarinpal.com/pg/v4/payment/request.json'
     VERIFY_URL   = 'https://sandbox.zarinpal.com/pg/v4/payment/verify.json'
@@ -27,14 +38,14 @@ def create_payment(amount_tomans, description, callback_url):
         data = res.json().get('data', {})
         if data.get('code') == 100:
             authority = data['authority']
-            print(f"[ZARINPAL] request OK status={res.status_code} amount(Rial)={amount_tomans * 10} code=100 authority={authority}")
+            plog(f"[ZARINPAL] request OK status={res.status_code} amount(Rial)={amount_tomans * 10} code=100 authority={authority}")
             return {'success': True, 'authority': authority, 'pay_url': STARTPAY_URL.format(authority)}
         errors = res.json().get('errors', {})
-        print(f"[ZARINPAL] request rejected. status={res.status_code} amount(Rial)={amount_tomans * 10} "
-              f"data={res.json().get('data')} errors={errors}")
+        plog(f"[ZARINPAL] request rejected. status={res.status_code} amount(Rial)={amount_tomans * 10} "
+             f"data={res.json().get('data')} errors={errors}")
         return {'success': False, 'error': errors.get('message', 'خطا در اتصال به درگاه')}
     except Exception as e:
-        print(f"[ZARINPAL] request exception: {type(e).__name__}: {e}")
+        plog(f"[ZARINPAL] request exception: {type(e).__name__}: {e}")
         return {'success': False, 'error': 'خطا در اتصال به درگاه پرداخت. لطفاً از روش کارت به کارت استفاده کنید.'}
 
 
