@@ -29,8 +29,11 @@ def create_payment(amount_tomans, description, callback_url):
             authority = data['authority']
             return {'success': True, 'authority': authority, 'pay_url': STARTPAY_URL.format(authority)}
         errors = res.json().get('errors', {})
+        print(f"[ZARINPAL] request rejected. status={res.status_code} amount(Rial)={amount_tomans * 10} "
+              f"data={res.json().get('data')} errors={errors}")
         return {'success': False, 'error': errors.get('message', 'خطا در اتصال به درگاه')}
-    except Exception:
+    except Exception as e:
+        print(f"[ZARINPAL] request exception: {type(e).__name__}: {e}")
         return {'success': False, 'error': 'خطا در اتصال به درگاه پرداخت. لطفاً از روش کارت به کارت استفاده کنید.'}
 
 
