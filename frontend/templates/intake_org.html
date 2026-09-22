@@ -29,27 +29,40 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q2_filler"><span class="q-num">۲.</span> نام و سمت تکمیل‌کننده فرم<span class="q-required">*</span></label>
+                <label class="q-label"><span class="q-num">۲.</span> از چه طریقی با ما آشنا شده‌اید؟<span class="q-required">*</span></label>
+                <div class="choice-grid">
+                    <label class="choice"><input type="radio" name="how_heard" value="اینستاگرام" required><span>الف) اینستاگرام</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="تلگرام" required><span>ب) تلگرام</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="لینکدین" required><span>ج) لینکدین</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="سرچ گوگل" required><span>د) سرچ گوگل</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="بله" required><span>ه) بله</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="دوستان" required><span>و) دوستان</span></label>
+                    <label class="choice"><input type="radio" name="how_heard" value="سایر" required><span>ز) سایر</span></label>
+                </div>
+            </div>
+
+            <div class="intake-q">
+                <label class="q-label" for="q2_filler"><span class="q-num">۳.</span> نام و سمت تکمیل‌کننده فرم<span class="q-required">*</span></label>
                 <input type="text" id="q2_filler" name="q2_filler" class="intake-input" required placeholder="مدیرعامل / مدیر منابع انسانی / هم‌بنیان‌گذار">
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q_contact_phone"><span class="q-num">۳.</span> شماره تماس<span class="q-required">*</span></label>
+                <label class="q-label" for="q_contact_phone"><span class="q-num">۴.</span> شماره تماس<span class="q-required">*</span></label>
                 <input type="tel" id="q_contact_phone" name="q_contact_phone" class="intake-input" required placeholder="مثلاً: ۰۹۱۲…" autocomplete="tel" dir="ltr" style="text-align:right;">
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q_contact_email"><span class="q-num">۴.</span> ایمیل<span class="q-required">*</span></label>
+                <label class="q-label" for="q_contact_email"><span class="q-num">۵.</span> ایمیل<span class="q-required">*</span></label>
                 <input type="email" id="q_contact_email" name="q_contact_email" class="intake-input" required placeholder="you@company.com" autocomplete="email" dir="ltr" style="text-align:left;">
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q3_industry"><span class="q-num">۵.</span> زمینه فعالیت و صنعت<span class="q-required">*</span></label>
+                <label class="q-label" for="q3_industry"><span class="q-num">۶.</span> زمینه فعالیت و صنعت<span class="q-required">*</span></label>
                 <input type="text" id="q3_industry" name="q3_industry" class="intake-input" required>
             </div>
 
             <div class="intake-q">
-                <label class="q-label"><span class="q-num">۶.</span> تعداد پرسنل فعال<span class="q-required">*</span></label>
+                <label class="q-label"><span class="q-num">۷.</span> تعداد پرسنل فعال<span class="q-required">*</span></label>
                 <div class="choice-grid">
                     <label class="choice"><input type="radio" name="q4_staff" value="زیر ۱۰ نفر (استارتاپ / تیم کوچک)" required><span>زیر ۱۰ نفر (استارتاپ / تیم کوچک)</span></label>
                     <label class="choice"><input type="radio" name="q4_staff" value="۱۰ تا ۵۰ نفر (کسب‌وکار در حال رشد)" required><span>۱۰ تا ۵۰ نفر (کسب‌وکار در حال رشد)</span></label>
@@ -59,12 +72,12 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q5_turnover"><span class="q-num">۷.</span> میزان گردش مالی یا درآمد سالانه تقریبی سازمان<span class="q-required">*</span><span class="q-note">(برای تناسب‌سنجی بودجه با دامنه پروژه عارضه‌یابی و کوچینگ)</span></label>
+                <label class="q-label" for="q5_turnover"><span class="q-num">۸.</span> میزان گردش مالی یا درآمد سالانه تقریبی سازمان<span class="q-required">*</span><span class="q-note">(برای تناسب‌سنجی بودجه با دامنه پروژه عارضه‌یابی و کوچینگ)</span></label>
                 <input type="text" id="q5_turnover" name="q5_turnover" class="intake-input" required>
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q6_budget"><span class="q-num">۸.</span> بودجه تقریبی مصوب برای فرآیند آموزش / کوچینگ / توسعه منابع انسانی<span class="q-required">*</span></label>
+                <label class="q-label" for="q6_budget"><span class="q-num">۹.</span> بودجه تقریبی مصوب برای فرآیند آموزش / کوچینگ / توسعه منابع انسانی<span class="q-required">*</span></label>
                 <input type="text" id="q6_budget" name="q6_budget" class="intake-input" required>
             </div>
         </section>
@@ -77,7 +90,7 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label"><span class="q-num">۹.</span> تمرکز اصلی این فرآیند کوچینگ روی کدام سطح است؟<span class="q-required">*</span></label>
+                <label class="q-label"><span class="q-num">۱۰.</span> تمرکز اصلی این فرآیند کوچینگ روی کدام سطح است؟<span class="q-required">*</span></label>
                 <div class="choice-grid">
                     <label class="choice"><input type="radio" name="q7_focus" value="کوچینگ رهبری و مدیران ارشد (Executive Coaching)" required><span>کوچینگ رهبری و مدیران ارشد (Executive Coaching)</span></label>
                     <label class="choice"><input type="radio" name="q7_focus" value="هم‌راستاسازی و حل تعارضات تیم‌لیدها / مدیران میانی (Team Coaching)" required><span>هم‌راستاسازی و حل تعارضات تیم‌لیدها / مدیران میانی (Team Coaching)</span></label>
@@ -87,12 +100,12 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q8_symptoms"><span class="q-num">۱۰.</span> سه نشانه (سمپتوم) یا چالش رفتاری اصلی که در حال حاضر در سازمان مشاهده می‌کنید چیست؟<span class="q-required">*</span></label>
+                <label class="q-label" for="q8_symptoms"><span class="q-num">۱۱.</span> سه نشانه (سمپتوم) یا چالش رفتاری اصلی که در حال حاضر در سازمان مشاهده می‌کنید چیست؟<span class="q-required">*</span></label>
                 <textarea id="q8_symptoms" name="q8_symptoms" class="intake-input" rows="6" required placeholder="مثال: فرسودگی شغلی، اهمال‌کاری تیمی، ترک خدمت نیروهای کلیدی، عدم تفویض اختیار مدیران"></textarea>
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q9_root"><span class="q-num">۱۱.</span> از نظر شما ریشه این چالش‌ها کجاست و چه عاملی تاکنون مانع رفع آن شده است؟<span class="q-required">*</span></label>
+                <label class="q-label" for="q9_root"><span class="q-num">۱۲.</span> از نظر شما ریشه این چالش‌ها کجاست و چه عاملی تاکنون مانع رفع آن شده است؟<span class="q-required">*</span></label>
                 <textarea id="q9_root" name="q9_root" class="intake-input" rows="6" required></textarea>
             </div>
         </section>
@@ -105,12 +118,12 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label" for="q10_kpi"><span class="q-num">۱۲.</span> شاخص کلیدی موفقیت (KPI) شما برای این دوره چیست؟<span class="q-required">*</span></label>
+                <label class="q-label" for="q10_kpi"><span class="q-num">۱۳.</span> شاخص کلیدی موفقیت (KPI) شما برای این دوره چیست؟<span class="q-required">*</span></label>
                 <textarea id="q10_kpi" name="q10_kpi" class="intake-input" rows="6" required placeholder="مثلاً: کاهش نرخ خروج پرسنل به میزان ۲۰٪، افزایش نرخ تحقق اهداف تیمی، بهبود ارزیابی ۳۶۰ درجه مدیران"></textarea>
             </div>
 
             <div class="intake-q">
-                <label class="q-label"><span class="q-num">۱۳.</span> میزان آمادگی و تعهد هیئت‌مدیره / مدیران ارشد برای همراهی با تغییرات چقدر است؟<span class="q-required">*</span></label>
+                <label class="q-label"><span class="q-num">۱۴.</span> میزان آمادگی و تعهد هیئت‌مدیره / مدیران ارشد برای همراهی با تغییرات چقدر است؟<span class="q-required">*</span></label>
                 <div class="scale-row">
                     <label class="scale-opt"><input type="radio" name="q11_readiness" value="۱" required><span>۱</span></label>
                     <label class="scale-opt"><input type="radio" name="q11_readiness" value="۲" required><span>۲</span></label>
@@ -121,7 +134,7 @@
             </div>
 
             <div class="intake-q">
-                <label class="q-label"><span class="q-num">۱۴.</span> افق زمانی مدنظر شما برای اجرای این برنامه چقدر است؟<span class="q-required">*</span></label>
+                <label class="q-label"><span class="q-num">۱۵.</span> افق زمانی مدنظر شما برای اجرای این برنامه چقدر است؟<span class="q-required">*</span></label>
                 <div class="choice-grid">
                     <label class="choice"><input type="radio" name="q12_horizon" value="۳ ماهه (تمرکز بر پروژه‌های ضربتی)" required><span>۳ ماهه (تمرکز بر پروژه‌های ضربتی)</span></label>
                     <label class="choice"><input type="radio" name="q12_horizon" value="۶ ماهه (استاندارد تغییر رفتار و تثبیت)" required><span>۶ ماهه (استاندارد تغییر رفتار و تثبیت)</span></label>

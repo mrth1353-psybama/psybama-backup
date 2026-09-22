@@ -1036,6 +1036,18 @@ def create_app():
             except Exception:
                 db.session.rollback()
 
+        # Migration: add how_heard column to intake forms (نحوه آشنایی)
+        for table in ('career_intakes', 'org_intakes'):
+            try:
+                from sqlalchemy import text
+                db.session.execute(text(
+                    f'ALTER TABLE {table} ADD COLUMN how_heard TEXT'
+                ))
+                db.session.commit()
+                print(f'[DB] Migration: added how_heard column to {table}')
+            except Exception:
+                db.session.rollback()
+
         # Seed placeholder products if none exist
         from models import Product
         if Product.query.count() == 0:
