@@ -228,9 +228,13 @@ def online_pay(product_id):
         discount_code = discount['code']
     else:
         discount_code = (request.form.get('discount_code') or '').strip()
-        discount = evaluate_discount(discount_code, product)
+        # کد تأییدشده از سشن (مرحله قبل / همان که در این صفحه نمایش داده شده)
+        # ارجح است؛ در صورت نبود، کد ورودی فرم واکشی می‌شود. در هر دو حالت
+        # قیمت دوباره از سمت سرور محاسبه می‌شود و مبلغ درگاه همیشه با تخفیف است.
+        discount = _resolve_discount(product, product_id, discount_code)
         if discount:
             amount, shipping = compute_order_amount(product, discount)
+            discount_code = discount['code']
         else:
             amount = product.price
             shipping = session_shipping
