@@ -365,6 +365,18 @@ def create_app():
         response.headers['X-XSS-Protection'] = '1; mode=block'
         response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
         response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
+        response.headers['Content-Security-Policy'] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data: https:; "
+            "font-src 'self' data: https:; "
+            "connect-src 'self'; "
+            "object-src 'none'; "
+            "frame-ancestors 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self'"
+        )
         if site_url.startswith('https://'):
             response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
         return response
@@ -528,6 +540,7 @@ def create_app():
         )
 
     @app.route('/api/knot/webinar/register', methods=['POST'])
+    @limiter.limit("10 per hour")
     def knot_webinar_register():
         """ثبت‌نام مستقل در وبینار گره کور (لندینگ پیج) — ذخیره مشخصات در پنل ادمین + ارسال پیامک و ایمیل."""
         import re
@@ -572,11 +585,13 @@ def create_app():
                     reg.email = email
                 db.session.commit()
 
-            threading.Thread(
-                target=_send_webinar_notifications_bg,
-                args=(app, reg.id, phone, name, _knot_webinar_date_env),
-                daemon=True
-            ).start()
+            # جلوگیری از ارسال مکرر پیامک/ایمیل برای همان شماره (ضد اسپم/سوزاندن اعتبار)
+            if not reg.sms_sent:
+                threading.Thread(
+                    target=_send_webinar_notifications_bg,
+                    args=(app, reg.id, phone, name, _knot_webinar_date_env),
+                    daemon=True
+                ).start()
 
         return jsonify({
             'success': True,
@@ -758,6 +773,7 @@ def create_app():
     # ── Assessment API ────────────────────────────────────────────────────────
 
     @app.route('/api/assessment/lead', methods=['POST'])
+    @limiter.limit("10 per hour")
     def submit_assessment_lead():
         import re
         data = request.get_json()

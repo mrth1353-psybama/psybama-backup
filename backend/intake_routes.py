@@ -1,6 +1,7 @@
 import threading
 from flask import Blueprint, render_template, request, jsonify
 from models import db, CareerIntake, OrgIntake
+from limiter_config import limiter
 
 intake_bp = Blueprint('intake', __name__)
 
@@ -48,6 +49,7 @@ def career_intake_form():
 
 
 @intake_bp.route('/intake/career', methods=['POST'])
+@limiter.limit("10 per hour")
 def submit_career_intake():
     data = request.get_json() or {}
     # Backward-compat: old single field q3_contact → split into phone/email
@@ -90,6 +92,7 @@ def org_intake_form():
 
 
 @intake_bp.route('/intake/organizational', methods=['POST'])
+@limiter.limit("10 per hour")
 def submit_org_intake():
     data = request.get_json() or {}
     missing = [label for field, label in ORG_FIELDS if not str(data.get(field, '')).strip()]
