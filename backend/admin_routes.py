@@ -1,5 +1,6 @@
 import io
 import os
+import secrets
 from flask import Blueprint, request, jsonify, session, send_file, render_template
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -29,7 +30,11 @@ def admin_login():
     if not data or not data.get('password'):
         return jsonify({'error': 'password_required'}), 400
 
-    if data['password'] == os.getenv('ADMIN_PASSWORD', 'admin1234'):
+    admin_password = os.getenv('ADMIN_PASSWORD', '')
+    if not admin_password:
+        return jsonify({'error': 'admin_not_configured', 'message': 'پسورد مدیریت تنظیم نشده است'}), 503
+
+    if secrets.compare_digest(data['password'], admin_password):
         import time
         session['admin_logged_in'] = True
         session['admin_auth_issued_at'] = time.time()

@@ -590,10 +590,11 @@ def create_app():
     @limiter.limit("5 per minute")
     @app.route('/api/auth/request-otp', methods=['POST'])
     def request_otp():
+        import re
         data = request.get_json()
         phone = (data or {}).get('phone_number', '').strip()
 
-        if not phone or len(phone) < 10:
+        if not re.match(r'^09\d{9}$', phone):
             return jsonify({'error': 'invalid_phone', 'message': 'شماره موبایل معتبر نیست'}), 400
 
         user, otp = create_or_update_otp(phone)

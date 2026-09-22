@@ -131,7 +131,7 @@ const Admin = (() => {
             tbody.innerHTML = data.users.map(u => `
                 <tr>
                     <td>${u.id}</td>
-                    <td style="direction:ltr;text-align:left">${u.phone_number}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(u.phone_number)}</td>
                     <td><span class="badge ${u.verified ? 'badge-success' : 'badge-warning'}">${u.verified ? 'تأیید شده' : 'در انتظار'}</span></td>
                     <td>${formatDateTime(u.created_at)}</td>
                     <td>${u.conversation_count}</td>
@@ -210,7 +210,7 @@ const Admin = (() => {
             tbody.innerHTML = data.conversations.map(c => `
                 <tr>
                     <td>${c.id}</td>
-                    <td style="direction:ltr;text-align:left">${c.phone_number || '—'}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(c.phone_number || '—')}</td>
                     <td>${c.message_count}</td>
                     <td>${formatDateTime(c.started_at)}</td>
                     <td><button class="btn btn-outline btn-sm" onclick="Admin.viewConversation(${c.id})">مشاهده</button></td>
@@ -292,7 +292,7 @@ const Admin = (() => {
                 return `
                 <tr style="${(needsAction) ? 'background:#FFF8E1;font-weight:bold' : ''}">
                     <td>${o.id}</td>
-                    <td style="direction:ltr;text-align:left">${o.phone_number}</td>
+                    <td style="direction:ltr;text-align:left">${escapeHtml(o.phone_number)}</td>
                     <td>${escapeHtml(o.product_name)}</td>
                     <td style="direction:ltr;text-align:left">${Number(o.amount).toLocaleString()}</td>
                     <td>${METHOD_LABEL[o.payment_method] || o.payment_method}</td>
