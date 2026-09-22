@@ -257,6 +257,9 @@ def online_pay(product_id):
 
     session.pop('shop_discount', None)
 
+    print(f"[PAYMENT] online order={order.id} product={product.name} amount={amount} "
+          f"shipping={shipping} code={discount_code if discount else None}")
+
     site_url = os.getenv('SITE_URL', request.host_url.rstrip('/'))
     callback_url = f'{site_url}/shop/verify/{order.id}'
 

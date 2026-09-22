@@ -27,6 +27,7 @@ def create_payment(amount_tomans, description, callback_url):
         data = res.json().get('data', {})
         if data.get('code') == 100:
             authority = data['authority']
+            print(f"[ZARINPAL] request OK status={res.status_code} amount(Rial)={amount_tomans * 10} code=100 authority={authority}")
             return {'success': True, 'authority': authority, 'pay_url': STARTPAY_URL.format(authority)}
         errors = res.json().get('errors', {})
         print(f"[ZARINPAL] request rejected. status={res.status_code} amount(Rial)={amount_tomans * 10} "
