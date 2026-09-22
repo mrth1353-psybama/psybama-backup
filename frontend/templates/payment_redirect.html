@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}اتصال به درگاه پرداخت — سای‌باما{% endblock %}
+
+{% block extra_css %}
+<meta http-equiv="refresh" content="2;url={{ pay_url }}">
+<style>
+.pay-page {
+    min-height: calc(100vh - 64px - 80px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--arctic-white);
+}
+.pay-box {
+    background: var(--pure-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 460px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+.pay-box h2 {
+    font-family: var(--font-title);
+    font-size: 1.15rem;
+    color: var(--slate-blue);
+    margin-bottom: 1rem;
+}
+.amount-badge {
+    background: linear-gradient(135deg, #3D5166, #1D5FA6);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem;
+    text-align: center;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+.amount-badge .lbl { font-size: 0.82rem; color: rgba(255,255,255,0.75); margin-bottom: 0.3rem; }
+.amount-badge .amt { font-family: var(--font-title); font-size: 1.5rem; }
+.spinner {
+    width: 42px;
+    height: 42px;
+    margin: 1rem auto 0.9rem;
+    border: 4px solid var(--mint-mist);
+    border-top-color: var(--ocean-blue);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.pay-box p { font-size: 0.92rem; color: var(--slate-blue); margin-bottom: 1.25rem; line-height: 1.8; }
+.pay-box .note { font-size: 0.8rem; color: #777; margin-top: 0.8rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pay-page">
+    <div class="pay-box">
+        <h2>در حال اتصال به درگاه پرداخت</h2>
+
+        <div class="amount-badge">
+            <div class="lbl">مبلغ قابل پرداخت</div>
+            <div class="amt">{{ '{:,}'.format(amount) }} تومان</div>
+            <div style="font-size:0.8rem;margin-top:0.3rem;color:rgba(255,255,255,0.7)">{{ product.name }}</div>
+        </div>
+
+        <div class="spinner" aria-hidden="true"></div>
+        <p>در حال انتقال به صفحه‌ی امن زرین‌پال هستید.<br>لطفاً کمی صبر کنید…</p>
+
+        <a href="{{ pay_url }}" class="btn btn-primary w-full" style="font-size:1rem;padding:0.85rem">
+            ورود به درگاه پرداخت
+        </a>
+        <div class="note">اگر به‌صورت خودکار باز نشد، دکمه‌ی بالا را بزنید.</div>
+    </div>
+</div>
+
+<script>
+setTimeout(function () {
+    window.location.href = {{ pay_url | tojson }};
+}, 2000);
+</script>
+{% endblock %}

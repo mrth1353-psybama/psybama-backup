@@ -274,7 +274,10 @@ def online_pay(product_id):
     if result['success']:
         order.zarinpal_authority = result['authority']
         db.session.commit()
-        return redirect(result['pay_url'])
+        # به‌جای ریدایرکت خودکار ۳۰۲ (که در برخی مرورگرها/شبکه‌ها دنبال نمی‌شود)،
+        # یک صفحه واسطه با اتصال خودکار + دکمه دستی به درگاه نمایش داده می‌شود.
+        return render_template('payment_redirect.html', product=product, order=order,
+                               amount=amount, pay_url=result['pay_url'])
 
     db.session.delete(order)
     db.session.commit()
