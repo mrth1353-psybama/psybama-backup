@@ -49,7 +49,6 @@ def _send_local(phone_number: str, otp_code: str) -> dict:
     return {
         'success': True,
         'mode': 'local',
-        'display_otp': otp_code
     }
 
 

@@ -1,4 +1,3 @@
-import os
 import secrets
 import string
 from datetime import datetime, timedelta
@@ -6,7 +5,6 @@ from functools import wraps
 from flask import session, jsonify
 
 OTP_EXPIRY_MINUTES = 5
-FIXED_TEST_OTP = '1234'
 
 
 def generate_otp() -> str:
@@ -35,19 +33,11 @@ def verify_otp(phone_number: str, submitted_code: str) -> tuple:
     if not user:
         return False, 'user_not_found'
 
-    sms_mode = os.getenv('SMS_MODE', 'local')
-
-    if sms_mode == 'local' and submitted_code == FIXED_TEST_OTP:
-        user.is_verified = True
-        user.otp_code = None
-        db.session.commit()
-        return True, 'ok'
-
     if not user.otp_code:
         return False, 'no_otp_issued'
     if datetime.utcnow() > user.otp_expires_at:
         return False, 'otp_expired'
-    if user.otp_code != submitted_code:
+    if not secrets.compare_digest(user.otp_code, submitted_code):
         return False, 'otp_mismatch'
 
     user.is_verified = True

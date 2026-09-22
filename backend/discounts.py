@@ -1,26 +1,38 @@
-"""مدیریت کدهای تخفیف فروشگاه از طریق فایل discounts.json.
+"""مدیریت کدهای تخفیف فروشگاه.
 
-برای تغییر میزان تخفیف یا کد، کافی است فایل discounts.json را ویرایش کنید
-(نیازی به ری‌استارت سرور نیست — فایل در هر درخواست خوانده می‌شود):
+کدهای تخفیف حساس نباید در ریپازیتوری عمومی باشند؛ بنابراین منبع اصلی،
+متغیر محیطی DISCOUNT_CODES_JSON است (در .env سرور تنظیم می‌شود). ساختار:
 
-{
-  "codes": {
-    "MODIR90": {
-      "active": true,                 // false کد را غیرفعال می‌کند
-      "type": "percent",              // "percent" (درصدی) یا "amount" (مبلغ ثابت تومان)
-      "value": 90,                    // ۹۰ یعنی ۹۰٪ تخفیف
-      "product": "کتاب مدیر هوشمند"   // نام دقیق محصولی که کد روی آن اعمال می‌شود
-    }
-  }
-}
+DISCOUNT_CODES_JSON={"MODIR90": {"active": true, "type": "percent", "value": 90, "product": "کتاب مدیر هوشمند"}}
+
+فایل discounts.json فقط به‌عنوان fallback برای محیط محلی نگه داشته شده و نباید
+کد راز واقعی داشته باشد. تغییر در هر درخواست خوانده می‌شود (نیازی به
+ری‌استارت نیست)؛ فقط بعد از تغییر .env، سرویس ری‌استارت لازم است.
 """
 import json
+import os
 from pathlib import Path
 
 DISCOUNTS_FILE = Path(__file__).parent / 'discounts.json'
 
 
+def _load_from_env():
+    raw = os.getenv('DISCOUNT_CODES_JSON', '')
+    if not raw.strip():
+        return None
+    try:
+        data = json.loads(raw)
+    except Exception:
+        return None
+    if not isinstance(data, dict) or 'codes' not in data:
+        return None
+    return data
+
+
 def load_discounts():
+    data = _load_from_env()
+    if data is not None:
+        return data
     try:
         with open(DISCOUNTS_FILE, encoding='utf-8') as f:
             data = json.load(f)
