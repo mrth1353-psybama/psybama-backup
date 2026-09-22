@@ -432,30 +432,6 @@ def create_app():
     def about():
         return render_template('about.html')
 
-    @limiter.limit("3 per minute")
-    @app.route('/contact', methods=['GET', 'POST'])
-    def contact():
-        if request.method == 'POST':
-            name = (request.form.get('name') or '').strip()
-            phone = (request.form.get('phone') or '').strip()
-            message = (request.form.get('message') or '').strip()
-            website = (request.form.get('website') or '').strip()
-            if not name or not phone or website:
-                return render_template('contact.html', error=True)
-            from models import ContactRequest
-            cr = ContactRequest(name=name, phone=phone, message=message)
-            db.session.add(cr)
-            db.session.commit()
-            try:
-                from email_service import send_contact_notification
-                result = send_contact_notification(name, phone, message)
-                if not result.get('success'):
-                    print(f"[EMAIL NOTIFICATION] Failed: {result.get('error')}")
-            except Exception as e:
-                print(f"[EMAIL NOTIFICATION] Error: {e}")
-            return render_template('contact.html', success=True)
-        return render_template('contact.html')
-
     @app.route('/assessment')
     def assessment():
         # پرسشنامه فرسودگی شغلی فعلاً غیرفعال است — کاربر به پرسشنامه گره کور هدایت می‌شود
