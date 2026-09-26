@@ -1,0 +1,24 @@
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=67 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A000000000000000000000000000vdnzlr1q
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=68 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A0000000000000000000000000001ln8oq5y
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=69 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A000000000000000000000000000qjew2d1x
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=70 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A000000000000000000000000000zr7z6858
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code=None
+[PAYMENT] online order=71 product=کتاب مدیر هوشمند amount=400000 shipping=0 code=None
+[ZARINPAL] request OK status=200 amount(Rial)=4000000 code=100 authority=A0000000000000000000000000002pzmo7jl
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=72 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A000000000000000000000000000qjewpg56
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code='MODIR90'
+[PAYMENT] online order=73 product=کتاب مدیر هوشمند amount=4000 shipping=0 code=MODIR90
+[ZARINPAL] request OK status=200 amount(Rial)=40000 code=100 authority=A000000000000000000000000000yl71ywd6
+[PAYMENT] online_pay POST arrived: name=True phone=True addr=True postal=True discount_code=None
+[PAYMENT] online order=74 product=کتاب مدیر هوشمند amount=400000 shipping=0 code=None
+[ZARINPAL] request OK status=200 amount(Rial)=4000000 code=100 authority=A000000000000000000000000000rml2z65x
